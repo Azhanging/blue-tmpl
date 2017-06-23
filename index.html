@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	</head>
+
+	<body>
+		<div id="app">
+
+		</div>
+		
+		<button type="button" id="add">添加</button>
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<script id="temp" type="text/template">
+			{{ var aaa = 1234; var bb = 123;}}
+				<div class="{{= aaa }}">456</div>
+			{{ for(var i = 0;i<data.length;i++){ }}
+				<div class='{{= i + 2 + 120 + 123 }} name'>
+					123
+					{{if(i != undefined){}}
+						<span>
+							{{= data[i] }}
+						</span>
+					{{ } }}
+					{{ if(data[i] == 'a'){ }}
+						<div>{{= i + '123465789' }}</div>
+					{{ }else{ }}
+						456
+					{{ } }}
+					{{for(var a = 0;a<5;a++){}}
+						<div>{{= a}}</div>
+					{{ } }}
+				</div>
+				<div>					
+					{{= data[i] }} - {{= (function(){return 1+3})()}}
+				</div>
+				<div>					
+					{{= data[i] }} - 2
+				</div>
+				<div>
+					{{= data[i] }} - 3
+				</div>
+				<div>					
+					{{= data[i] }} - 4
+				</div>
+				<div>					
+					{{= data[i] }} - 5
+				</div>
+			{{}}}
+		</script>
+		
+		<script src="js/tmlp.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			
+			var app = new Tmpl({
+				el:"#temp",
+				open_tag:"{{",
+				close_tag:'}}'
+			});
+			
+			$("#add").click(function(){
+				var arr = [];
+				for(var i = 0;i<100;i++){
+					arr.push(Math.random());
+				}
+				
+				app.appendTo(arr,"#app",function(){
+					console.log('好了');
+				});
+			});
+			
+		</script>
+	</body>
+
+</html>
