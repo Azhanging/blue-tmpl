@@ -45,15 +45,10 @@
 	Tmpl.prototype.appendTo = function(data, el, cb) {
 		var fragment = document.createDocumentFragment();
 		var tempEl = document.createElement('div');
-		var dom = '';
 		var index = 0;
 
-		function echo(data) {
-			dom += data.toString();
-		}
-
-		new Function('echo', 'data', this.dom).apply(this, [echo, data]);
-		tempEl.innerHTML = dom;
+		tempEl.innerHTML = new Function('data', this.dom).apply(this, [data]);
+		
 		while(tempEl.childNodes.length !== 0) {
 			fragment.appendChild(tempEl.childNodes[0]);
 		}
@@ -95,13 +90,14 @@
 		var longString = echoString.length > script.length ? echoString : script;
 
 		for(var i = 0; i < echoString.length; i++) {
-			echoString[i] = "echo(\"" + filterTransferredMeaning(echoString[i]) + "\");";
+			echoString[i] = "___.push(\"" + filterTransferredMeaning(echoString[i]) + "\");";
 		}
 
 		for(var index = 0; index < script.length; index++) {
+			/*恢复正则的索引位置*/
 			ECHO_SCRIPT_REGEXP.lastIndex = 0;
 			if(ECHO_SCRIPT_REGEXP.test(script[index])) {
-				script[index] = script[index].replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "echo(").replace(CLOSE_TAG_REGEXP, ");");
+				script[index] = script[index].replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(").replace(CLOSE_TAG_REGEXP, ");");
 			} else {
 				script[index] = script[index].replace(OPEN_TAG_REGEXP, '').replace(CLOSE_TAG_REGEXP, '');
 			}
@@ -116,7 +112,7 @@
 			}
 		}
 
-		this.dom = domString.join('');
+		this.dom = 'var ___ = [];' + domString.join('') + 'return ___.join("");';
 	};
 
 	//设置占位
