@@ -5,18 +5,31 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 	</head>
 
 	<body>
 		<div id="app">
-
+			<span class="@class">12312312312</span>
+			
+			<span class="test">123</span>
+			<span class="test">456</span>
 		</div>
+		<script type="text/javascript">
+//			$('.test').on('click',function(){
+//				alert('1');
+//			});
+//			
+//			$('.test').on('click',function(){
+//				alert('2');
+//			});
+		</script>
 		
-		<button type="button" id="add">添加</button>
-		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
+		<button type="button" class="@add" value="1">添加1</button>
+		<button type="button" class="@add" value="2">添加2</button>
 		<script id="temp" type="text/template">
 			{{ var aaa = 1234; var bb = 123;}}
-				<div class="{{= aaa }}">456</div>
+				<div class="{{= aaa }} @class">event</div>
 			{{ for(var i = 0;i<data.length;i++){ }}
 				<div class='{{= i + 2 + 120 + 123 }} name'>
 					123
@@ -58,19 +71,25 @@
 			var app = new Tmpl({
 				el:"#temp",
 				open_tag:"{{",
-				close_tag:'}}'
+				close_tag:'}}',
+				methods:{
+					add:function(event,el){
+						el.setAttribute('value',++el.value);
+						var arr = [];
+						for(var i = 0;i<500;i++){
+							arr.push(Math.random());
+						}
+						this.appendTo("#app", arr ,function(){
+							
+						});
+					}
+				},
+				ready:function(){
+					this.on('@add','click',this.add);
+				}
 			});
 			
-			$("#add").click(function(){
-				var arr = [];
-				for(var i = 0;i<5000;i++){
-					arr.push(Math.random());
-				}
-				
-				app.appendTo(arr,"#app",function(){
-					console.log('好了');
-				});
-			});
+			
 			
 		</script>
 	</body>

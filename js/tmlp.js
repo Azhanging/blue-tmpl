@@ -14,49 +14,107 @@
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
 
+	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST;
+
 	/*配置信息*/
 	var config = {
 		open_tag: "<%", //OPEN_TAG
 		close_tag: "%>" //CLOSE_TAG
 	};
 
-	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST;
-
 	/*实例构造*/
 	function Tmpl(opts) {
 		this.config = extend(config, opts);
 		this.el = getEl(opts.el);
 		this.template = this.el.innerHTML;
-		
 		setRegExp.call(this);
 		init.call(this);
 	}
 
 	/*初始化*/
 	function init() {
-		var script = this.template.match(SCRIPT_REGEXP);
-		var echoScript = this.template.match(ECHO_SCRIPT_REGEXP);
-		var replaceScript = setSeize.call(this);
-		var echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/);
-		setDom.apply(this, [script, echoScript, replaceScript, echoString]);
+		//转化为js执行
+		setDom.apply(this);
+		//初始化方法
+		setMethods.call(this);
+		//初始化事件
+		setEvent.call(this);
+		//所有完毕后的钩子
+		isFn(this.config.ready)?(this.config.ready.apply(this)):null;
 	};
 
 	/*数据绑定添加*/
-	Tmpl.prototype.appendTo = function(data, el, cb) {
+	Tmpl.prototype.appendTo = function(el, data, cb) {
+
 		var fragment = document.createDocumentFragment();
 		var tempEl = document.createElement('div');
-		var index = 0;
 
 		tempEl.innerHTML = new Function('data', this.dom).apply(this, [data]);
-		
+
 		while(tempEl.childNodes.length !== 0) {
 			fragment.appendChild(tempEl.childNodes[0]);
 		}
 
 		getEl(el).appendChild(fragment);
 
-		isFunction(cb) ? (cb()) : null;
+		isFn(cb) ? (cb.apply(this)) : null;
 	};
+
+	Tmpl.prototype.on = function(exp, type, fn) {
+
+		if(this.eventType.indexOf(type) == -1) {
+			setEntrust.apply(this,[exp, type, fn]);
+		}
+
+		//查找现在的节点是否存在事件
+		if(!this.events[exp]) {
+			this.events[exp] = {};
+		}
+
+		//当前的事件是否有设置
+		if(!this.events[exp][type]) {
+			this.events[exp][type] = [];
+		}
+
+		this.events[exp][type].push(fn);
+		
+	}
+	
+	//设置主的委托事件
+	function setEntrust(exp, type, fn){
+	    var _this = this;
+	    document.addEventListener(type, function(event) {
+            var el = event.target || window.event.target;
+            if(Array.prototype.indexOf.call(el.classList,exp) != -1){
+                var fnLen = _this.events[exp][type].length;
+                for(var index = 0;index < fnLen; index++){
+                    _this.events[exp][type][index].apply(_this,[event,el]);    
+                }
+            }
+        });
+        //添加委托事件
+        this.eventType.push(type);
+	}
+
+	function setEvent() {
+		//初始化事件
+		this.events = {};
+		//设置事件类型
+		this.eventType = [];
+	}
+
+	//设置实例方法
+	function setMethods() {
+		var methods = this.config.methods;
+		if(!isObj(methods)) {
+			return;
+		}
+		for(var method in methods) {
+			if(methods.hasOwnProperty(method)) {
+				this[method] = methods[method];
+			}
+		}
+	}
 
 	//设置正则
 	function setRegExp() {
@@ -85,7 +143,13 @@
 		return obj;
 	}
 
-	function setDom(script, echoScript, replaceScript, echoString) {
+	function setDom() {
+	    
+	    var script = this.template.match(SCRIPT_REGEXP);
+        var echoScript = this.template.match(ECHO_SCRIPT_REGEXP);
+        var replaceScript = setSeize.call(this);
+        var echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/);
+	    
 		var domString = [];
 		var longString = echoString.length > script.length ? echoString : script;
 
@@ -135,9 +199,23 @@
 		}
 	}
 
+    //获取class中的节点
+	function getEls(exp) {
+		if(document.querySelectorAll(exp)) {
+			return document.querySelector(exp);
+		} else {
+			return document.getElementsByClassName(exp);
+		}
+	}
+
 	/*是否为函数*/
-	function isFunction(fn) {
+	function isFn(fn) {
 		return typeof fn === 'function';
+	}
+
+	/*是否为对象*/
+	function isObj(obj) {
+		return obj instanceof Object && !(obj instanceof Array) && obj !== null;
 	}
 
 	Tmpl.version = "v1.0.0";
