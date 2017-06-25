@@ -22,6 +22,40 @@
 		close_tag: "%>" //CLOSE_TAG
 	};
 
+	//事件兼容处理
+	function Handler() {}
+	Handler.prototype = {
+		on : (function() {
+			if(typeof document.addEventListener === 'function') {
+				return function(type, fn) {
+					document.addEventListener(type, fn, false);
+				}
+			} else {
+				return function(type, fn) {
+					document.attachEvent('on' + type, fn);
+				};
+			}
+		})()
+	};
+
+	var handler = new Handler();
+
+	/*Array indexof方法*/
+	//兼容性IE8
+	(function() {
+		//兼容IE8中 的indexOf
+		if(!Array.prototype.indexOf) {
+			Array.prototype.indexOf = function(val) {
+				for(var index = 0, len = this.length; index < len; index++) {
+					if(this[index] === val) {
+						return index;
+					}
+				}
+				return -1;
+			}
+		}
+	})();
+
 	/*实例构造*/
 	function Tmpl(opts) {
 		this.config = extend(config, opts);
@@ -40,7 +74,7 @@
 		//初始化事件
 		setEvent.call(this);
 		//所有完毕后的钩子
-		isFn(this.config.ready)?(this.config.ready.apply(this)):null;
+		isFn(this.config.ready) ? (this.config.ready.apply(this)) : null;
 	};
 
 	/*数据绑定添加*/
@@ -60,10 +94,12 @@
 		isFn(cb) ? (cb.apply(this)) : null;
 	};
 
+
+    //添加事件
 	Tmpl.prototype.on = function(exp, type, fn) {
 
 		if(this.eventType.indexOf(type) == -1) {
-			setEntrust.apply(this,[exp, type, fn]);
+			setEntrust.apply(this, [exp, type, fn]);
 		}
 
 		//查找现在的节点是否存在事件
@@ -77,23 +113,31 @@
 		}
 
 		this.events[exp][type].push(fn);
-		
 	}
 	
+	//移除事件
+	Tmpl.prototype.off = function(exp, type, fn) {
+	    var eventIndex = this.events[exp][type].indexOf(fn);
+	    if(eventIndex != -1){
+	        this.events[exp][type].splice(eventIndex,1);
+	    }
+    }
+	
+
 	//设置主的委托事件
-	function setEntrust(exp, type, fn){
-	    var _this = this;
-	    document.addEventListener(type, function(event) {
-            var el = event.target || window.event.target;
-            if(Array.prototype.indexOf.call(el.classList,exp) != -1){
-                var fnLen = _this.events[exp][type].length;
-                for(var index = 0;index < fnLen; index++){
-                    _this.events[exp][type][index].apply(_this,[event,el]);    
-                }
-            }
-        });
-        //添加委托事件
-        this.eventType.push(type);
+	function setEntrust(exp, type, fn) {
+		var _this = this;
+		handler.on(type, function(event) {
+			var el = event.target || window.event.srcElement;
+			if(Array.prototype.indexOf.call(el.classList || el.className.split(' '), exp) != -1) {
+				var fnLen = _this.events[exp][type].length;
+				for(var index = 0; index < fnLen; index++) {
+					_this.events[exp][type][index].apply(_this, [event, el]);
+				}
+			}
+		});
+		//添加委托事件
+		this.eventType.push(type);
 	}
 
 	function setEvent() {
@@ -144,13 +188,13 @@
 	}
 
 	function setDom() {
-	    
-	    var script = this.template.match(SCRIPT_REGEXP);
-        var echoScript = this.template.match(ECHO_SCRIPT_REGEXP);
-        var replaceScript = setSeize.call(this);
-        var echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/);
-	    
-		var domString = [];
+
+		var script = this.template.match(SCRIPT_REGEXP);
+		var echoScript = this.template.match(ECHO_SCRIPT_REGEXP);
+		var replaceScript = setSeize.call(this);
+		var echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/);
+
+		var domString = []; 
 		var longString = echoString.length > script.length ? echoString : script;
 
 		for(var i = 0; i < echoString.length; i++) {
@@ -199,7 +243,7 @@
 		}
 	}
 
-    //获取class中的节点
+	//获取class中的节点
 	function getEls(exp) {
 		if(document.querySelectorAll(exp)) {
 			return document.querySelector(exp);

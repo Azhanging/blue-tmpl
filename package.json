@@ -1,0 +1,25 @@
+{
+  "name": "require",
+  "version": "1.0.0",
+  "description": "javascript module",
+  "main": "gulpfile.js",
+  "dependencies": {
+    "gulp": "^3.9.0",
+    "gulp-concat": "^2.6.0",
+    "gulp-uglify": "^1.4.2"
+  },
+  "devDependencies": {
+    "del": "^2.2.2",
+    "gulp": "^3.9.1",
+    "gulp-header": "^1.8.8"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Azhanging/tmlp.git"
+  },
+  "author": "",
+  "license": "ISC"
+}
