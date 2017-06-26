@@ -37,21 +37,21 @@
 				};
 			}
 		})(),
-		className: function(el, className, type) {
+		bind: function(el, className, type) {
 			//获得el中的className{type:string}
 			var className = className.split(' ');
 			var _className = el.className.split(' ');
 
 			for(var index = 0; index < className.length; index++) {
 				var findIndex = _className.indexOf(className[index]);
-				if(type == 'remove') {
-					if(findIndex != -1) {
-						_className.splice(findIndex, 1);
-					}
-				} else {
+				if(type == 'bind') {
 					if(findIndex == -1) {
 						_className.push(className[index]);
 					}
+				} else {
+				    if(findIndex != -1) {
+				    	_className.splice(findIndex, 1);
+				    }
 				}
 			}
 
@@ -98,7 +98,7 @@
 		this.el = getEl(opts.el);
 		this.template = this.el.innerHTML;
 		setRegExp.call(this);
-		init.call(this);
+		init.call(this); 
 	}
 
 	/*初始化*/
@@ -160,7 +160,13 @@
 				this.events[type][exp].splice(eventIndex, 1);
 			}
 		},
-		handler:new Handler()
+		handler:new Handler(),
+		bind:function(el, bind){
+		    this.handler.bind(el, bind, 'bind');
+		},
+		unbind:function(el, bind){
+		    this.handler.bind(el, bind, 'unbind');
+		}
 	}
 
 	//设置主的委托事件
@@ -170,7 +176,7 @@
 			var el = event.target || window.event.srcElement;
 			var eventType = _this.events[type];
 			_this.handler.each(eventType,function(_eventType,bind){
-				if(Array.prototype.indexOf.call(el.classList || el.className.split(' '), bind) != -1) {
+				if(el.className && Array.prototype.indexOf.call(el.className.split(' '), bind) != -1) {
 					_this.handler.each(_eventType, function(fn, index) {
 						fn.apply(_this, [event, el]);
 					});

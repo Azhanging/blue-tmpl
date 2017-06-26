@@ -72,6 +72,10 @@
 						this.appendTo("#app", arr ,function(){
 							console.log('success');
 						});
+						this.unbind(el,'@add');
+						setTimeout(function(){
+							this.bind(el,'@add');	
+						}.bind(this),2000);
 					},
 					mouse : function(){
 						console.log('mouse');
