@@ -71,11 +71,17 @@
 					}
 				}
 			}
-		}
+		},
+		getEl:function(exp) {
+            if(document.querySelector) {
+                var getEl = document.querySelector(exp);
+                return getEl !== null ? getEl : document.getElementById(exp);
+            } else {
+                return document.getElementById(exp);
+            }
+        }
 	};
-
-	//处理函数集合
-
+	
 	/*Array indexof方法*/
 	//兼容性IE8
 	(function() {
@@ -95,7 +101,7 @@
 	/*实例构造*/
 	function Tmpl(opts) {
 		this.config = extend.call(this,config, opts);
-		this.el = getEl(opts.el);
+		this.el = new Handler().getEl(opts.el);
 		this.template = this.el.innerHTML;
 		setRegExp.call(this);
 		init.call(this); 
@@ -131,7 +137,7 @@
 				fragment.appendChild(tempEl.childNodes[0]);
 			}
 
-			getEl(el).appendChild(fragment);
+			this.handler.getEl(el).appendChild(fragment);
 
 			isFn(cb) ? (cb.apply(this)) : null;
 		},
@@ -283,24 +289,6 @@
 	//过滤string中的引号
 	function filterTransferredMeaning(string) {
 		return string.replace(FILTER_TRANFORM, "").replace(QUEST, '\\\"');
-	}
-
-	/*获取元素*/
-	function getEl(exp) {
-		if(document.querySelector(exp)) {
-			return document.querySelector(exp);
-		} else {
-			return document.getElementById(exp);
-		}
-	}
-
-	//获取class中的节点
-	function getEls(exp) {
-		if(document.querySelectorAll(exp)) {
-			return document.querySelector(exp);
-		} else {
-			return document.getElementsByClassName(exp);
-		}
 	}
 
 	/*是否为函数*/

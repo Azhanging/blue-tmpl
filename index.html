@@ -14,9 +14,8 @@
 			<span class="test">456</span>
 		</div>
 		
-		<button type="button" class="@add" value="1">添加1</button>
-		<button type="button" class="@add1" value="2">添加2</button>
-		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+		<a class="@add">添加1</a>
+		<a class="@add1">添加2</a>
 		<script id="temp" type="text/template">
 			{{ var aaa = 1234; var bb = 123;}}
 				<div class="{{= aaa }} @class @mouse">event</div>
@@ -59,23 +58,24 @@
 		<script type="text/javascript">
 			
 			var app = new Tmpl({
-				el:"#temp",
+				el:"temp",
 				open_tag:"{{",
 				close_tag:'}}',
 				methods:{
 					add:function(event,el){
+						var _this = this;
 						el.setAttribute('value',++el.value);
 						var arr = [];
-						for(var i = 0;i<50;i++){
+						for(var i = 0;i<1;i++){
 							arr.push(Math.random());
 						}
-						this.appendTo("#app", arr ,function(){
+						this.appendTo("app", arr ,function(){
 							console.log('success');
 						});
 						this.unbind(el,'@add');
 						setTimeout(function(){
-							this.bind(el,'@add');	
-						}.bind(this),2000);
+							_this.bind(el,'@add');	
+						},2000);
 					},
 					mouse : function(){
 						console.log('mouse');
