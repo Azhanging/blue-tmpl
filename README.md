@@ -30,6 +30,21 @@ close_tag : 模板绑定js的结束标签
 </script>
 ```
 
+data : 可以设置模板中公用的数据可变动使用的数据
+```javascript
+...
+{
+	data:{
+		a:1,
+		b:2
+	}
+}
+
+app.a // 1
+app.b // 2
+
+```
+
 methods : 模板中使用的方法
 
 ```html
@@ -120,7 +135,7 @@ app.prop(div,'bind-id'); //返回  "123 + 456"
 ps:在绑定属性的中，this指向当前模板实例；
 
 ```html
-<div bind-is-true="this.method()"> 元素 </div>
+<div bind-is-true="this.method()" id="el"> 元素 </div>
 ```
 ```javascript
 new Tmpl({
@@ -132,5 +147,12 @@ new Tmpl({
 });
 
 app.prop(div,'bind-is-true'); //  "true"
+```
+
+也可以一次获取多个属性的值
+prop方法中传入一个数字，每个项对应的是el中的id
+
+```javascript
+app.prop(div,['bind-is-true','id']); // 返回 [true,"el"]
 ```
 

@@ -81,10 +81,17 @@
             }
         },
         prop:function(el,prop){
-        	if(/^bind-\S*/.test(prop)){
+            var _this = this;
+            if(prop instanceof Array){
+                var props = [];
+                this.handler.each(prop,function(_prop,index){
+                    props.push(_this.handler.prop.apply(_this,[el,_prop]));
+                });
+                return props;
+            }else if(/^bind-\S*/.test(prop)){
         		return new Function('return '+ el.getAttribute(prop) + ';').apply(this);	
         	}else{
-        		return el.getAttribute(prop);
+        		return el.getAttribute(prop); 
         	}
         }
 	};
@@ -119,7 +126,9 @@
 		//转化为js执行
 		setDom.apply(this);
 		//初始化方法
-		setMethods.call(this);
+		setInstance.call(this,'methods');
+		//初始化数据
+		setInstance.call(this,'data');
 		//初始化事件
 		setEvent.call(this);
 		//设置事件
@@ -215,17 +224,17 @@
 		this.eventType = [];
 	}
 
-	//设置实例方法
-	function setMethods() {
-		var methods = this.config.methods;
+	//设置实例
+	function setInstance(type) {
+		var get = this.config[type];
 		var _this = this;
 		
-		if(!isObj(methods)) {
+		if(!isObj(get)) {
 			return;
 		}
 		
-		this.handler.each(methods, function(method, methodKey) {
-			_this[methodKey] = method;
+		this.handler.each(get, function(_get, key) {
+			_this[key] = _get;
 		});
 	}
 
@@ -319,7 +328,7 @@
 		return array instanceof Array;
 	}
 
-	Tmpl.version = "v1.0.0";
+	Tmpl.version = "v1.0.1";
 
 	return Tmpl;
 });

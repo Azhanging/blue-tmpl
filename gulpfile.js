@@ -30,14 +30,17 @@ gulp.task('concat', function() {
 		    '/**',
 		    '*',
 		    '*',
-		    '* tmpl.js v1.0.0',
+		    '* tmpl.js v1.0.1',
 		    '* (c) 2016-2017 Blue',
 		    '* Released under the MIT License.',
 		    '*',
 		    '*',
-		    '**/',''
+		    '**/', ''
 		].join('\n')))
-		.pipe(gulp.dest(src.dist));
+		.pipe(gulp.dest(src.dist))
+		.on('error', function(err) {
+            console.error('Error in compress task', err.toString());
+        });
 });
 
 //watch fn
