@@ -79,6 +79,13 @@
             } else {
                 return document.getElementById(exp);
             }
+        },
+        prop:function(el,prop){
+        	if(/^bind-\S*/.test(prop)){
+        		return new Function('return '+ el.getAttribute(prop) + ';').apply(this);	
+        	}else{
+        		return el.getAttribute(prop);
+        	}
         }
 	};
 	
@@ -166,13 +173,20 @@
 				this.events[type][exp].splice(eventIndex, 1);
 			}
 		},
+		//继承处理实例
 		handler:new Handler(),
+		//添加方法绑定
 		bind:function(el, bind){
 		    this.handler.bind(el, bind, 'bind');
 		},
+		//取消方法绑定
 		unbind:function(el, bind){
 		    this.handler.bind(el, bind, 'unbind');
-		}
+		},
+		//获取属性
+		prop:function(el,prop){
+        	return this.handler.prop.apply(this,[el,prop]);
+        }
 	}
 
 	//设置主的委托事件

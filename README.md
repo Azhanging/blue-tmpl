@@ -99,6 +99,38 @@ unbind(el,bindClassName) : 某个元素的事件中的绑定
 ```javascript
 app.unbind(buttonEl,'@add');
 ```
+prop(el,propName) : 获取元素中对应的属性值，如果属性值前加上   bind-  ，则属性内部绑定的为js表达式
 
+```html
+<div bind-id="123 + 456"> 元素 </div>
+```
+```javascript
+app.prop(div,'bind-id'); //返回 579
+```
 
+如果没有不添加绑定，则返回原来属性上的propValue,都是字符串类型
+
+```html
+<div id="123 + 456"> 元素 </div>
+```
+```javascript
+app.prop(div,'bind-id'); //返回  "123 + 456"
+```
+
+ps:在绑定属性的中，this指向当前模板实例；
+
+```html
+<div bind-is-true="this.method()"> 元素 </div>
+```
+```javascript
+new Tmpl({
+	methods:{
+		method:function(){
+			console.log(true);
+		}
+	}
+});
+
+app.prop(div,'bind-is-true'); //  "true"
+```
 
