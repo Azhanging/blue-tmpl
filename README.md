@@ -156,3 +156,8 @@ prop方法中传入一个数字，每个项对应的是el中的id
 app.prop(div,['bind-is-true','id']); // 返回 [true,"el"]
 ```
 
+prop方法中的prop参数如果为对象，则为设置的当前el中的prop
+
+```javascript
+app.prop(div,{id:"prop",class:"name"}); // 设置div中的id="prop",class="name"
+```

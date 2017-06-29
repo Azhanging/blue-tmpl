@@ -48,7 +48,7 @@
 					if(findIndex == -1) {
 						_className.push(className[index]);
 					}
-				} else {
+				} else if(type == 'unbind'){
 				    if(findIndex != -1) {
 				    	_className.splice(findIndex, 1);
 				    }
@@ -82,17 +82,27 @@
         },
         prop:function(el,prop){
             var _this = this;
-            if(prop instanceof Array){
-                var props = [];
-                this.handler.each(prop,function(_prop,index){
-                    props.push(_this.handler.prop.apply(_this,[el,_prop]));
+            if(isObj(prop)){
+                this.handler.each(prop,function(_prop,key){
+                    if(typeof _prop === 'boolean'){
+                        el[key] = _prop; 
+                    }else{
+                        el.setAttribute(key,_prop);   
+                    }
                 });
-                return props;
-            }else if(/^bind-\S*/.test(prop)){
-        		return new Function('return '+ el.getAttribute(prop) + ';').apply(this);	
-        	}else{
-        		return el.getAttribute(prop); 
-        	}
+            }else{
+                if(prop instanceof Array){
+                var props = [];
+                    this.handler.each(prop,function(_prop,index){
+                        props.push(_this.handler.prop.apply(_this,[el,_prop]));
+                    });
+                    return props;
+                }else if(/^bind-\S*/.test(prop)){
+                    return new Function('return '+ el.getAttribute(prop) + ';').apply(this);    
+                }else{
+                    return el.getAttribute(prop); 
+                }
+            }
         }
 	};
 	
@@ -193,8 +203,8 @@
 		    this.handler.bind(el, bind, 'unbind');
 		},
 		//获取属性
-		prop:function(el,prop){
-        	return this.handler.prop.apply(this,[el,prop]);
+		prop:function(el,prop,propValue){
+        	return this.handler.prop.apply(this,[el,prop,propValue]);
         }
 	}
 
