@@ -17,7 +17,13 @@
 		<a class="@add">添加1</a>
 		<a class="@add1">添加2</a>
 		<script id="temp" type="text/template">
-			{{ var aaa = 1234; var bb = 123;}}
+			{{ 
+				var aaa = 1234; 
+				var bb = 123;
+				if(aaa != 1){
+					alert('a');
+				}
+			}}
 				<div class="{{= aaa }} @class @mouse">event</div>
 			{{ for(var i = 0;i<data.length;i++){ }}
 				<div class='{{= i + 2 + 120 + 123 }} name'>
@@ -88,7 +94,6 @@
 					}
 				},
 				events:function(){
-					this.on('@add','click',this.add);
 					this.on('@add','click',this.add);
 					this.on('@add1','click',this.add);
 					this.on('@add1','mouseover',this.add);

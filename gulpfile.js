@@ -37,10 +37,7 @@ gulp.task('concat', function() {
 		    '*',
 		    '**/', ''
 		].join('\n')))
-		.pipe(gulp.dest(src.dist))
-		.on('error', function(err) {
-            console.error('Error in compress task', err.toString());
-        });
+		.pipe(gulp.dest(src.dist));
 });
 
 //watch fn

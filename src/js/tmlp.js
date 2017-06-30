@@ -1,6 +1,6 @@
 /*!
  * 
- * 			tmpl.js v1.0.0
+ * 			tmpl.js v1.0.1
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 		
@@ -23,9 +23,18 @@
 	};
 
 	//事件兼容处理
-	function Handler() {}
+	function Fn() {}
 
-	Handler.prototype = {
+	Fn.prototype = {
+		isArray: function(array) {
+			return array instanceof Array;
+		},
+		isObj: function(obj) {
+			return obj instanceof Object && !(obj instanceof Array) && obj !== null;
+		},
+		isFn: function(fn) {
+			return typeof fn === 'function';
+		},
 		on: (function() {
 			if(typeof document.addEventListener === 'function') {
 				return function(type, fn) {
@@ -40,14 +49,14 @@
 		bind: function(el, className, type) {
 			var _className = el.className.split(' ');
 			//替换
-			if(isObj(className) && type == 'replaceBind'){
-				this.handler.each(className,function(__className,key){
-					var findIndex = _className.indexOf(key); 
-					if(findIndex != -1){
+			if(this.fn.isObj(className) && type == 'replaceBind') {
+				this.fn.each(className, function(__className, key) {
+					var findIndex = _className.indexOf(key);
+					if(findIndex != -1) {
 						_className[findIndex] = __className;
 					}
 				});
-			}else{
+			} else {
 				//获得el中的className{type:string}
 				var className = className.split(' ');
 				for(var index = 0; index < className.length; index++) {
@@ -63,7 +72,7 @@
 					}
 				}
 			}
-			
+
 			el.className = _className.join(' ');
 
 			return this;
@@ -71,7 +80,7 @@
 		each: function(obj, cb) {
 			var i = 0,
 				len = obj.length;
-			if(isArray(obj)) {
+			if(this.isArray(obj)) {
 				for(; i < len; i++) {
 					cb(obj[i], i);
 				}
@@ -91,30 +100,13 @@
 				return document.getElementById(exp);
 			}
 		},
-		prop: function(el, prop) {
-			var _this = this;
-			if(isObj(prop)) {
-				this.handler.each(prop, function(_prop, key) {
-					if(typeof _prop === 'boolean') {
-						el[key] = _prop;
-					} else {
-						el.setAttribute(key, _prop);
-					}
-				});
-			} else {
-				if(prop instanceof Array) {
-					var props = [];
-					this.handler.each(prop, function(_prop, index) {
-						props.push(_this.handler.prop.apply(_this, [el, _prop]));
-					});
-					return props;
-				} else if(/^bind-\S*/.test(prop)) {
-					return new Function('return ' + el.getAttribute(prop) + ';').apply(this);
-				} else {
-					return el.getAttribute(prop);
-				}
-			}
-		}
+		extend(obj, options) {
+            this.each(options, function(option, key) {
+                obj[key] = option;
+            });
+    
+            return obj;
+        }
 	};
 
 	/*Array indexof方法*/
@@ -135,8 +127,8 @@
 
 	/*实例构造*/
 	function Tmpl(opts) {
-		this.config = extend.call(this, config, opts);
-		this.el = new Handler().getEl(opts.el);
+		this.config = this.fn.extend(config, opts);
+		this.el = this.fn.getEl(opts.el);
 		this.template = this.el.innerHTML;
 		setRegExp.call(this);
 		init.call(this);
@@ -153,12 +145,13 @@
 		//初始化事件
 		setEvent.call(this);
 		//设置事件
-		isFn(this.config.events) ? (this.config.events.apply(this)) : null;
+		this.fn.isFn(this.config.events) ? (this.config.events.apply(this)) : null;
 		//所有完毕后的钩子
-		isFn(this.config.mounted) ? (this.config.mounted.apply(this)) : null;
+		this.fn.isFn(this.config.mounted) ? (this.config.mounted.apply(this)) : null;
 	};
 
 	Tmpl.prototype = {
+	    constructor:Tmpl,
 		/*数据绑定添加*/
 		appendTo: function(el, data, cb) {
 
@@ -171,9 +164,9 @@
 				fragment.appendChild(tempEl.childNodes[0]);
 			}
 
-			this.handler.getEl(el).appendChild(fragment);
+			this.fn.getEl(el).appendChild(fragment);
 
-			isFn(cb) ? (cb.apply(this)) : null;
+			this.fn.isFn(cb) ? (cb.apply(this)) : null;
 		},
 		//添加事件
 		on: function(exp, type, fn) {
@@ -201,33 +194,55 @@
 			}
 		},
 		//继承处理实例
-		handler: new Handler(),
+		fn: new Fn(),
 		//添加方法绑定
 		bind: function(el, bind) {
-			this.handler.bind.apply(this,[el, bind, 'bind']);
+			this.fn.bind.apply(this, [el, bind, 'bind']);
 		},
 		//取消方法绑定
 		unbind: function(el, bind) {
-			this.handler.bind.apply(this,[el, bind, 'unbind']);
+			this.fn.bind.apply(this, [el, bind, 'unbind']);
 		},
+		//替换绑定
 		replaceBind: function(el, bind, replaceBind) {
-			this.handler.bind.apply(this,[el, bind, 'replaceBind', replaceBind]);
+			this.fn.bind.apply(this, [el, bind, 'replaceBind', replaceBind]);
 		},
 		//获取属性
 		prop: function(el, prop, propValue) {
-			return this.handler.prop.apply(this, [el, prop, propValue]);
+			var _this = this;
+			if(this.fn.isObj(prop)) {
+				this.fn.each(prop, function(_prop, key) {
+					if(typeof _prop === 'boolean') {
+						el[key] = _prop;
+					} else {
+						el.setAttribute(key, _prop);
+					}
+				});
+			} else {
+				if(prop instanceof Array) {
+					var props = [];
+					this.fn.each(prop, function(_prop, index) {
+						props.push(_this.prop(el, _prop));
+					});
+					return props;
+				} else if(/^bind-\S*/.test(prop)) {
+					return new Function('return ' + el.getAttribute(prop) + ';').apply(this);
+				} else {
+					return el.getAttribute(prop);
+				}
+			}
 		}
 	}
 
 	//设置主的委托事件
 	function setEntrust(type, fn) {
 		var _this = this;
-		this.handler.on(type, function(event) {
+		this.fn.on(type, function(event) {
 			var el = event.target || window.event.srcElement;
 			var eventType = _this.events[type];
-			_this.handler.each(eventType, function(_eventType, bind) {
+			_this.fn.each(eventType, function(_eventType, bind) {
 				if(el.className && Array.prototype.indexOf.call(el.className.split(' '), bind) != -1) {
-					_this.handler.each(_eventType, function(fn, index) {
+					_this.fn.each(_eventType, function(fn, index) {
 						fn.apply(_this, [event, el]);
 					});
 				}
@@ -250,11 +265,11 @@
 		var get = this.config[type];
 		var _this = this;
 
-		if(!isObj(get)) {
+		if(!this.fn.isObj(get)) {
 			return;
 		}
 
-		this.handler.each(get, function(_get, key) {
+		this.fn.each(get, function(_get, key) {
 			_this[key] = _get;
 		});
 	}
@@ -279,15 +294,6 @@
 		QUEST = /"/g;
 	}
 
-	function extend(obj, options) {
-
-		this.handler.each(options, function(option, key) {
-			obj[key] = option;
-		});
-
-		return obj;
-	}
-
 	function setDom() {
 
 		var script = this.template.match(SCRIPT_REGEXP);
@@ -298,11 +304,11 @@
 		var domString = [];
 		var longString = echoString.length > script.length ? echoString : script;
 
-		this.handler.each(echoString, function(_echoString, index) {
+		this.fn.each(echoString, function(_echoString, index) {
 			echoString[index] = "___.push(\"" + filterTransferredMeaning(_echoString) + "\");";
 		});
 
-		this.handler.each(script, function(_string, index) {
+		this.fn.each(script, function(_string, index) {
 			/*恢复正则的索引位置*/
 			ECHO_SCRIPT_REGEXP.lastIndex = 0;
 			if(ECHO_SCRIPT_REGEXP.test(_string)) {
@@ -312,7 +318,7 @@
 			}
 		});
 
-		this.handler.each(longString, function(_longString, index) {
+		this.fn.each(longString, function(_longString, index) {
 			if(typeof echoString[index] === 'string') {
 				domString.push(echoString[index]);
 			}
@@ -333,20 +339,6 @@
 	//过滤string中的引号
 	function filterTransferredMeaning(string) {
 		return string.replace(FILTER_TRANFORM, "").replace(QUEST, '\\\"');
-	}
-
-	/*是否为函数*/
-	function isFn(fn) {
-		return typeof fn === 'function';
-	}
-
-	/*是否为对象*/
-	function isObj(obj) {
-		return obj instanceof Object && !(obj instanceof Array) && obj !== null;
-	}
-
-	function isArray(array) {
-		return array instanceof Array;
 	}
 
 	Tmpl.version = "v1.0.1";
