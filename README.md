@@ -114,6 +114,14 @@ unbind(el,bindClassName) : 某个元素的事件中的绑定
 ```javascript
 app.unbind(buttonEl,'@add');
 ```
+
+replaceBind(el,bindClassName) : 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
+
+```javascript
+app.replaceBind(buttonEl,{'@add':'@replaceAdd'}); // class="@replaceAdd"
+```
+
+
 prop(el,propName) : 获取元素中对应的属性值，如果属性值前加上   bind-  ，则属性内部绑定的为js表达式
 
 ```html
