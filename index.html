@@ -9,22 +9,35 @@
 
 	<body>
 		<div id="app">
-			<span class="@class">12312312312</span>
-			<span class="test @add-d">123</span>
+			<span class="on-class">12312312312</span>
+			<span class="test on-add-d">123</span>
 			<span bind-id="this.mouse()" id="id">456</span>
 		</div>
+		
+		<div id="app_1">
+			
+		</div>
+		
 		<input type="text" name="" id="" value="" />
-		<a class="@add">添加1</a>
-		<a class="@add1">添加2</a>
+		<a class="on-add">添加1</a>
+		<a class="on-add1">添加2</a>
+		
+		<script type="text/template" id="temp_1">
+			<div class="on-add"><%= this.a%></div>
+			<div><%= (function(){return {a:this.b}})() %></div>
+			<div><%= this.c %></div>		
+			<div><%= this.d %></div>
+		</script>
+		
 		<script id="temp" type="text/template">
 			{{ 
 				var aaa = 1234; 
 				var bb = 123;
 				if(aaa != 1){
-					alert('a');
+					console.log(index++);
 				}
 			}}
-				<div class="{{= aaa }} @class @mouse">event</div>
+				<div class="{{= aaa }} on-class on-mouse">event</div>
 			{{ for(var i = 0;i<data.length;i++){ }}
 				<div class='{{= i + 2 + 120 + 123 }} name'>
 					123
@@ -57,12 +70,29 @@
 				<div>					
 					{{= data[i] }} - 5
 				</div>
+				<div>
+					{{= this.a}}
+				</div>
 			{{}}}
 		</script>
 		
 		<script src="src/js/tmlp.js" type="text/javascript" charset="utf-8"></script>
+		
+		
+		<script>
+			new Tmpl({
+				el:"temp_1",
+				data:{
+					a:'节点1',
+					b:'节点2',
+					c:'节点3',
+					d:'节点4'
+				}
+			}).appendTo('app_1',null);
+		</script>
+		
 		<script type="text/javascript">
-			
+			var index = 0;
 			var app = new Tmpl({
 				el:"temp",
 				open_tag:"{{",
@@ -77,15 +107,15 @@
 						var _this = this;
 						el.setAttribute('value',++el.value);
 						var arr = [];
-						for(var i = 0;i<1;i++){
+						for(var i = 0;i<2;i++){
 							arr.push(Math.random());
 						}
 						this.appendTo("app", arr ,function(){
 							console.log('success');
 						});
-						this.unbind(el,'@add');
+						this.unbind(el,'on-add');
 						setTimeout(function(){
-							_this.bind(el,'@add');	
+							_this.bind(el,'on-add');	
 						},2000);
 					},
 					mouse : function(){
@@ -94,14 +124,19 @@
 					}
 				},
 				events:function(){
-					this.on('@add','click',this.add);
-					this.on('@add1','click',this.add);
-					this.on('@add1','mouseover',this.add);
-					this.on('@mouse','mouseover',this.mouse);
-					this.on('@class','click',this.mouse);
-					this.on('@add-d','dblclick',this.mouse);
+					this.on('on-add','click',this.add);
+					this.on('on-add1','click',this.add);
+					this.on('on-add1','mouseover',this.add);
+					this.on('on-mouse','mouseover',this.mouse);
+					this.on('on-class','click',this.mouse);
+					this.on('on-add-d','dblclick',this.mouse);
+				},
+				mounted:function(){
+					console.log('is OK');
 				}
 			});
+			
+			
 			
 			
 			

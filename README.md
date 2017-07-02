@@ -16,9 +16,9 @@ el : 绑定模板的script的id，在使用script模板的时候需要添加 "te
 <script id="temp" type="text/template"></script>
 ```
 
-open_tag : 模板绑定js的起始标签
+open_tag : 模板绑定js的起始标签，默认为 “<%”
 
-close_tag : 模板绑定js的结束标签
+close_tag : 模板绑定js的结束标签，默认为 “%>”
 
 ```html
 <script id="temp" type="text/template">
@@ -30,7 +30,11 @@ close_tag : 模板绑定js的结束标签
 </script>
 ```
 
-data : 可以设置模板中公用的数据可变动使用的数据
+有关模板的使用花括号内写js代码 {{ js 代码 }} ，{{= data}}为输出的js代码，内部可以写js表达式，只能是表达式（自执行函数需要分多行编写，不能写在一行内）；默认从外部传进去的数据只有一个顶层的data；
+
+*************
+
+data : 可以设置模板中公用的数据可变动使用的数据：
 ```javascript
 ...
 {
@@ -45,10 +49,42 @@ app.b // 2
 
 ```
 
+```html
+
+<script type="text/template">
+	<div><%= this.a %></div>
+	<div><%= this.b %></div>
+	<div><%= this.c %></div>		
+	<div><%= this.d %></div>
+</script>
+
+<script>
+	new Tmpl({
+		data:{
+			a:1,
+			b:2,
+			c:3,
+			d:4
+		}
+	}).appendTo('app',null);
+</script>
+
+```
+渲染后的结果
+
+```html
+<div id="app">
+	<div>1</div>	
+	<div>2</div>	
+	<div>3</div>	
+	<div>4</div>	
+</div>
+```
+
 methods : 模板中使用的方法
 
 ```html
-<script id="temp" type="text/template">
+<script>
 	...
 	{
 		methods:{
@@ -91,7 +127,7 @@ mounted : 模板加载完毕后调用的钩子
 
 #### 实例方法：
 
-on(bindClassName,eventType,fn) : 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上@好区分为模板事件，
+on(bindClassName,eventType,fn) : 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
 on中的fn默认带回两个参数(event,el);
 
 ```javascript
@@ -122,7 +158,7 @@ app.replaceBind(buttonEl,{'@add':'@replaceAdd'}); // class="@replaceAdd"
 ```
 
 
-attr(el,attrName) : 获取元素中对应的属性值，如果属性值前加上   bind-  ，则属性内部绑定的为js表达式
+attr(el,attrName) : 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的Tmpl实例对象：
 
 ```html
 <div bind-id="123 + 456"> 元素 </div>
@@ -164,8 +200,38 @@ attr方法中传入一个数字，每个项对应的是el中的id
 app.attr(div,['bind-is-true','id']); // 返回 [true,"el"]
 ```
 
-attr方法中的attr参数如果为对象，则为设置的当前el中的attr
+attr方法中的attr参数如果为Object，则为设置的当前el中的attr
 
 ```javascript
 app.attr(div,{id:"prop",class:"name"}); // 设置div中的id="prop",class="name"
 ```
+
+prop方法，用于节点属性，即是绑定到el[prop]的属性；
+
+prop(el,prop):如果第二个参数为Object则为设置属性，如果第二个参数为字符串时，则为获取属性；
+
+appendTo(elementId,data,callback);将解析好的模板添加到对应的父级节点中；elementId需要插入到的父级节点id，data为传入到模板中的data，callback为执行完毕后的回调函数
+
+```javascript
+app.appendTo(divId,{a:1,b:2},function(){
+	console.log('is OK');
+});
+```
+
+html(el,string):设置el中的innerHTML，如果不传参数，为获取innerHTML；
+
+```html
+app.html(el,'123'); // 设置innerHTML <div>123</div>
+
+app.html(el); // 123
+
+```
+
+val(el,string):设置el中的value，如果不传参数，为获取value；
+
+```html
+app.val(el,'123'); // 设置value el.value === '123' //true
+app.val(el); // 返回 123
+```
+
+

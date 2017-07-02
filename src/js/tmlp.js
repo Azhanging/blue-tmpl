@@ -35,51 +35,20 @@
 		isFn: function(fn) {
 			return typeof fn === 'function';
 		},
-		isStr:function(string){
+		isStr: function(string) {
 			return typeof string === 'string';
 		},
 		on: (function() {
 			if(typeof document.addEventListener === 'function') {
-				return function(type, fn) {
-					document.addEventListener(type, fn, false);
+				return function(el, type, fn) {
+					el.addEventListener(type, fn, false);
 				}
 			} else {
-				return function(type, fn) {
-					document.attachEvent('on' + type, fn);
+				return function(el, type, fn) {
+					el.attachEvent('on' + type, fn);
 				};
 			}
 		})(),
-		bind: function(el, className, type) {
-			var _className = el.className.split(' ');
-			//替换
-			if(this.fn.isObj(className) && type == 'replaceBind') {
-				this.fn.each(className, function(__className, key) {
-					var findIndex = _className.indexOf(key);
-					if(findIndex != -1) {
-						_className[findIndex] = __className;
-					}
-				});
-			} else {
-				//获得el中的className{type:string}
-				var className = className.split(' ');
-				for(var index = 0; index < className.length; index++) {
-					var findIndex = _className.indexOf(className[index]);
-					if(type == 'bind') {
-						if(findIndex == -1) {
-							_className.push(className[index]);
-						}
-					} else if(type == 'unbind') {
-						if(findIndex != -1) {
-							_className.splice(findIndex, 1);
-						}
-					}
-				}
-			}
-
-			el.className = _className.join(' ');
-
-			return this;
-		},
 		each: function(obj, cb) {
 			var i = 0,
 				len = obj.length;
@@ -103,13 +72,13 @@
 				return document.getElementById(exp);
 			}
 		},
-		extend:function(obj, options) {
-            this.each(options, function(option, key) {
-                obj[key] = option;
-            });
-    
-            return obj;
-        }
+		extend: function(obj, options) {
+			this.each(options, function(option, key) {
+				obj[key] = option;
+			});
+
+			return obj;
+		}
 	};
 
 	/*Array indexof方法*/
@@ -154,7 +123,7 @@
 	};
 
 	Tmpl.prototype = {
-	    constructor:Tmpl,
+		constructor: Tmpl,
 		/*数据绑定添加*/
 		appendTo: function(el, data, cb) {
 
@@ -170,6 +139,8 @@
 			this.fn.getEl(el).appendChild(fragment);
 
 			this.fn.isFn(cb) ? (cb.apply(this)) : null;
+
+			return this;
 		},
 		//添加事件
 		on: function(exp, type, fn) {
@@ -188,6 +159,8 @@
 			}
 
 			this.events[type][exp].push(fn);
+
+			return this;
 		},
 		//移除事件
 		off: function(exp, type, fn) {
@@ -195,41 +168,48 @@
 			if(eventIndex != -1) {
 				this.events[type][exp].splice(eventIndex, 1);
 			}
+
+			return this;
 		},
 		//继承处理实例
 		fn: new Fn(),
 		//添加方法绑定
 		bind: function(el, bind) {
-			this.fn.bind.apply(this, [el, bind, 'bind']);
+			bindFn.apply(this, [el, bind, 'bind']);
+			return this;
 		},
 		//取消方法绑定
 		unbind: function(el, bind) {
-			this.fn.bind.apply(this, [el, bind, 'unbind']);
+			bindFn.apply(this, [el, bind, 'unbind']);
+			return this;
 		},
 		//替换绑定
 		replaceBind: function(el, bind, replaceBind) {
-			this.fn.bind.apply(this, [el, bind, 'replaceBind', replaceBind]);
+			bindFn.apply(this, [el, bind, 'replaceBind', replaceBind]);
+			return this;
 		},
 		//获取属性
 		attr: function(el, attr) {
 			var _this = this;
 			if(this.fn.isObj(attr)) {
-				this.fn.each(attr, function(_prop, key) {
-					if(typeof _prop === 'boolean') {
-						el[key] = _prop;
-					} else if(_prop === ''){
+				this.fn.each(attr, function(_attr, key) {
+					if(typeof _attr === 'boolean') {
+						el[key] = _attr;
+						el.setAttribute(key, _attr);
+					} else if(_attr === '') {
 						el.removeAttribute(key);
 					} else {
-						el.setAttribute(key, _prop);
+						el.setAttribute(key, _attr);
 					}
 				});
+				return this;
 			} else {
 				if(attr instanceof Array) {
-					var props = [];
-					this.fn.each(attr, function(_prop, index) {
-						props.push(_this.attr(el, _prop));
+					var attrs = [];
+					this.fn.each(attr, function(_attr, index) {
+						attrs.push(_this.attr(el, _attr));
 					});
-					return props;
+					return attrs;
 				} else if(/^bind-\S*/.test(attr)) {
 					return new Function('return ' + el.getAttribute(attr) + ';').apply(this);
 				} else {
@@ -237,39 +217,72 @@
 				}
 			}
 		},
-		prop:function(el,prop){
+		prop: function(el, prop) {
 			//设置节点属性
 			if(this.fn.isObj(prop)) {
-				this.fn.each(prop, function(_prop, key) {					
+				this.fn.each(prop, function(_prop, key) {
 					el[key] = _prop;
 				});
 				return this;
-			}else if(this.fn.isStr(prop)){	//获得节点属性
+			} else if(this.fn.isStr(prop)) { //获得节点属性
 				return el[prop];
 			}
 		},
-		html:function(el,html){
-			if(html !== undefined){
+		html: function(el, html) {
+			if(html !== undefined) {
 				el.innerHTML = html;
 				return this;
-			}else{
+			} else {
 				return el.innerHTML;
 			}
 		},
-		val:function(el,val){
-			if(val !== undefined){
-				el.value(val);
+		val: function(el, val) {
+			if(val !== undefined) {
+				el.value = val;
 				return this;
-			}else{
+			} else {
 				return el.value;
 			}
 		}
 	}
 
+	//绑定相关函数
+	function bindFn(el, className, type) {
+		var _className = el.className.split(' ');
+		//替换
+		if(this.fn.isObj(className) && type == 'replaceBind') {
+			this.fn.each(className, function(__className, key) {
+				var findIndex = _className.indexOf(key);
+				if(findIndex != -1) {
+					_className[findIndex] = __className;
+				}
+			});
+		} else {
+			//获得el中的className{type:string}
+			var className = className.split(' ');
+			for(var index = 0; index < className.length; index++) {
+				var findIndex = _className.indexOf(className[index]);
+				if(type == 'bind') {
+					if(findIndex == -1) {
+						_className.push(className[index]);
+					}
+				} else if(type == 'unbind') {
+					if(findIndex != -1) {
+						_className.splice(findIndex, 1);
+					}
+				}
+			}
+		}
+
+		el.className = _className.join(' ');
+
+		return this;
+	}
+
 	//设置主的委托事件
 	function setEntrust(type, fn) {
 		var _this = this;
-		this.fn.on(type, function(event) {
+		this.fn.on(document, type, function(event) {
 			var el = event.target || window.event.srcElement;
 			var eventType = _this.events[type];
 			_this.fn.each(eventType, function(_eventType, bind) {
@@ -285,6 +298,7 @@
 		this.eventType.push(type);
 	}
 
+	//初始化时间中的参数
 	function setEvent() {
 		//初始化事件
 		this.events = {};
@@ -326,6 +340,7 @@
 		QUEST = /"/g;
 	}
 
+	//初始化dom生成
 	function setDom() {
 
 		var script = this.template.match(SCRIPT_REGEXP);
