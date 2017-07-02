@@ -122,22 +122,22 @@ app.replaceBind(buttonEl,{'@add':'@replaceAdd'}); // class="@replaceAdd"
 ```
 
 
-prop(el,propName) : 获取元素中对应的属性值，如果属性值前加上   bind-  ，则属性内部绑定的为js表达式
+attr(el,attrName) : 获取元素中对应的属性值，如果属性值前加上   bind-  ，则属性内部绑定的为js表达式
 
 ```html
 <div bind-id="123 + 456"> 元素 </div>
 ```
 ```javascript
-app.prop(div,'bind-id'); //返回 579
+app.attr(div,'bind-id'); //返回 579
 ```
 
-如果没有不添加绑定，则返回原来属性上的propValue,都是字符串类型
+如果没有不添加绑定，则返回原来属性上的attrValue,都是字符串类型
 
 ```html
 <div id="123 + 456"> 元素 </div>
 ```
 ```javascript
-app.prop(div,'bind-id'); //返回  "123 + 456"
+app.attr(div,'bind-id'); //返回  "123 + 456"
 ```
 
 ps:在绑定属性的中，this指向当前模板实例；
@@ -154,18 +154,18 @@ new Tmpl({
 	}
 });
 
-app.prop(div,'bind-is-true'); //  "true"
+app.attr(div,'bind-is-true'); //  "true"
 ```
 
 也可以一次获取多个属性的值
-prop方法中传入一个数字，每个项对应的是el中的id
+attr方法中传入一个数字，每个项对应的是el中的id
 
 ```javascript
-app.prop(div,['bind-is-true','id']); // 返回 [true,"el"]
+app.attr(div,['bind-is-true','id']); // 返回 [true,"el"]
 ```
 
-prop方法中的prop参数如果为对象，则为设置的当前el中的prop
+attr方法中的attr参数如果为对象，则为设置的当前el中的attr
 
 ```javascript
-app.prop(div,{id:"prop",class:"name"}); // 设置div中的id="prop",class="name"
+app.attr(div,{id:"prop",class:"name"}); // 设置div中的id="prop",class="name"
 ```

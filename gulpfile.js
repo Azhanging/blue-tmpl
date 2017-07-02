@@ -25,7 +25,9 @@ gulp.task('concat', function() {
 	return gulp.src(src.js, {
 			base: 'src'
 		})
-		.pipe(uglify())
+		.pipe(uglify().on('error', function(e){
+            console.log(e);
+         }))
 		.pipe(header([
 		    '/**',
 		    '*',

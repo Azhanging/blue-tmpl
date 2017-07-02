@@ -35,6 +35,9 @@
 		isFn: function(fn) {
 			return typeof fn === 'function';
 		},
+		isStr:function(string){
+			return typeof string === 'string';
+		},
 		on: (function() {
 			if(typeof document.addEventListener === 'function') {
 				return function(type, fn) {
@@ -100,7 +103,7 @@
 				return document.getElementById(exp);
 			}
 		},
-		extend(obj, options) {
+		extend:function(obj, options) {
             this.each(options, function(option, key) {
                 obj[key] = option;
             });
@@ -208,28 +211,57 @@
 			this.fn.bind.apply(this, [el, bind, 'replaceBind', replaceBind]);
 		},
 		//获取属性
-		prop: function(el, prop, propValue) {
+		attr: function(el, attr) {
 			var _this = this;
-			if(this.fn.isObj(prop)) {
-				this.fn.each(prop, function(_prop, key) {
+			if(this.fn.isObj(attr)) {
+				this.fn.each(attr, function(_prop, key) {
 					if(typeof _prop === 'boolean') {
 						el[key] = _prop;
+					} else if(_prop === ''){
+						el.removeAttribute(key);
 					} else {
 						el.setAttribute(key, _prop);
 					}
 				});
 			} else {
-				if(prop instanceof Array) {
+				if(attr instanceof Array) {
 					var props = [];
-					this.fn.each(prop, function(_prop, index) {
-						props.push(_this.prop(el, _prop));
+					this.fn.each(attr, function(_prop, index) {
+						props.push(_this.attr(el, _prop));
 					});
 					return props;
-				} else if(/^bind-\S*/.test(prop)) {
-					return new Function('return ' + el.getAttribute(prop) + ';').apply(this);
+				} else if(/^bind-\S*/.test(attr)) {
+					return new Function('return ' + el.getAttribute(attr) + ';').apply(this);
 				} else {
-					return el.getAttribute(prop);
+					return el.getAttribute(attr);
 				}
+			}
+		},
+		prop:function(el,prop){
+			//设置节点属性
+			if(this.fn.isObj(prop)) {
+				this.fn.each(prop, function(_prop, key) {					
+					el[key] = _prop;
+				});
+				return this;
+			}else if(this.fn.isStr(prop)){	//获得节点属性
+				return el[prop];
+			}
+		},
+		html:function(el,html){
+			if(html !== undefined){
+				el.innerHTML = html;
+				return this;
+			}else{
+				return el.innerHTML;
+			}
+		},
+		val:function(el,val){
+			if(val !== undefined){
+				el.value(val);
+				return this;
+			}else{
+				return el.value;
 			}
 		}
 	}
