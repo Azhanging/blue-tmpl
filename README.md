@@ -2,7 +2,7 @@
 
 更新时间：2017-6-26 23:01:35
 
-支持IE5-IE11 , chrome , firefox
+支持IE5-IE11, EDGE , chrome , firefox
 
 ## 构造对象 Tmpl
 
@@ -10,15 +10,21 @@
 
 ##### options中的参数
 
-el : 绑定模板的script的id，在使用script模板的时候需要添加 "text/template"，如：
+#### 特别说明一下，在默认的模板中的上下文this都是指向当前模板的实例对象上；
+
+*************
+
+##### el : 绑定模板的script的id，在使用script模板的时候需要添加 "text/template"，如：
 
 ```html
 <script id="temp" type="text/template"></script>
 ```
 
-open_tag : 模板绑定js的起始标签，默认为 “<%”
+##### open_tag : 模板绑定js的起始标签，默认为 “<%”
 
-close_tag : 模板绑定js的结束标签，默认为 “%>”
+##### close_tag : 模板绑定js的结束标签，默认为 “%>”
+
+下列事例为设置新的开闭合标签（没有什么特殊情况，不推荐更换这个，会出现一些意想不到的错误，主要是有些标签需要通过转义的正则才能使用）；
 
 ```html
 <script id="temp" type="text/template">
@@ -29,12 +35,13 @@ close_tag : 模板绑定js的结束标签，默认为 “%>”
 	}
 </script>
 ```
+*************
 
-有关模板的使用花括号内写js代码 {{ js 代码 }} ，{{= data}}为输出的js代码，内部可以写js表达式，只能是表达式（自执行函数需要分多行编写，不能写在一行内）；默认从外部传进去的数据只有一个顶层的data；
+#### 有关模板的使用open\_tag和close\_tag内写js代码 <% js 代码 %> ，<%= data%>为输出的js代码，内部可以写js表达式，只能是表达式（自执行函数需要分多行编写，不能写在一行内）；
 
 *************
 
-data : 可以设置模板中公用的数据可变动使用的数据：
+##### data : 可以设置模板中公用的数据可变动使用的数据：
 ```javascript
 ...
 {
@@ -80,8 +87,34 @@ app.b // 2
 	<div>4</div>	
 </div>
 ```
+*************
 
-methods : 模板中使用的方法
+##### 默认从外部传进去的数据只有一个顶层的data变量：
+
+```html
+<div id="app"></div>	
+<script type="text/template" id="tmpl">
+	<div><%= data.title %></div>
+	<div><%= data.content %></div>
+</script>
+
+<script>
+	new Tmpl({el:"tmpl"}).appendTo('app',{title:'我是标题'，content:"我是内容"});
+</script>
+
+```
+渲染后的结果
+
+```html
+<div id="app">
+	<div>我是标题</div>	
+	<div>我是内容</div>
+</div>
+```
+
+*************
+
+##### methods : 模板中使用的方法
 
 ```html
 <script>
@@ -89,76 +122,71 @@ methods : 模板中使用的方法
 	{
 		methods:{
 			add:function(event,el){
-				el.setAttribute('value',++el.value);
-				var arr = [];
-				for(var i = 0;i<50;i++){
-					arr.push(Math.random());
-				}
 				this.appendTo("#app", arr ,function(){
 					console.log('success');
 				});
-				this.unbind(el,'@add');
-			},
-			mouse : function(){
-				console.log('mouse');
 			}
 		}
 	}
 </script>
 ```
 
-events : 模板加载完毕后事件处理可以写在这里
+*************
+
+##### events : 模板加载完毕后事件处理可以写在这里
 
 ```html
 <script id="temp" type="text/template">
 	...
 	{
 		events:function(){
-			this.on('@add','click',this.add);
-			this.on('@add','click',this.add);
-			this.on('@add1','click',this.add);
+			this.on('on-add','click',this.add);
+			this.on('on-add','click',this.add);
+			this.on('on-add1','click',this.add);
 		}
 	}
 </script>
 ```
+*************
 
+##### mounted : 模板加载完毕后调用的钩子函数，this指向实例对象；
 
-mounted : 模板加载完毕后调用的钩子
+*************
 
 #### 实例方法：
 
-on(bindClassName,eventType,fn) : 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
+***on(bindClassName,eventType,fn)***: 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
 on中的fn默认带回两个参数(event,el);
 
 ```javascript
-app.on('@add','click',this.add);
+app.on('on-add','click',this.add);
 ```
 
-off(bindClassName,eventType,fn) : 移除事件，参数配置和on方法一样；对当前绑定委托事件移除对应的处理绑定
+***off(bindClassName,eventType,fn)*** : 移除事件，参数配置和on方法一样；对当前绑定委托事件移除对应的处理绑定
 ```javascript
-app.off('@add','click',this.add);
+app.off('on-add','click',this.add);
 ```
 
-bind(el,bindClassName) : 某个元素的事件中的绑定
-
-```javascript
-app.bind(buttonEl,'@add');
-```
-
-unbind(el,bindClassName) : 某个元素的事件中的绑定
+***bind(el,bindClassName)*** : 某个元素的事件中的绑定
 
 ```javascript
-app.unbind(buttonEl,'@add');
+app.bind(buttonEl,'on-add');
 ```
 
-replaceBind(el,bindClassName) : 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
+***unbind(el,bindClassName)*** : 某个元素的事件中的绑定
 
 ```javascript
-app.replaceBind(buttonEl,{'@add':'@replaceAdd'}); // class="@replaceAdd"
+app.unbind(buttonEl,'on-add');
+```
+
+***replaceBind(el,bindClassName)*** : 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
+
+```javascript
+app.replaceBind(buttonEl,{'on-add':'@replaceAdd'}); // class="@replaceAdd"
 ```
 
 
-attr(el,attrName) : 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的Tmpl实例对象：
+***attr(el,attrName)*** : 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的Tmpl实例对象：
 
 ```html
 <div bind-id="123 + 456"> 元素 </div>
@@ -176,7 +204,7 @@ app.attr(div,'bind-id'); //返回 579
 app.attr(div,'bind-id'); //返回  "123 + 456"
 ```
 
-ps:在绑定属性的中，this指向当前模板实例；
+##### ps:在绑定属性的中，this指向当前模板实例；
 
 ```html
 <div bind-is-true="this.method()" id="el"> 元素 </div>
@@ -208,7 +236,7 @@ app.attr(div,{id:"prop",class:"name"}); // 设置div中的id="prop",class="name"
 
 prop方法，用于节点属性，即是绑定到el[prop]的属性；
 
-prop(el,prop):如果第二个参数为Object则为设置属性，如果第二个参数为字符串时，则为获取属性；
+***prop(el,prop)***:如果第二个参数为Object则为设置属性，如果第二个参数为字符串时，则为获取属性；
 
 appendTo(elementId,data,callback);将解析好的模板添加到对应的父级节点中；elementId需要插入到的父级节点id，data为传入到模板中的data，callback为执行完毕后的回调函数
 
@@ -218,7 +246,7 @@ app.appendTo(divId,{a:1,b:2},function(){
 });
 ```
 
-html(el,string):设置el中的innerHTML，如果不传参数，为获取innerHTML；
+***html(el,string)***:设置el中的innerHTML，如果不传参数，为获取innerHTML；
 
 ```html
 app.html(el,'123'); // 设置innerHTML <div>123</div>
@@ -227,7 +255,7 @@ app.html(el); // 123
 
 ```
 
-val(el,string):设置el中的value，如果不传参数，为获取value；
+***val(el,string)***:设置el中的value，如果不传参数，为获取value；
 
 ```html
 app.val(el,'123'); // 设置value el.value === '123' //true
