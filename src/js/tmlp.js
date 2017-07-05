@@ -184,8 +184,23 @@
 			return this;
 		},
 		//替换绑定
-		replaceBind: function(el, bind, replaceBind) {
-			bindFn.apply(this, [el, bind, 'replaceBind', replaceBind]);
+		replaceBind: function(el, bind) {
+			bindFn.apply(this, [el, bind, 'replaceBind']);
+			return this;
+		},
+		//添加class
+		addClass:function(el,className){
+			bindFn.apply(this, [el, bind, 'addClass']);
+			return this;
+		},
+		//删除class
+		removeClass:function(el, bind){
+			bindFn.apply(this, [el, bind, 'removeClass']);
+			return this;
+		},
+		//替换className
+		replaceClass:function(el, bind){
+			bindFn.apply(this, [el, bind, 'replaceClass']);
 			return this;
 		},
 		//获取属性
@@ -225,7 +240,11 @@
 				});
 				return this;
 			} else if(this.fn.isStr(prop)) { //获得节点属性
-				return el[prop];
+				if(/^bind-\S*/.test(prop)) {
+					return new Function('return ' + el[prop] + ';').apply(this);
+				}else{
+					return el[prop];	
+				}
 			}
 		},
 		html: function(el, html) {
@@ -250,7 +269,7 @@
 	function bindFn(el, className, type) {
 		var _className = el.className.split(' ');
 		//替换
-		if(this.fn.isObj(className) && type == 'replaceBind') {
+		if(this.fn.isObj(className) && (type == 'replaceBind' || type == 'replaceClass')) {
 			this.fn.each(className, function(__className, key) {
 				var findIndex = _className.indexOf(key);
 				if(findIndex != -1) {
@@ -262,11 +281,11 @@
 			var className = className.split(' ');
 			for(var index = 0; index < className.length; index++) {
 				var findIndex = _className.indexOf(className[index]);
-				if(type == 'bind') {
+				if(type == 'bind' || type == 'addClass') {
 					if(findIndex == -1) {
 						_className.push(className[index]);
 					}
-				} else if(type == 'unbind') {
+				} else if(type == 'unbind' || type == 'removeClass') {
 					if(findIndex != -1) {
 						_className.splice(findIndex, 1);
 					}

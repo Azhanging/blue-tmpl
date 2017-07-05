@@ -1,6 +1,6 @@
 # Tmpl
 
-更新时间：2017-6-26 23:01:35
+##### 更新时间：2017年7月4日09:21:38
 
 支持IE5-IE11, EDGE , chrome , firefox
 
@@ -28,11 +28,11 @@
 
 ```html
 <script id="temp" type="text/template">
-	...
-	{
-		open_tag:"{{",
-		close_tag:'}}'
-	}
+...
+{
+	open_tag:"{{",
+	close_tag:'}}'
+}
 </script>
 ```
 *************
@@ -118,16 +118,16 @@ app.b // 2
 
 ```html
 <script>
-	...
-	{
-		methods:{
-			add:function(event,el){
-				this.appendTo("#app", arr ,function(){
-					console.log('success');
-				});
-			}
+...
+{
+	methods:{
+		add:function(event,el){
+			this.appendTo("#app", arr ,function(){
+				console.log('success');
+			});
 		}
 	}
+}
 </script>
 ```
 
@@ -137,14 +137,14 @@ app.b // 2
 
 ```html
 <script id="temp" type="text/template">
-	...
-	{
-		events:function(){
-			this.on('on-add','click',this.add);
-			this.on('on-add','click',this.add);
-			this.on('on-add1','click',this.add);
-		}
+...
+{
+	events:function(){
+		this.on('on-add','click',this.add);
+		this.on('on-add','click',this.add);
+		this.on('on-add1','click',this.add);
 	}
+}
 </script>
 ```
 *************
@@ -155,38 +155,38 @@ app.b // 2
 
 #### 实例方法：
 
-***on(bindClassName,eventType,fn)***: 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
+**on(bindClassName,eventType,fn)**: 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
 on中的fn默认带回两个参数(event,el);
 
 ```javascript
 app.on('on-add','click',this.add);
 ```
 
-***off(bindClassName,eventType,fn)*** : 移除事件，参数配置和on方法一样；对当前绑定委托事件移除对应的处理绑定
+**off(bindClassName,eventType,fn)** : 移除事件，参数配置和on方法一样；对当前绑定委托事件移除对应的处理绑定
 ```javascript
 app.off('on-add','click',this.add);
 ```
 
-***bind(el,bindClassName)*** : 某个元素的事件中的绑定
+**bind(el,bindClassName)** : 某个元素的事件中的绑定
 
 ```javascript
 app.bind(buttonEl,'on-add');
 ```
 
-***unbind(el,bindClassName)*** : 某个元素的事件中的绑定
+**unbind(el,bindClassName)** : 某个元素的事件中的绑定
 
 ```javascript
 app.unbind(buttonEl,'on-add');
 ```
 
-***replaceBind(el,bindClassName)*** : 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
+**replaceBind(el,bindClassName)** : 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
 
 ```javascript
-app.replaceBind(buttonEl,{'on-add':'@replaceAdd'}); // class="@replaceAdd"
+app.replaceBind(buttonEl,{'on-add':'on-replaceAdd'}); // class="on-replaceAdd"
 ```
 
 
-***attr(el,attrName)*** : 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的Tmpl实例对象：
+**attr(el,attrName)** : 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的Tmpl实例对象：
 
 ```html
 <div bind-id="123 + 456"> 元素 </div>
@@ -200,8 +200,9 @@ app.attr(div,'bind-id'); //返回 579
 ```html
 <div id="123 + 456"> 元素 </div>
 ```
+
 ```javascript
-app.attr(div,'bind-id'); //返回  "123 + 456"
+app.attr(div,'id'); //返回  "123 + 456"
 ```
 
 ##### ps:在绑定属性的中，this指向当前模板实例；
@@ -236,9 +237,17 @@ app.attr(div,{id:"prop",class:"name"}); // 设置div中的id="prop",class="name"
 
 prop方法，用于节点属性，即是绑定到el[prop]的属性；
 
-***prop(el,prop)***:如果第二个参数为Object则为设置属性，如果第二个参数为字符串时，则为获取属性；
+**prop(el,prop)**:如果第二个参数为Object则为设置属性，如果第二个参数为字符串时，则为获取属性；和**attr**方法类似，使用bind-开头的属性，该属性内为js的表达式；
 
-appendTo(elementId,data,callback);将解析好的模板添加到对应的父级节点中；elementId需要插入到的父级节点id，data为传入到模板中的data，callback为执行完毕后的回调函数
+```javascript
+app.prop(div,{id:"prop",class:"name",'bind-id':"'123'+1"}); 
+// div['id'] =>'prop'
+// div['class']=>"name"
+// div['bind-id'] => 1231
+```
+
+
+**appendTo(elementId,data,callback)**:将解析好的模板添加到对应的父级节点中；elementId需要插入到的父级节点id，data为传入到模板中的data，callback为执行完毕后的回调函数
 
 ```javascript
 app.appendTo(divId,{a:1,b:2},function(){
@@ -246,7 +255,7 @@ app.appendTo(divId,{a:1,b:2},function(){
 });
 ```
 
-***html(el,string)***:设置el中的innerHTML，如果不传参数，为获取innerHTML；
+**html(el,string)**:设置el中的innerHTML，如果不传参数，为获取innerHTML；
 
 ```html
 app.html(el,'123'); // 设置innerHTML <div>123</div>
@@ -255,11 +264,30 @@ app.html(el); // 123
 
 ```
 
-***val(el,string)***:设置el中的value，如果不传参数，为获取value；
+**val(el,string)**:设置el中的value，如果不传参数，为获取value；
 
 ```html
 app.val(el,'123'); // 设置value el.value === '123' //true
 app.val(el); // 返回 123
 ```
+
+#### 一些常用的方法：
+
+在tmpl的实例中，可以使用.fn中的方法
+
+**.isArray(array)**:检测是否为数组，返回true/false;
+
+**.isObj(object)**:检测是否为对象，返回true/false;
+
+**.isFn(fn)**:检测是否为函数，返回true/false;
+
+**.isStr(string)**:检测是否为字符串，返回true/false;
+
+**.each(eachObj,handler)**:遍历器，handler中两个参数，第一个为获取到遍历的值，第二个为index/key;
+
+**.extend(obj1,obj2)**:合并两个obj对象，返回一下合并的对象;
+
+
+
 
 
