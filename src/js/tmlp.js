@@ -165,10 +165,7 @@
 		//移除事件
 		off: function(exp, type, fn) {
 			var eventIndex = this.events[type][exp].indexOf(fn);
-			if(eventIndex != -1) {
-				this.events[type][exp].splice(eventIndex, 1);
-			}
-
+			if(eventIndex != -1) this.events[type][exp].splice(eventIndex, 1);
 			return this;
 		},
 		//继承处理实例
@@ -203,6 +200,7 @@
 			bindFn.apply(this, [el, bind, 'replaceClass']);
 			return this;
 		},
+		//是否存在class
 		hasClass: function(el, className) {
 			//节点中存在的className
 			var _className = el.className.split(' ');
@@ -211,13 +209,9 @@
 			var hasLen = 0;
 
 			for(var index = 0; index < hasClassName.length; index++) {
-				if(_className.indexOf(hasClassName[index]) !== -1) {
-					++hasLen;
-				}
+				if(_className.indexOf(hasClassName[index]) !== -1) ++hasLen;
 			}
-			if(hasLen === hasClassName.length) {
-				return true;
-			}
+			if(hasLen === hasClassName.length) return true;
 			return false;
 		},
 		//获取属性
@@ -249,6 +243,7 @@
 				}
 			}
 		},
+		//获取、设置prop属性
 		prop: function(el, prop) {
 			//设置节点属性
 			if(this.fn.isObj(prop)) {
@@ -257,47 +252,78 @@
 				});
 				return this;
 			} else if(this.fn.isStr(prop)) { //获得节点属性
-				if(/^bind-\S*/.test(prop)) {
-					return new Function('return ' + el[prop] + ';').apply(this);
-				} else {
-					return el[prop];
-				}
+				if(/^bind-\S*/.test(prop)) return new Function('return ' + el[prop] + ';').apply(this);
+				return el[prop];
 			}
 		},
+		//获取、设置html
 		html: function(el, html) {
-			if(html !== undefined) {
-				el.innerHTML = html;
-				return this;
-			} else {
-				return el.innerHTML;
-			}
+			if(html === undefined) return el.innerHTML;
+			el.innerHTML = html;
+			return this;
 		},
+		//获取、设置value
 		val: function(el, val) {
-			if(val !== undefined) {
-				el.value = val;
-				return this;
-			} else {
-				return el.value;
-			}
+			if(val === undefined) return el.value;
+			el.value = val;
+			return this;
 		},
+		//查找符合的一个父级节点
 		parent: function(el, hasClassName) {
+
 			var parent = el.parentNode;
-			if(el === document || parent === null) {
-				return null;
-			}
-			//存在class赛选的
-			if(hasClassName) {
-				if(this.hasClass(el.parentNode, hasClassName)) {
 
-				} else {
+			if(parent === document || parent === null) return null;
 
-				}
-			} else {
-				return el.parentNode;
-			}
+			if(!hasClassName) return parent;
+
+			if(this.hasClass(parent, hasClassName)) return parent;
+
+			return this.parent(parent, hasClassName);
+
 		},
+		//超找所有符合的父元素
+		parents: function(el, hasClassName, hasClassParent) {
+
+			var parent = el.parentNode;
+
+			hasClassParent = (hasClassParent ? hasClassParent : []);
+
+			if(parent === document || parent === null) return null;
+
+			if(this.hasClass(parent, hasClassName)) hasClassParent.push(parent);
+
+			this.parents(parent, hasClassName, hasClassParent);
+
+			return hasClassParent;
+		},
+		//获取直接的当个子节点
 		children: function(el) {
 			return el.children;
+		},
+		//查找对应的class存在的节点
+		find: function(el, className, hasClassChild) {
+			var i = 0;
+			hasClassChild = (hasClassChild ? hasClassChild : []);
+			for(; i < el.children.length; i++) {
+				if(this.hasClass(el.children[i], className)) hasClassChild.push(el.children[i]);
+				this.find(el.children[i], className, hasClassChild);
+			}
+			return hasClassChild;
+		},
+		//下一个节点
+		next: function(el) {
+			var nextEl = el.nextSibling;
+			if(nextEl === null) return null;
+			if(nextEl.nodeType !== 1) return this.next(nextEl);
+			return nextEl;
+		},
+		//上一个节点
+		prev: function(el) {
+            var prevEl = el.previousSibling;
+            if(prevEl === null) return null;
+            if(prevEl.nodeType !== 1) return this.prev(prevEl);
+            return prevEl;
 		}
 	}
 
