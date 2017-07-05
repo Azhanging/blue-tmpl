@@ -189,19 +189,36 @@
 			return this;
 		},
 		//添加class
-		addClass:function(el,className){
+		addClass: function(el, className) {
 			bindFn.apply(this, [el, bind, 'addClass']);
 			return this;
 		},
 		//删除class
-		removeClass:function(el, bind){
+		removeClass: function(el, bind) {
 			bindFn.apply(this, [el, bind, 'removeClass']);
 			return this;
 		},
 		//替换className
-		replaceClass:function(el, bind){
+		replaceClass: function(el, bind) {
 			bindFn.apply(this, [el, bind, 'replaceClass']);
 			return this;
+		},
+		hasClass: function(el, className) {
+			//节点中存在的className
+			var _className = el.className.split(' ');
+			//是否存在的className
+			var hasClassName = className.split(' ');
+			var hasLen = 0;
+
+			for(var index = 0; index < hasClassName.length; index++) {
+				if(_className.indexOf(hasClassName[index]) !== -1) {
+					++hasLen;
+				}
+			}
+			if(hasLen === hasClassName.length) {
+				return true;
+			}
+			return false;
 		},
 		//获取属性
 		attr: function(el, attr) {
@@ -242,8 +259,8 @@
 			} else if(this.fn.isStr(prop)) { //获得节点属性
 				if(/^bind-\S*/.test(prop)) {
 					return new Function('return ' + el[prop] + ';').apply(this);
-				}else{
-					return el[prop];	
+				} else {
+					return el[prop];
 				}
 			}
 		},
@@ -262,6 +279,25 @@
 			} else {
 				return el.value;
 			}
+		},
+		parent: function(el, hasClassName) {
+			var parent = el.parentNode;
+			if(el === document || parent === null) {
+				return null;
+			}
+			//存在class赛选的
+			if(hasClassName) {
+				if(this.hasClass(el.parentNode, hasClassName)) {
+
+				} else {
+
+				}
+			} else {
+				return el.parentNode;
+			}
+		},
+		children: function(el) {
+			return el.children;
 		}
 	}
 
