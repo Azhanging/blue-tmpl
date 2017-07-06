@@ -271,17 +271,155 @@ app.val(el,'123'); // 设置value el.value === '123' //true
 app.val(el); // 返回 123
 ```
 
+**text(el,text)**:设置el中的textContent，如果不传参数，为获取textContent；
+
+```html
+app.text(el,'123'); // 设置value el.textContent === '123' //true
+app.text(el); // 返回 123
+```
+
+**parent(el,hasClassName)**:获取父节点，如果第二参数为className，则查询第一个找到匹配的父类的节点；
+
+```html
+<div class="parentClass">
+	<div class="parent">
+		<div>el</div>
+	</div>
+</div>
+```
+```javascript
+app.parent(el,'parentClass');  //返回查找到parentClass的父级节点
+app.parent(el);  //返回el的父级节点
+```
+
+**parents(el,hasClassName)**:获取父节点，如果第二参数为className，则查询找到匹配的所有父类的节点；
+
+```html
+<div class="parentClass">
+	<div class="parentClass">
+		<div>el</div>
+	</div>
+</div>
+```
+```javascript
+app.parents(el,'parentClass');  //返回查找到所有存在parentClass的父级节点
+```
+
+
+**children(el)**:获取el的子节点
+
+```html
+<div class="el">
+	<div>el1</div>
+	<div>el2</div>
+	<div>el3</div>
+</div>
+```
+```javascript
+app.children(el);  //返回[el1,el2,el3]
+```
+
+**childrens(el,className)**:获取el的后代符合存在className节点
+
+```html
+<div class="el">
+	<div class="child">
+		<div class="child">
+			<div class="child">
+				<div class="child"></div>
+			</div>
+		</div>	
+	</div>
+</div>
+```
+```javascript
+app.children(el,'child');  
+//返回[div.child,div.child,div.child]
+```
+
+**next(el)**:获取el的子节点
+
+```html
+<div class="el">
+	<div>el1</div>
+	<div>el2</div>
+	<div>el3</div>
+</div>
+```
+```javascript
+app.next(el1);  //返回 el2
+```
+
+**nextAll(el)**:获取el的子节点
+
+```html
+<div class="el">
+	<div>el1</div>
+	<div>el2</div>
+	<div>el3</div>
+</div>
+```
+```javascript
+app.nextAll(el1);  //返回  [el2,el3]
+```
+
+
+**prev(el)**:获取el的子节点
+
+```html
+<div class="el">
+	<div>el1</div>
+	<div>el2</div>
+	<div>el3</div>
+</div>
+```
+```javascript
+app.prev(el2);  //返回 el1
+```
+
+**prevAll(el)**:获取el的子节点
+
+```html
+<div class="el">
+	<div>el1</div>
+	<div>el2</div>
+	<div>el3</div>
+</div>
+```
+```javascript
+app.prevAll(el3);  //返回  [el1,el2]
+```
+
+**siblings(el)**:获取el的子节点
+
+```html
+<div class="el">
+	<div>el1</div>
+	<div>el2</div>
+	<div>el3</div>
+	<div>el4</div>
+	<div>el5</div>
+	<div>el6</div>
+</div>
+```
+```javascript
+app.prevAll(el3);  //返回  [el1,el2,el4,el5,el6]
+```
+
+
 #### 一些常用的方法：
 
 在tmpl的实例中，可以使用.fn中的方法
 
-**.isArray(array)**:检测是否为数组，返回true/false;
+**.isArr(array)**:检测是否为数组，返回true/false;
 
 **.isObj(object)**:检测是否为对象，返回true/false;
 
 **.isFn(fn)**:检测是否为函数，返回true/false;
 
 **.isStr(string)**:检测是否为字符串，返回true/false;
+
+**.isNum(number|string)**:检测是否为数字，返回true/false;
 
 **.each(eachObj,handler)**:遍历器，handler中两个参数，第一个为获取到遍历的值，第二个为index/key;
 

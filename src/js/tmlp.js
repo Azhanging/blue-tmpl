@@ -26,7 +26,7 @@
 	function Fn() {}
 
 	Fn.prototype = {
-		isArray: function(array) {
+		isArr: function(array) {
 			return array instanceof Array;
 		},
 		isObj: function(obj) {
@@ -37,6 +37,9 @@
 		},
 		isStr: function(string) {
 			return typeof string === 'string';
+		},
+		isNum: function(num) {
+			return typeof num === 'number' || /^\d*(.\d*)?$/.test(num);
 		},
 		on: (function() {
 			if(typeof document.addEventListener === 'function') {
@@ -52,7 +55,7 @@
 		each: function(obj, cb) {
 			var i = 0,
 				len = obj.length;
-			if(this.isArray(obj)) {
+			if(this.isArr(obj)) {
 				for(; i < len; i++) {
 					cb(obj[i], i);
 				}
@@ -268,6 +271,12 @@
 			el.value = val;
 			return this;
 		},
+		//获取、设置textContent
+		text: function(el, text) {
+			if(text === undefined) return el.textContent;
+			el.textContent = text;
+			return this;
+		},
 		//查找符合的一个父级节点
 		parent: function(el, hasClassName) {
 
@@ -302,7 +311,7 @@
 			return el.children;
 		},
 		//查找对应的class存在的节点
-		find: function(el, className, hasClassChild) {
+		childrens: function(el, className, hasClassChild) {
 			var i = 0;
 			hasClassChild = (hasClassChild ? hasClassChild : []);
 			for(; i < el.children.length; i++) {
@@ -318,12 +327,34 @@
 			if(nextEl.nodeType !== 1) return this.next(nextEl);
 			return nextEl;
 		},
+		//获取当前元素同级前的节点
+		nextAll: function(el) {
+			return this.siblings(el, 'nextAll');
+		},
+		//获取当前元素同级后的节点
+		prevAll: function(el) {
+			return this.siblings(el, 'prevAll');
+		},
 		//上一个节点
 		prev: function(el) {
-            var prevEl = el.previousSibling;
-            if(prevEl === null) return null;
-            if(prevEl.nodeType !== 1) return this.prev(prevEl);
-            return prevEl;
+			var prevEl = el.previousSibling;
+			if(prevEl === null) return null;
+			if(prevEl.nodeType !== 1) return this.prev(prevEl);
+			return prevEl;
+		},
+		//获取同级的兄弟节点
+		siblings: function(el, type) {
+			var parent = this.parent(el);
+			if(parent === null) return null;
+			var child = parent.children;
+			var siblings = [];
+			var i = 0;
+			if(type === 'nextAll') i = Array.prototype.indexOf.call(child, el);
+			for(; i < child.length; i++) {
+				if(child[i] !== el) siblings.push(child[i]);
+				if(type === 'prevAll' && child[i] === el) return siblings;
+			}
+			return siblings;
 		}
 	}
 
