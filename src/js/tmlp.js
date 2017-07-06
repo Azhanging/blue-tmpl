@@ -395,12 +395,13 @@
 	function setEntrust(type, fn) {
 		var _this = this;
 		this.fn.on(document, type, function(event) {
-			var el = event.target || window.event.srcElement;
+			var ev = event || window.event;
+			var el = ev.target || ev.srcElement;
 			var eventType = _this.events[type];
 			_this.fn.each(eventType, function(_eventType, bind) {
 				if(el.className && Array.prototype.indexOf.call(el.className.split(' '), bind) != -1) {
 					_this.fn.each(_eventType, function(fn, index) {
-						fn.apply(_this, [event, el]);
+						fn.apply(_this, [ev, el]);
 					});
 				}
 			});
