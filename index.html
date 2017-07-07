@@ -102,7 +102,7 @@
 				</div>
 				<% } %>
 			</div>
-			<include name="id"/>
+			<include name="temp_1"/>
 			<include name="id"/>
 			<div>
 				<%= parseInt(data[i] * 10) %> -
@@ -125,7 +125,7 @@
 
 		<script src="src/js/tmlp.js" type="text/javascript" charset="utf-8"></script>
 
-		<!--<script>
+		<script>
 			new Tmpl({
 				el: "temp_1",
 				data: {
@@ -137,7 +137,7 @@
 			}).data(null).appendTo('app_1', function() {
 				console.log('yes')
 			});
-		</script>-->
+		</script>
 
 		<script type="text/javascript">
 			var index = 0;
@@ -152,6 +152,7 @@
 					add: function(event, el) {
 						var _this = this;
 						el.setAttribute('value', ++el.value);
+						var arr = [];
 						this.data(this.a).appendTo("app", function() {
 							console.log('success');
 						});

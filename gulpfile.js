@@ -1,4 +1,6 @@
 'use strict';
+var version = 'v1.0.2';
+var github = 'https://github.com/azhanging/tmpl';
 
 var gulp = require('gulp'),
 	concat = require('gulp-concat'),
@@ -25,15 +27,16 @@ gulp.task('concat', function() {
 	return gulp.src(src.js, {
 			base: 'src'
 		})
-		.pipe(uglify().on('error', function(e){
-            console.log(e);
-         }))
+		.pipe(uglify().on('error', function(e) {
+			console.log(e);
+		}))
 		.pipe(header([
 		    '/**',
 		    '*',
 		    '*',
-		    '* tmpl.js v1.0.1',
+		    '* tmpl.js ' + version,
 		    '* (c) 2016-2017 Blue',
+		    '* ' + github,
 		    '* Released under the MIT License.',
 		    '*',
 		    '*',

@@ -14,12 +14,13 @@
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
 
-	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST;
+	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST, INCLUDE;
 
 	/*配置信息*/
 	var config = {
 		open_tag: "<%", //OPEN_TAG
-		close_tag: "%>" //CLOSE_TAG
+		close_tag: "%>", //CLOSE_TAG,
+		template: ""
 	};
 
 	//事件兼容处理
@@ -66,10 +67,11 @@
 			}
 		},
 		getEl: function(exp) {
-			if(exp.nodeType) return exp;
+			if(!exp) return null;
 			if(!this.isFn(document.querySelector)) return document.getElementById(exp);
 			var getEl = document.querySelector(exp);
-			return getEl !== null ? getEl : document.getElementById(exp);
+			var el = document.getElementById(exp);
+			return getEl !== null ? getEl : (el ? el : null);
 		},
 		extend: function(obj, options) {
 			this.each(options, function(option, key) {
@@ -85,15 +87,25 @@
 			this.cb(cb, context);
 		},
 		/*去重*/
-		unique:function(arr){
+		unique: function(arr) {
 			if(!this.isArr(arr)) return [];
 			var newArray = [];
-			this.each(arr,function(item,index){
+			this.each(arr, function(item, index) {
 				if(newArray.indexOf(item) === -1) {
 					newArray.push(item);
 				}
 			});
 			return newArray;
+		},
+		/*清空数组中空的值*/
+		clearNull: function(arr) {
+			var newArr = [];
+			this.each(arr, function(item, index) {
+				if(item !== '') {
+					newArr.push(item);
+				}
+			});
+			return newArr;
 		}
 	};
 
@@ -127,27 +139,24 @@
 		init: function(options) {
 			this.tmpl = options.tmpl;
 			this.data = options.data;
-			this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
-			this.setDom();
+			this.dom = new Function('data', this.tmpl.dom)
+				.apply(this.tmpl, [this.data]);
+			this.fragment = this.setDom();
 		},
 		setDom: function() {
-			var fragment = document.createDocumentFragment();
-			var tempEl = document.createElement('div');
-			tempEl.innerHTML = this.dom;
-			while(tempEl.childNodes.length !== 0) {
-				fragment.appendChild(tempEl.childNodes[0]);
-			}
-			this.fragment = fragment;
+			return this.tmpl.create(this.dom);
 		},
 		appendTo: function(el, cb) {
 			var fn = this.tmpl.fn;
-			fn.getEl(el).appendChild(this.fragment);
+			fn.getEl(el)
+				.appendChild(this.fragment);
 			fn.cb(cb, this.tmpl);
 			return this.tmpl;
 		},
 		insertBefore: function(el, ex, cb) {
 			var fn = this.tmpl.fn;
-			fn.getEl(el).insertBefore(this.fragment, ex);
+			fn.getEl(el)
+				.insertBefore(this.fragment, ex);
 			fn.cb(cb, this.tmpl);
 			return this.tmpl;
 		}
@@ -161,6 +170,7 @@
 		this.config = this.fn.extend(config, opts);
 		this.el = this.fn.getEl(opts.el);
 		this.template = this.el.innerHTML;
+		this.config.template = this.el.innerHTML;
 		setRegExp.call(this);
 		init.call(this);
 	}
@@ -168,7 +178,7 @@
 	/*初始化*/
 	function init() {
 		//转化为js执行
-		setDom.apply(this);
+		setDom.call(this);
 		//初始化方法
 		setInstance.call(this, 'methods');
 		//初始化数据
@@ -179,6 +189,7 @@
 		this.fn.run(this.config.events, this);
 		//所有完毕后的钩子
 		this.fn.run(this.config.mounted, this);
+		//这是->嫂子
 	};
 
 	Tmpl.prototype = {
@@ -190,6 +201,10 @@
 				tmpl: _this,
 				data: data
 			});
+		},
+		update: function() {
+			this.template = this.config.template;
+			setDom.call(this);
 		},
 		//添加事件
 		on: function(exp, type, fn) {
@@ -280,7 +295,8 @@
 					});
 					return attrs;
 				} else if(/^bind-\S*/.test(attr)) {
-					return new Function('return ' + el.getAttribute(attr) + ';').apply(this);
+					return new Function('return ' + el.getAttribute(attr) + ';')
+						.apply(this);
 				} else {
 					return el.getAttribute(attr);
 				}
@@ -295,7 +311,8 @@
 				});
 				return this;
 			} else if(this.fn.isStr(prop)) { //获得节点属性
-				if(/^bind-\S*/.test(prop)) return new Function('return ' + el[prop] + ';').apply(this);
+				if(/^bind-\S*/.test(prop)) return new Function('return ' + el[prop] + ';')
+					.apply(this);
 				return el[prop];
 			}
 		},
@@ -412,6 +429,15 @@
 				parent !== null ? parent.removeChild(el) : (console.warn('element remove error!'));
 			}
 			return this;
+		},
+		create: function(dom) {
+			var fragment = document.createDocumentFragment();
+			var tempEl = document.createElement('div');
+			tempEl.innerHTML = dom;
+			while(tempEl.childNodes.length !== 0) {
+				fragment.appendChild(tempEl.childNodes[0]);
+			}
+			return fragment;
 		}
 	};
 
@@ -456,7 +482,7 @@
 			var el = ev.target || ev.srcElement;
 			var eventType = _this.events[type];
 			_this.fn.each(eventType, function(_eventType, bind) {
-				if(!_this.hasClass(el,bind)) return;
+				if(!_this.hasClass(el, bind)) return;
 				_this.fn.each(_eventType, function(fn, index) {
 					fn.apply(_this, [ev, el]);
 				});
@@ -491,7 +517,7 @@
 
 	//处理正则数据
 	function initRegExp(expr) {
-		var tm = '\\/*.?+$^[](){}|';
+		var tm = '\\/*.?+$^[](){}|\'\"';
 		this.fn.each(tm, function(tmItem, index) {
 			expr = expr.replace(new RegExp('\\' + tmItem, 'g'), '\\' + tmItem);
 		});
@@ -517,22 +543,17 @@
 		//转义双引号
 		QUEST = /"/g;
 		//引入模板
-		INCLUDE = /<include name=(\'|\")(\S*?)\1 ?\/>/g;
+		INCLUDE = /<include name=(\'|\")(\S*?)\1.*?\/>/g;
 	}
 
 	//初始化dom生成
 	function setDom() {
-		//获取include的引入模板
-		var includeTmpl = this.fn.unique(this.template.match(INCLUDE)); 
-		var includeId = includeTmpl.toString().replace(INCLUDE,"$2").split(',');
-		
-		console.log(includeTmpl,includeId);
-		
+		//先设置获取include的引入模板
+		replaceInclude.call(this);
 		var script = this.template.match(SCRIPT_REGEXP);
 		var echoScript = this.template.match(ECHO_SCRIPT_REGEXP);
 		var replaceScript = setSeize.call(this);
 		var echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/);
-
 		var domString = [];
 		var longString = echoString.length > script.length ? echoString : script;
 
@@ -544,9 +565,11 @@
 			/*恢复正则的索引位置*/
 			ECHO_SCRIPT_REGEXP.lastIndex = 0;
 			if(ECHO_SCRIPT_REGEXP.test(_string)) {
-				script[index] = _string.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(").replace(CLOSE_TAG_REGEXP, ");");
+				script[index] = _string.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(")
+					.replace(CLOSE_TAG_REGEXP, ");");
 			} else {
-				script[index] = _string.replace(OPEN_TAG_REGEXP, '').replace(CLOSE_TAG_REGEXP, '');
+				script[index] = _string.replace(OPEN_TAG_REGEXP, '')
+					.replace(CLOSE_TAG_REGEXP, '');
 			}
 		});
 
@@ -557,24 +580,46 @@
 
 		this.dom = 'var _this = this,___ = [];' + domString.join('') + 'return ___.join("");';
 	};
-	
+
 	/*替换include引入的模板*/
-	function replaceInclude(){
-		
+	function replaceInclude() {
+		var _this = this;
+		var includeTmpl, includeId;
+		//去重
+		includeTmpl = this.fn.unique(this.template.match(INCLUDE));
+		includeId = includeTmpl.toString()
+			.replace(INCLUDE, "$2")
+			.split(',');
+		//找不到include//查找的id和include匹配的数量必须相同
+		if(includeTmpl.length === 0 || this.fn.clearNull(includeId)
+			.length === 0 ||
+			!(includeTmpl.length > 0 && includeId.length > 0 && includeId.length === includeTmpl.length)) return;
+
+		this.fn.each(includeId, function(id, index) {
+			var el = _this.fn.getEl(id);
+			var replaceInclude = new RegExp(initRegExp.call(_this, includeTmpl[index]), 'g');
+			if(el) _this.template = _this.template.replace(replaceInclude, _this.html(el));
+			else _this.template = _this.template.replace(replaceInclude, '');
+		});
+
+		includeTmpl = this.fn.unique(this.template.match(INCLUDE));
+		if(includeTmpl.length > 0) replaceInclude.call(this);
 	}
 
 	//设置占位
 	function setSeize() {
-		var replaceScript = this.template.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___').replace(SCRIPT_REGEXP, '___SCRIPT___');
+		var replaceScript = this.template.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___')
+			.replace(SCRIPT_REGEXP, '___SCRIPT___');
 		return replaceScript;
 	}
 
 	//过滤string中的引号
 	function filterTransferredMeaning(string) {
-		return string.replace(FILTER_TRANFORM, "").replace(QUEST, '\\\"');
+		return string.replace(FILTER_TRANFORM, "")
+			.replace(QUEST, '\\\"');
 	}
 
-	Tmpl.version = "v1.0.1";
+	Tmpl.version = "v1.0.2";
 
 	return Tmpl;
 });

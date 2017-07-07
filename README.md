@@ -14,6 +14,41 @@
 
 *************
 
+#### 支持include引入（新）
+
+在模板用可以使用
+```html
+<script type="text/template" id="tmpl">
+	<include name="tmpl1"/>
+</script>
+<script type="text/template" id="tmpl1">
+	<div>
+		123
+		<include name="tmpl12"/>
+	</div>
+</script>
+<script type="text/template" id="tmpl2">
+	<div>456</div>
+</script>
+```
+來嵌入模板，name指向引入模板的id，如果id不存在则无视引入（可以在引入模块中引入别的模块，但是有一点需要注意，可能存在循环引入，tm1引入tm2,tm2引入tm1，这样会出现死循环，需要注意）；
+
+生成为：
+```html
+<script type="text/template" id="tmpl">
+	<div>
+		123
+		<div>456</div>
+	</div>
+</script>
+```
+
+
+
+**动态模板**：默认模板中的include中引入是不存在的，会被忽略掉，可以动态添加原来插入不存在的模板，使用update方法更新模板即可；
+
+*************
+
 ##### el : 绑定模板的script的id，在使用script模板的时候需要添加 "text/template"，如：
 
 ```html
@@ -407,6 +442,9 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 
 **remove(el)**：删除节点
 
+**create(elString)**：创建一个新的节点，参数为一个节点字符串，返回一个节点文档对象
+
+**update()**：更新模板，主要是使用在动态模板中使用；具体查看<include />的用法
 
 #### 一些常用的方法：
 
@@ -425,6 +463,17 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 **.each(eachObj,handler)**:遍历器，handler中两个参数，第一个为获取到遍历的值，第二个为index/key;
 
 **.extend(obj1,obj2)**:合并两个obj对象，返回一下合并的对象;
+
+**.unique(arr)**:数组去重;
+
+**.clearNull(arr)**:清除数组中的空白值，返回清除完的数组;
+
+**.run(fn，context)**:在指定作用域内运行fn;
+
+**.cb(fn，context)**:在指定作用域内运行fn;
+
+
+
 
 
 

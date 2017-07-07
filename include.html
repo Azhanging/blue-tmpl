@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+	</head>
+
+	<body>
+		<div id="app"></div>
+		<button class="on-add-script">add</button>
+		<script src="src/js/tmlp.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/template" id="tm1">
+			<div>
+				<% if(data){ %>
+				<include name='tm2' />
+				<% } %>
+				<include name='tm3' />
+			</div>
+		</script>
+
+		<script type="text/template" id="tm2">
+			<div>
+				<%= data.a %>
+				<include name="tm4"/>
+			</div>
+		</script>
+		
+		<script type="text/template" id="tm4">
+			<div>
+				haha
+			</div>
+		</script>
+
+		<script type="text/javascript">
+			app = new Tmpl({
+				el: 'tm1',
+				methods: {
+					add: function() {
+						var script = document.createElement('script');
+						script.setAttribute('id','tm3');
+						script.setAttribute('type','text/template');
+						script.innerHTML ="<div>123</div>";
+						document.body.appendChild(script);
+						this.update();
+					}
+				},
+				events: function() {
+					this.on('on-add-script', 'click', this.add);
+				}
+			}).data({
+				a: 1
+			}).appendTo('app');
+		</script>
+	</body>
+
+</html>
