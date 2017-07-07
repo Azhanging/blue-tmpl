@@ -39,7 +39,7 @@
 			return typeof string === 'string';
 		},
 		isNum: function(num) {
-			return typeof num === 'number' || /^\d*(.\d*)?$/.test(num);
+			return typeof num === 'number' || /^\d*(\.\d*)?$/.test(num);
 		},
 		on: (function() {
 			if(typeof document.addEventListener === 'function') {
@@ -61,19 +61,15 @@
 				}
 			} else {
 				for(i in obj) {
-					if(obj.hasOwnProperty(i)) {
-						cb(obj[i], i);
-					}
+					if(obj.hasOwnProperty(i)) cb(obj[i], i);
 				}
 			}
 		},
 		getEl: function(exp) {
-			if(document.querySelector) {
-				var getEl = document.querySelector(exp);
-				return getEl !== null ? getEl : document.getElementById(exp);
-			} else {
-				return document.getElementById(exp);
-			}
+			if(exp.nodeType) return exp;
+			if(!this.isFn(document.querySelector)) return document.getElementById(exp);
+			var getEl = document.querySelector(exp);
+			return getEl !== null ? getEl : document.getElementById(exp);
 		},
 		extend: function(obj, options) {
 			this.each(options, function(option, key) {
@@ -81,6 +77,23 @@
 			});
 
 			return obj;
+		},
+		cb: function(cb, context) {
+			this.isFn(cb) ? (cb.apply(context)) : null;
+		},
+		run: function(cb, context) {
+			this.cb(cb, context);
+		},
+		/*去重*/
+		unique:function(arr){
+			if(!this.isArr(arr)) return [];
+			var newArray = [];
+			this.each(arr,function(item,index){
+				if(newArray.indexOf(item) === -1) {
+					newArray.push(item);
+				}
+			});
+			return newArray;
 		}
 	};
 
@@ -100,6 +113,49 @@
 		}
 	})();
 
+	/*
+	 *	Data代理实例
+	 * */
+	/*针对tmpl中的数据流*/
+	function Data(options) {
+		this.init(options);
+	}
+
+	//插入方法
+	Data.prototype = {
+		constructor: Data,
+		init: function(options) {
+			this.tmpl = options.tmpl;
+			this.data = options.data;
+			this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
+			this.setDom();
+		},
+		setDom: function() {
+			var fragment = document.createDocumentFragment();
+			var tempEl = document.createElement('div');
+			tempEl.innerHTML = this.dom;
+			while(tempEl.childNodes.length !== 0) {
+				fragment.appendChild(tempEl.childNodes[0]);
+			}
+			this.fragment = fragment;
+		},
+		appendTo: function(el, cb) {
+			var fn = this.tmpl.fn;
+			fn.getEl(el).appendChild(this.fragment);
+			fn.cb(cb, this.tmpl);
+			return this.tmpl;
+		},
+		insertBefore: function(el, ex, cb) {
+			var fn = this.tmpl.fn;
+			fn.getEl(el).insertBefore(this.fragment, ex);
+			fn.cb(cb, this.tmpl);
+			return this.tmpl;
+		}
+	};
+
+	/*
+	 *	Tmpl实例
+	 * */
 	/*实例构造*/
 	function Tmpl(opts) {
 		this.config = this.fn.extend(config, opts);
@@ -120,49 +176,29 @@
 		//初始化事件
 		setEvent.call(this);
 		//设置事件
-		this.fn.isFn(this.config.events) ? (this.config.events.apply(this)) : null;
+		this.fn.run(this.config.events, this);
 		//所有完毕后的钩子
-		this.fn.isFn(this.config.mounted) ? (this.config.mounted.apply(this)) : null;
+		this.fn.run(this.config.mounted, this);
 	};
 
 	Tmpl.prototype = {
 		constructor: Tmpl,
-		/*数据绑定添加*/
-		appendTo: function(el, data, cb) {
-
-			var fragment = document.createDocumentFragment();
-			var tempEl = document.createElement('div');
-
-			tempEl.innerHTML = new Function('data', this.dom).apply(this, [data]);
-
-			while(tempEl.childNodes.length !== 0) {
-				fragment.appendChild(tempEl.childNodes[0]);
-			}
-
-			this.fn.getEl(el).appendChild(fragment);
-
-			this.fn.isFn(cb) ? (cb.apply(this)) : null;
-
-			return this;
+		/*绑定临时数据*/
+		data: function(data) {
+			var _this = this;
+			return new Data({
+				tmpl: _this,
+				data: data
+			});
 		},
 		//添加事件
 		on: function(exp, type, fn) {
-			if(this.eventType.indexOf(type) == -1) {
-				setEntrust.apply(this, [type, fn]);
-			}
-
+			if(this.eventType.indexOf(type) == -1) setEntrust.apply(this, [type, fn]);
 			//查找现在的节点是否存在事件
-			if(!this.events[type]) {
-				this.events[type] = {};
-			}
-
+			if(!this.events[type]) this.events[type] = {};
 			//当前的事件是否有设置
-			if(!this.events[type][exp]) {
-				this.events[type][exp] = [];
-			}
-
+			if(!this.events[type][exp]) this.events[type][exp] = [];
 			this.events[type][exp].push(fn);
-
 			return this;
 		},
 		//移除事件
@@ -205,17 +241,21 @@
 		},
 		//是否存在class
 		hasClass: function(el, className) {
-			//节点中存在的className
-			var _className = el.className.split(' ');
-			//是否存在的className
-			var hasClassName = className.split(' ');
-			var hasLen = 0;
+			try {
+				//节点中存在的className
+				var _className = el.className.split(' ');
+				//是否存在的className
+				var hasClassName = className.split(' ');
+				var hasLen = 0;
 
-			for(var index = 0; index < hasClassName.length; index++) {
-				if(_className.indexOf(hasClassName[index]) !== -1) ++hasLen;
+				for(var index = 0; index < hasClassName.length; index++) {
+					if(_className.indexOf(hasClassName[index]) !== -1) ++hasLen;
+				}
+				if(hasLen === hasClassName.length) return true;
+				return false;
+			} catch(e) {
+				return false;
 			}
-			if(hasLen === hasClassName.length) return true;
-			return false;
 		},
 		//获取属性
 		attr: function(el, attr) {
@@ -355,8 +395,25 @@
 				if(type === 'prevAll' && child[i] === el) return siblings;
 			}
 			return siblings;
+		},
+		show: function(el) {
+			el.style.display = '';
+			return this;
+		},
+		hide: function(el) {
+			el.style.display = 'none';
+			return this;
+		},
+		remove: function(el) {
+			try {
+				el.remove();
+			} catch(e) {
+				var parent = this.parent(el);
+				parent !== null ? parent.removeChild(el) : (console.warn('element remove error!'));
+			}
+			return this;
 		}
-	}
+	};
 
 	//绑定相关函数
 	function bindFn(el, className, type) {
@@ -399,11 +456,10 @@
 			var el = ev.target || ev.srcElement;
 			var eventType = _this.events[type];
 			_this.fn.each(eventType, function(_eventType, bind) {
-				if(el.className && Array.prototype.indexOf.call(el.className.split(' '), bind) != -1) {
-					_this.fn.each(_eventType, function(fn, index) {
-						fn.apply(_this, [ev, el]);
-					});
-				}
+				if(!_this.hasClass(el,bind)) return;
+				_this.fn.each(_eventType, function(fn, index) {
+					fn.apply(_this, [ev, el]);
+				});
 			});
 		});
 
@@ -433,10 +489,19 @@
 		});
 	}
 
+	//处理正则数据
+	function initRegExp(expr) {
+		var tm = '\\/*.?+$^[](){}|';
+		this.fn.each(tm, function(tmItem, index) {
+			expr = expr.replace(new RegExp('\\' + tmItem, 'g'), '\\' + tmItem);
+		});
+		return expr;
+	}
+
 	//设置正则
 	function setRegExp() {
-		var open_tag = this.config.open_tag;
-		var close_tag = this.config.close_tag;
+		var open_tag = initRegExp.call(this, this.config.open_tag);
+		var close_tag = initRegExp.call(this, this.config.close_tag);
 		//解析原生的表达式
 		SCRIPT_REGEXP = new RegExp(open_tag + '[^=][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + config.close_tag, 'g');
 		//解析输出的表达式
@@ -451,11 +516,18 @@
 		FILTER_TRANFORM = /[\\\b\\\t\\\r\\\f\\\n]/g;
 		//转义双引号
 		QUEST = /"/g;
+		//引入模板
+		INCLUDE = /<include name=(\'|\")(\S*?)\1 ?\/>/g;
 	}
 
 	//初始化dom生成
 	function setDom() {
-
+		//获取include的引入模板
+		var includeTmpl = this.fn.unique(this.template.match(INCLUDE)); 
+		var includeId = includeTmpl.toString().replace(INCLUDE,"$2").split(',');
+		
+		console.log(includeTmpl,includeId);
+		
 		var script = this.template.match(SCRIPT_REGEXP);
 		var echoScript = this.template.match(ECHO_SCRIPT_REGEXP);
 		var replaceScript = setSeize.call(this);
@@ -479,16 +551,17 @@
 		});
 
 		this.fn.each(longString, function(_longString, index) {
-			if(typeof echoString[index] === 'string') {
-				domString.push(echoString[index]);
-			}
-			if(typeof script[index] === 'string') {
-				domString.push(script[index]);
-			}
+			if(typeof echoString[index] === 'string') domString.push(echoString[index]);
+			if(typeof script[index] === 'string') domString.push(script[index].replace(FILTER_TRANFORM, ""));
 		});
 
-		this.dom = 'var ___ = [];' + domString.join('') + 'return ___.join("");';
+		this.dom = 'var _this = this,___ = [];' + domString.join('') + 'return ___.join("");';
 	};
+	
+	/*替换include引入的模板*/
+	function replaceInclude(){
+		
+	}
 
 	//设置占位
 	function setSeize() {

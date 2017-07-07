@@ -5,7 +5,6 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
-		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.min.js"></script>
 	</head>
 
 	<body class="on-add">
@@ -17,8 +16,8 @@
 			<span class="test on-add-d">123</span>
 			<span class="test on-add-d">123</span>
 		</div>
-		
-		<div class="a">
+
+		<!--<div class="a">
 			<div class="a">
 				<div class="b">
 					<div class="a"></div>
@@ -32,9 +31,9 @@
 					1
 				</div>
 			</div>
-		</div>
-		
-		<div class="text">
+		</div>-->
+
+		<!--<div class="text">
 			<div class="class_1">1</div>
 			<div class="class_2">2</div>
 			<div class="class_2">
@@ -49,134 +48,148 @@
 				<div class="class_2">2</div>
 			</div>
 			<div class="class_3">3</div>
-		</div>
-		
+		</div>-->
+
 		<div id="app_1">
-			
+
 		</div>
-		
+
 		<input type="text" name="" id="" value="" />
 		<a class="on-add">添加1</a>
 		<a class="on-add1">添加2</a>
-		
+
 		<script type="text/template" id="temp_1">
-			<div class="on-add"><%= this.a%></div>
-			<div><%= (function(){return {a:this.b}})() %></div>
-			<div><%= this.c %></div>		
-			<div><%= this.d %></div>
+			<div class="on-add">
+				<%= this.a %>
+			</div>
+			<div>
+				<%= (function(){return {a:this.b }})() %></div>
+			<div>
+				<%= this.c %>
+			</div>
+			<div>
+				<%= this.d %>
+			</div>
 		</script>
-		
+
 		<script id="temp" type="text/template">
-			{{ 
+			<% 
 				var aaa = 1234; 
 				var bb = 123;
 				if(aaa != 1){
 					console.log(index++);
+					console.log(_this);
 				}
-			}}
-				<div class="{{= aaa }} on-class on-mouse">event</div>
-			{{ for(var i = 0;i<data.length;i++){ }}
-				<div class='{{= i + 2 + 120 + 123 }} name'>
-					123
-					{{if(i != undefined){}}
-						<span>
-							{{= data[i] }}
+			%>
+			<div class="<%= aaa %> on-class on-mouse">event</div>
+			<% for(var i = 0;i<data.length;i++){ %>
+			<div class='<%= i + 2 + 120 + 123 %> name'>
+				123
+				<%if(i != undefined){%>
+				<span>
+							<%= data[i] %>
 						</span>
-					{{ } }}
-					{{ if(data[i] == 'a'){ }}
-						<div>{{= i + '123465789' }}</div>
-					{{ }else{ }}
-						456
-					{{ } }}
-					{{for(var a = 0;a<5;a++){}}
-						<div>{{= a}}</div>
-					{{ } }}
-				</div>
-				<div>					
-					{{= data[i] }} - {{= (function(){return 1+3})()}}
-				</div>
-				<div>					
-					{{= data[i] }} - 2
-				</div>
+				<% } %>
+				<% if(i == 1){ %>
 				<div>
-					{{= data[i] }} - 3
-				</div>
-				<div>					
-					{{= data[i] }} - 4
-				</div>
-				<div>					
-					{{= data[i] }} - 5
-				</div>
+					<%= i + '123465789' %>-判断0</div>
+				<% }else{ %>
+				<div>456-判断1</div>
+				<% } %>
+				<%for(var a = 0;a<5;a++){%>
 				<div>
-					{{= this.a}}
+					<%= a%>
 				</div>
-			{{}}}
+				<% } %>
+			</div>
+			<include name="id"/>
+			<include name="id"/>
+			<div>
+				<%= parseInt(data[i] * 10) %> -
+				<%= (function(){return 1})() %>
+			</div>
+			<div>
+				<%= parseInt(data[i] * 20) %> - 2
+			</div>
+			<div>
+				<%= parseInt(data[i] * 30) %> - 3
+			</div>
+			<div>
+				<%= parseInt(data[i] * 40) %> - 4
+			</div>
+			<div>
+				<%= parseInt(data[i] * 50) %> - 5
+			</div>
+			<%}%>
 		</script>
-		
+
 		<script src="src/js/tmlp.js" type="text/javascript" charset="utf-8"></script>
-		
-		
-		<script>
+
+		<!--<script>
 			new Tmpl({
-				el:"temp_1",
-				data:{
-					a:'节点1',
-					b:'节点2',
-					c:'节点3',
-					d:'节点4'
+				el: "temp_1",
+				data: {
+					a: '节点1',
+					b: '节点2',
+					c: '节点3',
+					d: '节点4'
 				}
-			}).appendTo('app_1',null);
-		</script>
-		
+			}).data(null).appendTo('app_1', function() {
+				console.log('yes')
+			});
+		</script>-->
+
 		<script type="text/javascript">
 			var index = 0;
 			var app = new Tmpl({
-				el:"temp",
-				open_tag:"{{",
-				close_tag:'}}',
-				data:{
-					a:1,
-					b:2,
-					a:[1,2,3,4]
+				el: "temp",
+				data: {
+					a: 1,
+					b: 2,
+					a: [1, 2, 3, 4]
 				},
-				methods:{
-					add:function(event,el){
+				methods: {
+					add: function(event, el) {
 						var _this = this;
-						el.setAttribute('value',++el.value);
-						var arr = [];
-						for(var i = 0;i<100;i++){
-							arr.push(Math.random());
-						}
-						this.appendTo("app", arr ,function(){
+						el.setAttribute('value', ++el.value);
+						this.data(this.a).appendTo("app", function() {
 							console.log('success');
 						});
-						this.unbind(el,'on-add');
-						setTimeout(function(){
-							_this.bind(el,'on-add');	
-						},2000);
+						this.unbind(el, 'on-add');
+						setTimeout(function() {
+							_this.bind(el, 'on-add');
+						}, 2000);
 					},
-					mouse : function(){
+					mouse: function() {
 						console.log('mouse');
 						return true;
 					}
 				},
-				events:function(){
-					this.on('on-add','click',this.add);
-					this.on('on-add1','click',this.add);
-					this.on('on-add1','mouseover',this.add);
-					this.on('on-mouse','mouseover',this.mouse);
-					this.on('on-class','click',this.mouse);
-					this.on('on-add-d','dblclick',this.mouse);
+				events: function() {
+					this.on('on-add', 'click', this.add);
+					this.on('on-add1', 'click', this.add);
+					this.on('on-add1', 'mouseover', this.add);
+					this.on('on-mouse', 'mouseover', this.mouse);
+					this.on('on-class', 'click', this.mouse);
+					this.on('on-add-d', 'dblclick', this.mouse);
 				},
-				mounted:function(){
+				mounted: function() {
 					console.log('is OK');
+					var arr = [];
+					for(var i = 0; i < 1; i++) {
+						arr.push(Math.random());
+					}
+					this.a = arr;
+					this.data(this.a).appendTo("app", function() {
+						console.log('success');
+					});
 				}
 			});
 			
-			
-			
-			
-			
+			var d = document.createDocumentFragment();
+			var div = document.createElement('div');
+			div.innerHTML = 123;
+			d.appendChild(div);
 		</script>
 	</body>
 

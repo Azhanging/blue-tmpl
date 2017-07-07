@@ -10,7 +10,7 @@
 
 ##### options中的参数
 
-#### 特别说明一下，在默认的模板中的上下文this都是指向当前模板的实例对象上；
+#### 特别说明一下，在默认的模板中的上下文this都是指向当前模板的实例对象上，里面还有一个代理this的变量_this，为了在一个函数作用域内方便查找当前模板的实例this对象；
 
 *************
 
@@ -37,7 +37,7 @@
 ```
 *************
 
-#### 有关模板的使用open\_tag和close\_tag内写js代码 <% js 代码 %> ，<%= data%>为输出的js代码，内部可以写js表达式，只能是表达式（自执行函数需要分多行编写，不能写在一行内）；
+#### 有关模板的使用open\_tag和close\_tag内写js代码 <% js 代码 %> ，<%= data%>为输出的js代码，内部可以写js表达式，只能是表达式（自执行函数需要分多行编写，建议不写在一行内，会出现预测不到的结果）；
 
 *************
 
@@ -73,7 +73,7 @@ app.b // 2
 			c:3,
 			d:4
 		}
-	}).appendTo('app',null);
+	}).data(null).appendTo('app');
 </script>
 
 ```
@@ -99,7 +99,7 @@ app.b // 2
 </script>
 
 <script>
-	new Tmpl({el:"tmpl"}).appendTo('app',{title:'我是标题'，content:"我是内容"});
+	new Tmpl({el:"tmpl"}).data({title:'我是标题'，content:"我是内容"}).appendTo('app');
 </script>
 
 ```
@@ -122,7 +122,7 @@ app.b // 2
 {
 	methods:{
 		add:function(event,el){
-			this.appendTo("#app", arr ,function(){
+			this.data(arr).appendTo("#app",function(){
 				console.log('success');
 			});
 		}
@@ -154,6 +154,11 @@ app.b // 2
 *************
 
 #### 实例方法：
+
+**data(data)**:绑定数据到当前模板实例上，返回一个Data的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：
+
+	appendTo(el,cb):把绑定的数据模板添加到指定的el的子节点上,cb为回调；
+	inserBefore(el,ex,cb):把绑定的数据模板添加到指定的el的ex子节点前,cb为回调；
 
 **on(bindClassName,eventType,fn)**: 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
 on中的fn默认带回两个参数(event,el);
@@ -218,7 +223,6 @@ new Tmpl({
 		}
 	}
 });
-
 app.attr(div,'bind-is-true'); //  "true"
 ```
 
@@ -244,15 +248,6 @@ app.prop(div,{id:"prop",class:"name",'bind-id':"'123'+1"});
 // div['id'] =>'prop'
 // div['class']=>"name"
 // div['bind-id'] => 1231
-```
-
-
-**appendTo(elementId,data,callback)**:将解析好的模板添加到对应的父级节点中；elementId需要插入到的父级节点id，data为传入到模板中的data，callback为执行完毕后的回调函数
-
-```javascript
-app.appendTo(divId,{a:1,b:2},function(){
-	console.log('is OK');
-});
 ```
 
 **html(el,string)**:设置el中的innerHTML，如果不传参数，为获取innerHTML；
@@ -403,8 +398,14 @@ app.prevAll(el3);  //返回  [el1,el2]
 </div>
 ```
 ```javascript
-app.prevAll(el3);  //返回  [el1,el2,el4,el5,el6]
+app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 ```
+
+**show(el)**：显示el，设置display为初始值
+
+**hide(el)**：隐藏el，设置display为'none'
+
+**remove(el)**：删除节点
 
 
 #### 一些常用的方法：
