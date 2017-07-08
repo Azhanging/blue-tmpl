@@ -14,16 +14,16 @@
 		<script type="text/template" id="tm1">
 			<div>
 				<% if(data){ %>
-				<include name='tm2' />
+				<tmpl name='tm2'></tmpl>
 				<% } %>
-				<include name='tm3' />
+				<tmpl name='tm3'></tmpl>
 			</div>
 		</script>
 
 		<script type="text/template" id="tm2">
 			<div>
 				<%= data.a %>
-				<include name="tm4"/>
+				<tmpl name='tm4'></tmpl>
 			</div>
 		</script>
 		

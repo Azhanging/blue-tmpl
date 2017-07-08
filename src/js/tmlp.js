@@ -14,7 +14,7 @@
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
 
-	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST, INCLUDE;
+	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST, INCLUDE, INCLUDE_NULL;
 
 	/*配置信息*/
 	var config = {
@@ -148,8 +148,10 @@
 		},
 		appendTo: function(el, cb) {
 			var fn = this.tmpl.fn;
-			fn.getEl(el)
+			if(el.nodeType === 1) el.appendChild(this.fragment);
+			else fn.getEl(el)
 				.appendChild(this.fragment);
+
 			fn.cb(cb, this.tmpl);
 			return this.tmpl;
 		},
@@ -377,6 +379,9 @@
 			}
 			return hasClassChild;
 		},
+		hasId:function(id){
+			return !!this.fn.getEl(id);
+		},
 		//下一个节点
 		next: function(el) {
 			var nextEl = el.nextSibling;
@@ -438,6 +443,14 @@
 				fragment.appendChild(tempEl.childNodes[0]);
 			}
 			return fragment;
+		},
+		append: function(el, child) {
+			if(el.nodeType === 1) el.appendChild(child);
+			return this;
+		},
+		cb:function(fn){
+			this.fn.cb(fn,this);
+			return this;
 		}
 	};
 
@@ -543,7 +556,9 @@
 		//转义双引号
 		QUEST = /"/g;
 		//引入模板
-		INCLUDE = /<include name=(\'|\")(\S*?)\1.*?\/>/g;
+		INCLUDE = /<tmpl name=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl>/g;
+		//空模板
+		INCLUDE_NULL = /<tmpl\s*?>[\s\S]*?<\/tmpl>/g;
 	}
 
 	//初始化dom生成
@@ -555,6 +570,10 @@
 		var replaceScript = setSeize.call(this);
 		var echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/);
 		var domString = [];
+
+		if(!script) script = [];
+		if(!echoScript) echoScript = [];
+
 		var longString = echoString.length > script.length ? echoString : script;
 
 		this.fn.each(echoString, function(_echoString, index) {
@@ -585,11 +604,16 @@
 	function replaceInclude() {
 		var _this = this;
 		var includeTmpl, includeId;
+
+		//清空空的引入模块
+		this.template = this.template.replace(INCLUDE_NULL, '');
+
 		//去重
 		includeTmpl = this.fn.unique(this.template.match(INCLUDE));
 		includeId = includeTmpl.toString()
 			.replace(INCLUDE, "$2")
 			.split(',');
+
 		//找不到include//查找的id和include匹配的数量必须相同
 		if(includeTmpl.length === 0 || this.fn.clearNull(includeId)
 			.length === 0 ||

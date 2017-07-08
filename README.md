@@ -14,17 +14,17 @@
 
 *************
 
-#### 支持include引入（新）
+#### 支持tmpl引入（新）
 
 在模板用可以使用
 ```html
 <script type="text/template" id="tmpl">
-	<include name="tmpl1"/>
+	<tmpl name="tmpl1"></tmpl>
 </script>
 <script type="text/template" id="tmpl1">
 	<div>
 		123
-		<include name="tmpl12"/>
+		<tmpl name="tmpl2"></tmpl>
 	</div>
 </script>
 <script type="text/template" id="tmpl2">
