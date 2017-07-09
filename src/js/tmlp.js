@@ -106,6 +106,12 @@
 				}
 			});
 			return newArr;
+		},
+		/*深拷贝*/
+		copy: function(obj) {
+			if(this.isObj(obj) || this.isArr(obj))
+				return JSON.parse(JSON.stringify(obj));
+			return null;
 		}
 	};
 
@@ -169,7 +175,7 @@
 	 * */
 	/*实例构造*/
 	function Tmpl(opts) {
-		this.config = this.fn.extend(config, opts);
+		this.config = this.fn.extend(this.fn.copy(config), opts);
 		this.el = this.fn.getEl(opts.el);
 		this.template = this.el.innerHTML;
 		this.config.template = this.el.innerHTML;
@@ -191,7 +197,6 @@
 		this.fn.run(this.config.events, this);
 		//所有完毕后的钩子
 		this.fn.run(this.config.mounted, this);
-		//这是->嫂子
 	};
 
 	Tmpl.prototype = {
@@ -243,17 +248,17 @@
 		},
 		//添加class
 		addClass: function(el, className) {
-			bindFn.apply(this, [el, bind, 'addClass']);
+			bindFn.apply(this, [el, className, 'addClass']);
 			return this;
 		},
 		//删除class
-		removeClass: function(el, bind) {
-			bindFn.apply(this, [el, bind, 'removeClass']);
+		removeClass: function(el, className) {
+			bindFn.apply(this, [el, className, 'removeClass']);
 			return this;
 		},
 		//替换className
-		replaceClass: function(el, bind) {
-			bindFn.apply(this, [el, bind, 'replaceClass']);
+		replaceClass: function(el, className) {
+			bindFn.apply(this, [el, className, 'replaceClass']);
 			return this;
 		},
 		//是否存在class
@@ -375,11 +380,11 @@
 			hasClassChild = (hasClassChild ? hasClassChild : []);
 			for(; i < el.children.length; i++) {
 				if(this.hasClass(el.children[i], className)) hasClassChild.push(el.children[i]);
-				this.find(el.children[i], className, hasClassChild);
+				this.childrens(el.children[i], className, hasClassChild);
 			}
 			return hasClassChild;
 		},
-		hasId:function(id){
+		hasId: function(id) {
 			return !!this.fn.getEl(id);
 		},
 		//下一个节点
@@ -418,13 +423,34 @@
 			}
 			return siblings;
 		},
-		show: function(el) {
+		show: function(el, time) {
 			el.style.display = '';
+			this.animate(el,'show',time);
 			return this;
 		},
-		hide: function(el) {
+		hide: function(el,time) {
 			el.style.display = 'none';
+			this.animate(el,'hide',time);
 			return this;
+		},
+		animate: function(el,type,time) {
+		    var num = 0.1;
+		    if(type === 'show'){
+		        opacity = 0;
+		    }else if(type === 'hide'){
+		        opacity = 1;
+		        num = -0.1;
+		    }
+            if(this.fn.isNum(time)) {
+                el.style.opacity = 0;
+                var time = setInterval(function() {
+                    if(el.style.opacity == 1) {
+                        clearInterval(time);
+                    } else {
+                        el.style.opacity = parseFloat(el.style.opacity) + num;
+                    }
+                }, time / 60);
+            }
 		},
 		remove: function(el) {
 			try {
@@ -440,16 +466,30 @@
 			var tempEl = document.createElement('div');
 			tempEl.innerHTML = dom;
 			while(tempEl.childNodes.length !== 0) {
-				fragment.appendChild(tempEl.childNodes[0]);
+				var child = tempEl.childNodes[0];
+				var childHtml = child.innerHTML;
+				if(child.tagName === 'SCRIPT') {
+					var newScript = document.createElement('script');
+					newScript.innerHTML = childHtml;
+					this.fn.each(child.attributes, function(attr) {
+						if(!attr) true;
+						newScript.setAttribute(attr.name, attr.value);
+					});
+					this.remove(child);
+					child = newScript;
+				}
+				fragment.appendChild(child);
 			}
 			return fragment;
 		},
 		append: function(el, child) {
 			if(el.nodeType === 1) el.appendChild(child);
+			else this.fn.getEl(el)
+				.appendChild(child);
 			return this;
 		},
-		cb:function(fn){
-			this.fn.cb(fn,this);
+		cb: function(fn) {
+			this.fn.cb(fn, this);
 			return this;
 		}
 	};

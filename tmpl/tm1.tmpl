@@ -1,0 +1,38 @@
+<script type="text/template" id="tm1">
+	<% for(var i = 0;i<data.length;i++){ %>
+		<div class="g-media mg-t-10 pd-10  g-bg-primary">
+			<div class="g-media-head">
+				<img src="" class="wh-64 radius-50perc" />
+			</div>
+			<div class="g-media-body">
+				<h4 class="g-media-title">模板1-<%= data[i] %></h4>
+				<p class="g-media-content">
+					<%= data %>
+				</p>
+				<div class="g-media-other-msg">
+					<time><%= new Date() %></time>
+				</div>
+			</div>
+		</div>
+	<% } %>
+</script>
+<script type="text/javascript">
+	new Tmpl({
+		el: "tm1",
+		data: {
+			i: 0
+		},
+		methods: {
+			up: function() {
+				this.data([this.i++,this.i++,this.i++,this.i++])
+					.appendTo(this.childrens(this.fn.getEl('tm-1'), 'content')[0]);
+			}
+		},
+		mounted: function() {
+			this.up();
+		},
+		events: function() {
+			this.on('on-add-tm1', 'click', this.up);
+		}
+	});
+</script>

@@ -17,39 +17,6 @@
 			<span class="test on-add-d">123</span>
 		</div>
 
-		<!--<div class="a">
-			<div class="a">
-				<div class="b">
-					<div class="a"></div>
-					<div class="a"></div>
-					<div class="a"></div>
-					<div class="a"></div>
-					1
-					<div class="c">
-						<div class="a"></div>
-					</div>
-					1
-				</div>
-			</div>
-		</div>-->
-
-		<!--<div class="text">
-			<div class="class_1">1</div>
-			<div class="class_2">2</div>
-			<div class="class_2">
-				2
-				<div class="class_1">
-					1
-					<div class="class_1">1</div>
-				</div>
-			</div>
-			<div class="class_1">
-				1
-				<div class="class_2">2</div>
-			</div>
-			<div class="class_3">3</div>
-		</div>-->
-
 		<div id="app_1">
 
 		</div>
@@ -83,43 +50,43 @@
 			%>
 			<div class="<%= aaa %> on-class on-mouse">event</div>
 			<% for(var i = 0;i<data.length;i++){ %>
-			<div class='<%= i + 2 + 120 + 123 %> name'>
-				123
-				<%if(i != undefined){%>
-				<span>
-							<%= data[i] %>
-						</span>
-				<% } %>
-				<% if(i == 1){ %>
-				<div>
-					<%= i + '123465789' %>-判断0</div>
-				<% }else{ %>
-				<div>456-判断1</div>
-				<% } %>
-				<%for(var a = 0;a<5;a++){%>
-				<div>
-					<%= a%>
+				<div class='<%= i + 2 + 120 + 123 %> name'>
+					123
+					<%if(i != undefined){%>
+					<span>
+								<%= data[i] %>
+							</span>
+					<% } %>
+					<% if(i == 1){ %>
+					<div>
+						<%= i + '123465789' %>-判断0</div>
+					<% }else{ %>
+					<div>456-判断1</div>
+					<% } %>
+					<%for(var a = 0;a<5;a++){%>
+					<div>
+						<%= a%>
+					</div>
+					<% } %>
 				</div>
-				<% } %>
-			</div>
-			<tmpl name='temp_1'></tmpl>
-			<tmpl name='id'></tmpl>
-			<div>
-				<%= parseInt(data[i] * 10) %> -
-				<%= (function(){return 1})() %>
-			</div>
-			<div>
-				<%= parseInt(data[i] * 20) %> - 2
-			</div>
-			<div>
-				<%= parseInt(data[i] * 30) %> - 3
-			</div>
-			<div>
-				<%= parseInt(data[i] * 40) %> - 4
-			</div>
-			<div>
-				<%= parseInt(data[i] * 50) %> - 5
-			</div>
+				<tmpl name='temp_1'></tmpl>
+				<tmpl name='id'></tmpl>
+				<div>
+					<%= parseInt(data[i] * 10) %> -
+					<%= (function(){return 1})() %>
+				</div>
+				<div>
+					<%= parseInt(data[i] * 20) %> - 2
+				</div>
+				<div>
+					<%= parseInt(data[i] * 30) %> - 3
+				</div>
+				<div>
+					<%= parseInt(data[i] * 40) %> - 4
+				</div>
+				<div>
+					<%= parseInt(data[i] * 50) %> - 5
+				</div>
 			<%}%>
 		</script>
 
