@@ -24,7 +24,6 @@
 		},
 		methods: {
 			up: function() {
-				console.log(this.i);	
 				this.data([this.i++, this.i++, this.i++, this.i++])
 					.appendTo(this.childrens(this.fn.getEl('tm-3'), 'content')[0]);
 			}

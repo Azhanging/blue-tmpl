@@ -1,4 +1,4 @@
-<script type="text/template" id="tm1">
+<script type="text/template" id="tm-1">
 	<% for(var i = 0;i<data.length;i++){ %>
 		<div class="g-media mg-t-10 pd-10  g-bg-primary">
 			<div class="g-media-head">
@@ -18,21 +18,20 @@
 </script>
 <script type="text/javascript">
 	new Tmpl({
-		el: "tm1",
+		el: "tm-1",
 		data: {
 			i: 0
 		},
 		methods: {
 			up: function() {
-				this.data([this.i++,this.i++,this.i++,this.i++])
-					.appendTo(this.childrens(this.fn.getEl('tm-1'), 'content')[0]);
+				this.data([this.i++,this.i++,this.i++,this.i++]).appendTo(Tmpl.Router.router.appendTo);
 			}
 		},
 		mounted: function() {
 			this.up();
 		},
 		events: function() {
-			this.on('on-add-tm1', 'click', this.up);
+//			this.on('on-add-tm1', 'click', this.up);
 		}
 	});
 </script>

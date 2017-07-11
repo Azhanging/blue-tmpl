@@ -20,7 +20,9 @@
 	var config = {
 		open_tag: "<%", //OPEN_TAG
 		close_tag: "%>", //CLOSE_TAG,
-		template: ""
+		template: "",
+		data:{},
+		methods:{}
 	};
 
 	//事件兼容处理
@@ -73,6 +75,13 @@
 			var el = document.getElementById(exp);
 			return getEl !== null ? getEl : (el ? el : null);
 		},
+		getEls: function(exp) {
+			if(!exp) return null;
+			if(!this.isFn(document.querySelectorAll)) return document.getElementsByClassName(exp);
+			var getEls = document.querySelectorAll(exp);
+			var el = document.getElementsByClassName(exp);
+			return getEls.length > 0 ? getEls : (el ? el : []);
+		},
 		extend: function(obj, options) {
 			this.each(options, function(option, key) {
 				obj[key] = option;
@@ -80,11 +89,11 @@
 
 			return obj;
 		},
-		cb: function(cb, context) {
-			this.isFn(cb) ? (cb.apply(context)) : null;
+		cb: function(cb, context, args) {
+			this.isFn(cb) ? (cb.apply(context, args)) : null;
 		},
-		run: function(cb, context) {
-			this.cb(cb, context);
+		run: function(cb, context, args) {
+			this.cb(cb, context, args);
 		},
 		/*去重*/
 		unique: function(arr) {
@@ -176,31 +185,37 @@
 	/*实例构造*/
 	function Tmpl(opts) {
 		this.config = this.fn.extend(this.fn.copy(config), opts);
-		this.el = this.fn.getEl(opts.el);
-		this.template = this.el.innerHTML;
-		this.config.template = this.el.innerHTML;
-		setRegExp.call(this);
-		init.call(this);
+		this.init();
 	}
 
-	/*初始化*/
-	function init() {
-		//转化为js执行
-		setDom.call(this);
-		//初始化方法
-		setInstance.call(this, 'methods');
-		//初始化数据
-		setInstance.call(this, 'data');
-		//初始化事件
-		setEvent.call(this);
-		//设置事件
-		this.fn.run(this.config.events, this);
-		//所有完毕后的钩子
-		this.fn.run(this.config.mounted, this);
-	};
-
+	
 	Tmpl.prototype = {
 		constructor: Tmpl,
+		/*初始化*/
+		init() {
+			//构建开始的钩子
+			this.fn.run(this.config.created, this);
+			this.el = this.fn.getEl(this.config.el);
+			//查找模板
+			if(this.el) {
+				this.template = this.el.innerHTML;
+				this.config.template = this.el.innerHTML;
+				setRegExp.call(this);
+				//转化为js执行
+				setDom.call(this);
+				//初始化方法
+				setInstance.call(this, 'methods');
+				//初始化数据
+				setInstance.call(this, 'data');
+				//初始化事件
+				setEvent.call(this);
+			}
+
+			//设置事件
+			this.fn.run(this.config.events, this);
+			//所有完毕后的钩子
+			this.fn.run(this.config.mounted, this);
+		},
 		/*绑定临时数据*/
 		data: function(data) {
 			var _this = this;
@@ -222,6 +237,9 @@
 			if(!this.events[type][exp]) this.events[type][exp] = [];
 			this.events[type][exp].push(fn);
 			return this;
+		},
+		router: function(options) {
+			this.router[options.path] = options.content;
 		},
 		//移除事件
 		off: function(exp, type, fn) {
@@ -425,32 +443,32 @@
 		},
 		show: function(el, time) {
 			el.style.display = '';
-			this.animate(el,'show',time);
+			this.animate(el, 'show', time);
 			return this;
 		},
-		hide: function(el,time) {
+		hide: function(el, time) {
 			el.style.display = 'none';
-			this.animate(el,'hide',time);
+			this.animate(el, 'hide', time);
 			return this;
 		},
-		animate: function(el,type,time) {
-		    var num = 0.1;
-		    if(type === 'show'){
-		        opacity = 0;
-		    }else if(type === 'hide'){
-		        opacity = 1;
-		        num = -0.1;
-		    }
-            if(this.fn.isNum(time)) {
-                el.style.opacity = 0;
-                var time = setInterval(function() {
-                    if(el.style.opacity == 1) {
-                        clearInterval(time);
-                    } else {
-                        el.style.opacity = parseFloat(el.style.opacity) + num;
-                    }
-                }, time / 60);
-            }
+		animate: function(el, type, time) {
+			var num = 0.1;
+			if(type === 'show') {
+				opacity = 0;
+			} else if(type === 'hide') {
+				opacity = 1;
+				num = -0.1;
+			}
+			if(this.fn.isNum(time)) {
+				el.style.opacity = 0;
+				var time = setInterval(function() {
+					if(el.style.opacity == 1) {
+						clearInterval(time);
+					} else {
+						el.style.opacity = parseFloat(el.style.opacity) + num;
+					}
+				}, time / 60);
+			}
 		},
 		remove: function(el) {
 			try {
@@ -491,6 +509,12 @@
 		cb: function(fn) {
 			this.fn.cb(fn, this);
 			return this;
+		},
+		//取消冒泡
+		preventDefault: function(event) {
+			var ev = event || window.event;
+			ev.stopPropagation();
+			ev.cancelBubble = true;
 		}
 	};
 
@@ -556,8 +580,8 @@
 
 	//设置实例
 	function setInstance(type) {
-		var get = this.config[type];
 		var _this = this;
+		var get = this.config[type];
 
 		if(!this.fn.isObj(get)) {
 			return;
