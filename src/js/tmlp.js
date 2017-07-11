@@ -195,7 +195,12 @@
 		init() {
 			//构建开始的钩子
 			this.fn.run(this.config.created, this);
+			//初始配置信息
 			this.el = this.fn.getEl(this.config.el);
+			//初始化方法
+            setInstance.call(this, 'methods');
+            //初始化数据
+            setInstance.call(this, 'data');
 			//查找模板
 			if(this.el) {
 				this.template = this.el.innerHTML;
@@ -203,10 +208,6 @@
 				setRegExp.call(this);
 				//转化为js执行
 				setDom.call(this);
-				//初始化方法
-				setInstance.call(this, 'methods');
-				//初始化数据
-				setInstance.call(this, 'data');
 				//初始化事件
 				setEvent.call(this);
 			}

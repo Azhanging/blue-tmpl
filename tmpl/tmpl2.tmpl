@@ -1,11 +1,11 @@
-<script type="text/template" id="tm3">
+<script type="text/template" id="tmpl2">
 	<% for(var i = 0;i<data.length;i++){ %>
-	<div class="g-media mg-t-10 pd-10  g-bg-success">
+	<div class="g-media mg-t-10 pd-10  g-bg-danger">
 		<div class="g-media-head">
 			<img src="" class="wh-64 radius-50perc" />
 		</div>
 		<div class="g-media-body">
-			<h4 class="g-media-title">模板3-<%= data[i] %></h4>
+			<h4 class="g-media-title">模板2-<%= data[i] %></h4>
 			<p class="g-media-content">
 				<%= data %>
 			</p>
@@ -18,21 +18,20 @@
 </script>
 <script type="text/javascript">
 	new Tmpl({
-		el: "tm3",
+		el: "tmpl2",
 		data: {
 			i: 0
 		},
 		methods: {
-			up: function() {
-				this.data([this.i++, this.i++, this.i++, this.i++])
-					.appendTo(this.childrens(this.fn.getEl('tm-3'), 'content')[0]);
+			add: function() {
+				this.data([this.i++,this.i++,this.i++,this.i++]).appendTo(this.childrens(this.fn.getEl('tmp2'),'content')[0]);
 			}
 		},
-		mounted: function() {
-			this.up();
+		mounted:function(){
+			this.add();
 		},
 		events: function() {
-			this.on('on-add-tm3', 'click', this.up);
+			this.on('on-add-tm2', 'click', this.add);
 		}
 	});
 </script>
