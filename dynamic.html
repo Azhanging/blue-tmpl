@@ -15,11 +15,22 @@
 				color: #fff;
 				background-color: #2E75B2;
 			}
-			.background-white{
+			
+			.background-white {
 				background-color: white;
 			}
+			
+			#view {
+				position: fixed;
+				top: 38px;
+				height: 100%;
+				left: 0;
+				overflow: auto;
+				z-index: -1;
+				padding-bottom:38px;
+			}
 		</style>
-		
+
 		<div id="app">
 			<div style="height:38px;display: none;" id="d"></div>
 			<ul class="reset-ul row t-c background-white" id="top">
@@ -34,7 +45,7 @@
 				</li>
 			</ul>
 		</div>
-		
+
 		<div id="view" class="row">
 			<div class="row" id="tmp1" style="display: none;">
 				<h3>tm1</h3>
@@ -73,21 +84,21 @@
 			new Tmpl({
 				methods: {
 					scroll: function(event) {
-						if(window.scrollY >38){
+						if(window.scrollY > 38) {
 							$('#top').css({
-								position:'fixed',
-								left:0,
-								top:0
+								position: 'fixed',
+								left: 0,
+								top: 0
 							});
 							$('#d').show();
-						}else{
-							$('#top').attr('style','');
+						} else {
+							$('#top').attr('style', '');
 							$('#d').hide();
 						}
 					}
 				},
 				events: function() {
-					this.fn.on(window,'scroll',this.scroll)
+					this.fn.on(window, 'scroll', this.scroll)
 				}
 			});
 
