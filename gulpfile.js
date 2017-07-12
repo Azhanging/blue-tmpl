@@ -5,10 +5,14 @@ var github = 'https://github.com/azhanging/tmpl';
 var gulp = require('gulp'),
 	concat = require('gulp-concat'),
 	header = require('gulp-header'),
-	uglify = require('gulp-uglify');
+	uglify = require('gulp-uglify'),
+	path = require('path');
 
 var src = {
-	js: ['src/js/*.js'],
+	js: [
+	   'src/js/tmpl.js',
+	   'src/js/tmpl-router.js'
+	],
 	jsConcat: ['dist/js/*.js'],
 	dist: 'dist',
 	del: 'dist',
@@ -30,19 +34,10 @@ gulp.task('concat', function() {
 		.pipe(uglify().on('error', function(e) {
 			console.log(e);
 		}))
-		.pipe(header([
-		    '/**',
-		    '*',
-		    '*',
-		    '* tmpl.js ' + version,
-		    '* (c) 2016-2017 Blue',
-		    '* ' + github,
-		    '* Released under the MIT License.',
-		    '*',
-		    '*',
-		    '**/', ''
-		].join('\n')))
+		.pipe(header('commit'))
 		.pipe(gulp.dest(src.dist));
+		
+		
 });
 
 //watch fn
