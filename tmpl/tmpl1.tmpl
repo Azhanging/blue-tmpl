@@ -1,37 +1,51 @@
 <script type="text/template" id="tmpl1">
 	<% for(var i = 0;i<data.length;i++){ %>
-		<div class="g-media mg-t-10 pd-10  g-bg-primary">
-			<div class="g-media-head">
-				<img src="" class="wh-64 radius-50perc" />
-			</div>
-			<div class="g-media-body">
-				<h4 class="g-media-title">模板1-<%= data[i] %></h4>
-				<p class="g-media-content">
-					<%= data %>
-				</p>
-				<div class="g-media-other-msg">
-					<time><%= new Date() %></time>
-				</div>
+	<div class="g-media mg-t-10 pd-10  g-bg-primary">
+		<div class="g-media-head">
+			<img src="" class="wh-64 radius-50perc" />
+		</div>
+		<div class="g-media-body">
+			<h4 class="g-media-title">模板1-<%= data[i] %></h4>
+			<p class="g-media-content on-show-detailed">
+				<%= data %>
+			</p>
+			<div class="g-media-other-msg">
+				<time><%= new Date() %></time>
 			</div>
 		</div>
+	</div>
 	<% } %>
 </script>
+
 <script type="text/javascript">
-	new Tmpl({
-		el: "tmpl1",
-		data: {
-			i: 0
-		},
-		methods: {
-			add: function() {
-				this.data([this.i++,this.i++,this.i++,this.i++]).appendTo(this.childrens(this.fn.getEl('tmp1'),'content')[0]);
-			}
-		},
-		mounted:function(){
-			this.add();
-		},
-		events: function() {
-			this.on('on-add-tm1', 'click', this.add);
+	_require.defineId('tmpl1', function() {
+		var Tmpl = _require('tmpl');
+		function tmpl1() {
+			new Tmpl({
+				el: "tmpl1",
+				data: {
+					i: 0
+				},
+				methods: {
+					add: function() {
+						this.data([this.i++, this.i++, this.i++, this.i++])
+							.appendTo(this.childrens(this.fn.getEl('tmp1'), 'content')[0]);
+					},
+					showDetailed: function(event, el) {
+						var content = this.html(el);
+						var wrap = this.fn.getEl('detailed');
+						this.html(wrap, content);
+						this.toggle(wrap);
+					}
+				},
+				mounted: function() {
+					this.add();
+				},
+				events: function() {
+					this.on('on-add-tm1', 'click', this.add);
+				}
+			});
 		}
+		return tmpl1;
 	});
 </script>

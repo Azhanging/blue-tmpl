@@ -10,7 +10,7 @@
 	if(typeof _require === 'function') {
 		_require.define('tmpl', factory);
 	} else {
-		(global ? (global.Tmpl = global.tmpl = factory()) : {});
+		(global ? (global.Tmpl = factory()) : {});
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
 
@@ -21,8 +21,8 @@
 		open_tag: "<%", //OPEN_TAG
 		close_tag: "%>", //CLOSE_TAG,
 		template: "",
-		data:{},
-		methods:{}
+		data: {},
+		methods: {}
 	};
 
 	//事件兼容处理
@@ -90,6 +90,7 @@
 			return obj;
 		},
 		cb: function(cb, context, args) {
+			args = args ? args : [];
 			this.isFn(cb) ? (cb.apply(context, args)) : null;
 		},
 		run: function(cb, context, args) {
@@ -137,6 +138,24 @@
 				}
 				return -1;
 			}
+		}
+
+		if(!document.getElementsByClassName) {
+			document.getElementsByClassName = function(className, element) {
+				var children = (element || document).getElementsByTagName('*');
+				var elements = new Array();
+				for(var i = 0; i < children.length; i++) {
+					var child = children[i];
+					var classNames = child.className.split(' ');
+					for(var j = 0; j < classNames.length; j++) {
+						if(classNames[j] == className) {
+							elements.push(child);
+							break;
+						}
+					}
+				}
+				return elements;
+			};
 		}
 	})();
 
@@ -188,30 +207,35 @@
 		this.init();
 	}
 
-	
+	//安装插件
+	Tmpl.install = function(constructor) {
+		constructor.install(this);
+	}
+
 	Tmpl.prototype = {
 		constructor: Tmpl,
 		/*初始化*/
-		init() {
+		init: function() {
 			//构建开始的钩子
 			this.fn.run(this.config.created, this);
 			//初始配置信息
 			this.el = this.fn.getEl(this.config.el);
 			//初始化方法
-            setInstance.call(this, 'methods');
-            //初始化数据
-            setInstance.call(this, 'data');
+			setInstance.call(this, 'methods');
+			//初始化数据
+			setInstance.call(this, 'data');
 			//查找模板
 			if(this.el) {
 				this.template = this.el.innerHTML;
+				
 				this.config.template = this.el.innerHTML;
+				
 				setRegExp.call(this);
 				//转化为js执行
 				setDom.call(this);
-				//初始化事件
-				setEvent.call(this);
 			}
-
+			//初始化事件
+			setEvent.call(this);
 			//设置事件
 			this.fn.run(this.config.events, this);
 			//所有完毕后的钩子
@@ -451,6 +475,10 @@
 			el.style.display = 'none';
 			this.animate(el, 'hide', time);
 			return this;
+		},
+		toggle: function(el) {
+			if(el.style.display === '') this.hide(el);
+			else this.show(el);
 		},
 		animate: function(el, type, time) {
 			var num = 0.1;

@@ -1,34 +1,59 @@
-(function() {
-	var tmplRouterConfig = {
+(function(global, factory) {
+	if(typeof _require === 'function') {
+		_require.define('tmpl-router', factory);
+	} else {
+		(global ? (global.TmplRouter = factory()) : {});
+	}
+})(typeof window !== 'undefined' ? window : this, function() {
+
+	var config = {
 		routerLink: 'tmpl-router',
 		activeClassName: 'tmpl-router-active',
 		data: {},
 		methods: {}
 	}
+	
+	var _Tmpl = null;
+	
+	var tmpl = null;
 
-	var tmpl = new Tmpl({});
-
-	var fn = tmpl.fn;
+	var fn = null;
 
 	//设置路由参数
-	Tmpl.Router = function(opts) {
+	function TmplRouter(opts) {
 		this.init(opts);
 	}
 
+	//安装插件
+	TmplRouter.install = function(Tmpl) {
+		if(this.installed) return TmplRouter;
+		
+		this.installed = true;
+		
+		_Tmpl = Tmpl;
+		
+		tmpl = new _Tmpl({});
+		
+		fn = tmpl.fn;
+	}
+	
+	//查看是否在全部中存在插件
+	if(window.Tmpl){
+		TmplRouter.install(Tmpl);
+	}
+
 	//路由器原型
-	Tmpl.Router.prototype = {
-		constructor: Tmpl.Router,
+	TmplRouter.prototype = {
+		constructor: TmplRouter,
 		init: function(opts) {
 			var _this = this;
-			this.config = fn.extend(fn.copy(tmplRouterConfig), opts);
+			this.config = fn.extend(fn.copy(config), opts);
 			this.router = this.config.router ? this.config.router : {};
 			this.tmpl = tmpl;
 			//设置methods
 			setInstance.call(this, 'methods');
 			//设置data
 			setInstance.call(this, 'data');
-			//设置路由的className
-			setRouterStatusClassName.call(this);
 			//设置hash
 			setHashEvent.call(this);
 			//所有完毕后的钩子
@@ -51,7 +76,7 @@
 			//获取hash
 			var hash = window.location.hash;
 			//获取路由绑定的节点
-			var routerBtns = fn.getEls(this.routerLink);
+			var routerBtns = fn.getEls(this.config.routerLink);
 			//存储hash点击的对象
 			var alinkEl = null;
 			//存在路由绑定
@@ -67,26 +92,19 @@
 				if(href === hash) {
 					viewEl = fn.getEl(view);
 					alinkEl = el;
-					tmpl.addClass(el, _this.activeClassName);
+					tmpl.addClass(el, _this.config.activeClassName);
 					tmpl.show(viewEl);
 					cb = _this.router[hash];
 					if(fn.isFn(cb)) {
 						cb.apply(_this, [el, viewEl]);
 					}
 				} else {
-					tmpl.removeClass(el, _this.activeClassName);
+					tmpl.removeClass(el, _this.config.activeClassName);
 					tmpl.hide(fn.getEl(view));
 				}
+
 			});
 		}
-	}
-
-	//设置路由className
-	function setRouterStatusClassName() {
-		//绑定路由链接router-link
-		this.routerLink = this.config.routerLink;
-		//选中绑定路由的class
-		this.activeClassName = this.config.activeClassName;
 	}
 
 	//设置hash
@@ -105,9 +123,7 @@
 	//设置data和methods方法
 	function setInstance(type) {
 		var _this = this;
-
 		var get = this.config[type];
-
 		if(!fn.isObj(get)) {
 			return;
 		}
@@ -116,4 +132,6 @@
 			_this[key] = _get;
 		});
 	}
-})();
+
+	return TmplRouter;
+});
