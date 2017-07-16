@@ -8,7 +8,7 @@
 
 (function(global, factory) {
 	if(typeof _require === 'function') {
-		_require.define('tmpl', factory);
+		_require.defineId('tmpl', factory);
 	} else {
 		(global ? (global.Tmpl = factory()) : {});
 	}
@@ -43,6 +43,9 @@
 		},
 		isNum: function(num) {
 			return typeof num === 'number' || /^\d*(\.\d*)?$/.test(num);
+		},
+		isEl: function(el) {
+            return el && el.nodeType;
 		},
 		on: (function() {
 			if(typeof document.addEventListener === 'function') {
@@ -224,12 +227,14 @@
 			setInstance.call(this, 'methods');
 			//初始化数据
 			setInstance.call(this, 'data');
+			//初始化路由
+			setRouter.call(this);
 			//查找模板
 			if(this.el) {
 				this.template = this.el.innerHTML;
-				
+
 				this.config.template = this.el.innerHTML;
-				
+
 				setRegExp.call(this);
 				//转化为js执行
 				setDom.call(this);
@@ -597,6 +602,10 @@
 
 		//添加委托事件
 		this.eventType.push(type);
+	}
+	
+	function setRouter(){
+	    if(this.fn.isObj(this.config.router)) this.router = this.config.router; 
 	}
 
 	//初始化时间中的参数
