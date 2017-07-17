@@ -45,7 +45,7 @@
 			return typeof num === 'number' || /^\d*(\.\d*)?$/.test(num);
 		},
 		isEl: function(el) {
-            return el && el.nodeType;
+			return el && el.nodeType;
 		},
 		on: (function() {
 			if(typeof document.addEventListener === 'function') {
@@ -125,6 +125,49 @@
 			if(this.isObj(obj) || this.isArr(obj))
 				return JSON.parse(JSON.stringify(obj));
 			return null;
+		},
+		ajax: function(options) {
+			var _this = this;
+			//创建xhr
+			var xhr = new XMLHttpRequest();
+			//连接类型
+			options.type = (options.type ? options.type.toUpperCase() : 'GET');
+
+			if(options.type === "GET") {
+				xhr.open(options.type, (function() {
+					return options.url.indexOf('?') ? options.url + _this.serialize(options.data) : options.url + '?' + _this.serialize(options.data)
+				})(), options.async);
+			} else if(options.type === "POST") {
+				xhr.open(options.type, options.url, options.async);
+			}
+			xhr.setRequestHeader('Content-Type', options.contentType ? options.contentType : 'application/x-www-form-urlencoded; charset=UTF-8');
+			//响应事件
+			xhr.addEventListener('readystatechange', function() {
+				var data = JSON.parse(xhr.responseText);
+				if(xhr.readyState == 4) {
+					if(xhr.status == 200) {
+						_this.isFn(options.success) ? (options.success(data)) : null;
+					} else if(xhr.status >= 400) {
+						_this.isFn(options.error) ? (options.error(data)) : null;
+					}
+				}
+			}, false);
+			//send指令
+			if(options.type === "GET") {
+				xhr.send();
+			} else if(options.type === "POST") {
+				xhr.send(this.serialize(options.data));
+			}
+		},
+		//初始化数据
+		serialize: function(data) {
+			var result = '';
+			for(var k in data) {
+				if(data.hasOwnProperty(k)) {
+					result = result + k + '=' + data[k] + '&';
+				}
+			}
+			return result.substring(0, result.length - 1);
 		}
 	};
 
@@ -420,7 +463,13 @@
 		},
 		//获取直接的当个子节点
 		children: function(el) {
-			return el.children;
+			var els = [];
+			this.fn.each(el.childNodes,function(child){
+				if(child.nodeType === 1){
+					els.push(child);
+				}
+			});
+			return els;
 		},
 		//查找对应的class存在的节点
 		childrens: function(el, className, hasClassChild) {
@@ -603,9 +652,9 @@
 		//添加委托事件
 		this.eventType.push(type);
 	}
-	
-	function setRouter(){
-	    if(this.fn.isObj(this.config.router)) this.router = this.config.router; 
+
+	function setRouter() {
+		if(this.fn.isObj(this.config.router)) this.router = this.config.router;
 	}
 
 	//初始化时间中的参数

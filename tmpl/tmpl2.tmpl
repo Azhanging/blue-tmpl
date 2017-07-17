@@ -1,3 +1,13 @@
+<div class="row view" id="tmp2">
+	<h3>tm2</h3>
+	<div class="content">
+
+	</div>
+	<div class="row pd-10 t-c">
+		<button class="g-btn g-btn-danger g-btn-radius on-add-tm2">add</button>
+	</div>
+</div>
+
 <script type="text/template" id="tmpl2">
 	<% for(var i = 0;i<data.length;i++){ %>
 	<div class="g-media mg-t-10 pd-10  g-bg-danger">
@@ -18,10 +28,8 @@
 </script>
 
 <script type="text/javascript">
-	_require.config({
-		baseUrl:'./tmpl/tmpl-js/',
-		paths:[
-			'tmpl2.js'
-		]
+	_require.loadModules('@tjs/tmpl2.js');
+	_require.use(function(){
+		_require('@tjs/tmpl2.js')();
 	});
 </script>

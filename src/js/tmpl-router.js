@@ -17,8 +17,10 @@
 
 	/*默认配置*/
 	var config = {
-		routerLink: 'tmpl-router',
-		activeClassName: 'tmpl-router-active',
+		created: function() {},
+		routerLink: 'tmpl-router', //.tmpl-router						
+		activeClassName: 'tmpl-router-active', //.tmpl-router-active
+		routerView: 'tmpl-router-view', //#tmpl-router-view
 		data: {},
 		methods: {},
 		error: function() {}
@@ -29,6 +31,8 @@
 	var tmpl = null;
 
 	var fn = null;
+	
+	var lastRouter = null;
 
 	//设置路由参数
 	function TmplRouter(opts) {
@@ -90,10 +94,8 @@
 			var hash = window.location.hash.replace('#', '');
 			//获取路由绑定的节点
 			var routerBtns = fn.getEls(this.config.routerLink);
-			//存储hash点击的对象
-			var alinkEl = null;
 			//视图容器
-			var viewEl = null;
+			var viewEl = fn.getEl(this.config.routerView);
 			//处理回调
 			var cb = null;
 			//如果不存在hash设置为根目录
@@ -107,37 +109,51 @@
 
 				var href = tmpl.attr(el, 'href').replace('#', '');
 
-				var view = tmpl.attr(el, 'view');
-
 				if(href === hash) {
-
-					viewEl = fn.getEl(view);
-
-					alinkEl = el;
+					//动态加载模块
+					_this.getTmpl(el, hash);
 					//路由回调
 					cb = _this.router[hash]['cb'];
+					
+					if(lastRouter){
+						
+						/*如果不是匹配的路由视图，则不显示在路由视图中*/
+						fn.each(_this.router[lastRouter]['view'],function(el,index){
+							_this.router[lastRouter]['temp'].appendChild(el);
+						});
+						
+						_this.router[lastRouter]['view'] = [];
+					}
 
+					viewEl.appendChild(_this.router[href]['temp']);
+					
+					fn.each(tmpl.children(viewEl),function(el,index){
+						_this.router[href]['view'].push(el);
+					});
+					
 					tmpl.addClass(el, _this.config.activeClassName);
-
-					fn.isEl(viewEl) ? (tmpl.show(viewEl)) : null;
-
+					
 					if(fn.isFn(cb)) cb.apply(_this, [el, viewEl, hash]);
-
+					
+					lastRouter = hash;
+					
 				} else {
-					viewEl = fn.getEl(view);
+					
+					/*如果不是匹配的路由视图，则不显示在路由视图中*/
+					fn.each(_this.router[href]['view'],function(el,index){
+						_this.router[href]['temp'].appendChild(el);
+					});
+					
+					_this.router[href]['view'] = [];
 
 					tmpl.removeClass(el, _this.config.activeClassName);
-
-					fn.isEl(viewEl) ? (tmpl.hide(viewEl)) : null;
 				}
 			});
 			//error页面
 			if(!this.alias[hash] && !this.router[hash]) this.config.error.call(this);
 		},
 		go: function(page) {
-
 			if(fn.isNum(page)) history.go(1);
-
 		},
 		redirect: function(hash) {
 			var href = location.href.split('#');
@@ -147,6 +163,20 @@
 				href[1] = hash;
 				location.href = href.join('#');
 			}
+		},
+		/*获取模板*/
+		getTmpl: function(el, hash) {
+			var _this = this;
+			//查看当前的路由模板是否加载回来了
+			if(this.router[hash]['temp'].childNodes.length > 0) return;
+			//获取请求的url
+			var tmplUrl = tmpl.attr(el, 'tmpl-url');
+			tmpl.fn.ajax({
+				url: tmplUrl,
+				success: function(data) {
+					_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
+				}
+			});
 		}
 	}
 
@@ -154,10 +184,12 @@
 	function setPaths() {
 		var _this = this;
 		this.alias = {};
-		this.paths = [];
 		fn.each(this.config.router, function(router, path) {
 			var alias = router.alias;
-			_this.paths.push(path);
+			/*设置视图节点*/
+			_this.router[path]['view'] = [];
+			/*设置临时存放节点*/
+			_this.router[path]['temp'] = document.createDocumentFragment();
 			//存在别名
 			if(alias) {
 				_this.alias[alias] = path;
@@ -168,7 +200,7 @@
 	//设置hash
 	function setHashEvent() {
 		var _this = this;
-		if(!window.hasTmplRouter) {;
+		if(!window.hasTmplRouter) {
 			//修改hash时触发修改
 			fn.on(window, 'hashchange', function(event) {
 				var hash = window.location.hash;
