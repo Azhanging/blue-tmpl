@@ -51,16 +51,16 @@
 			<div style="height:38px;display: none;" id="d"></div>
 			<ul class="reset-ul row t-c background-white" id="top">
 				<li class="col-xs-2">
-					<a href="#/tm1" tmpl-url="./php/get_tmpl.php?tmpl=tmpl1" class="tmpl-router reset-a on-get-tmpl block pd-10">tm1</a>
+					<a href="#/tm1" class="tmpl-router reset-a on-get-tmpl block pd-10">tm1</a>
 				</li>
 				<li class="col-xs-2">
-					<a href="#/tm2" tmpl-url="./php/get_tmpl.php?tmpl=tmpl2" class="tmpl-router reset-a on-get-tmpl block pd-10">tm2</a>
+					<a href="#/tm2" class="tmpl-router reset-a on-get-tmpl block pd-10">tm2</a>
 				</li>
 				<li class="col-xs-2">
-					<a href="#/tm3" tmpl-url="./php/get_tmpl.php?tmpl=tmpl3" class="tmpl-router reset-a on-get-tmpl block pd-10">tm3</a>
+					<a href="#/tm3" class="tmpl-router reset-a on-get-tmpl block pd-10">tm3</a>
 				</li>
 				<li class="col-xs-2">
-					<a href="#/tm8" tmpl-id="tmp4" class="tmpl-router reset-a on-get-tmpl block pd-10">tm8</a>
+					<a href="#/tm8" class="tmpl-router reset-a on-get-tmpl block pd-10">tm8</a>
 				</li>
 				<li class="col-xs-2">
 					<a href="#/tm9" class="tmpl-router reset-a on-get-tmpl block pd-10">tm9</a>
@@ -112,12 +112,14 @@
 					},
 					router: {
 						'/tm1': {
+							tmplUrl:"./php/get_tmpl.php?tmpl=tmpl1",
 							alias:'/tm2/tm2-2/tm2-2-1',
 							cb: function(hash, viewEl, el) {
 								console.log(this, hash);
 							},
 							modules: {
 								'/tm1-1': {
+									alias:'/tm1/index',
 									cb: function(hash, viewEl, el) {
 										console.log(this, hash);
 									},
@@ -161,6 +163,7 @@
 							}
 						},
 						'/tm2': {
+							tmplUrl:"./php/get_tmpl.php?tmpl=tmpl2",
 							alias:'/',
 							cb: function(hash, viewEl, el) {
 //								console.log(this, hash);
@@ -203,6 +206,7 @@
 							}
 						},
 						'/tm3': {
+							tmplUrl:"./php/get_tmpl.php?tmpl=tmpl3",
 							alias: '/tm6',
 							cb: function(hash, viewEl, el) {
 								console.log(this, hash);
@@ -214,13 +218,19 @@
 							}
 						},
 						'/tm8': {
+							tmplId:"tmp4",
 							alias: '/tm9',
 							cb: function(hash, viewEl, el) {
 								console.log(this, hash);
 							}
 						},
 						'/tm9': {
-							alias: '/tm10',
+							cb: function(hash, viewEl, el) {
+								console.log(this, hash);
+							}
+						},
+						'/tm10': {
+							tmplUrl:"./php/get_tmpl.php?tmpl=tmpl2",
 							cb: function(hash, viewEl, el) {
 								console.log(this, hash);
 							}

@@ -131,9 +131,9 @@
 			//查看当前的路由模板是否加载回来了
 			if((!this.router[hash]) || this.router[hash]['temp'].childNodes.length > 0 || this.router[hash]['view'].length > 0) return;
 			//获取请求的url
-			var tmplUrl = tmpl.attr(el, 'tmpl-url');
+			var tmplUrl = this.router[hash]['tmplUrl']; 
 			//获取静态模板的id
-			var tmplId = tmpl.attr(el, 'tmpl-id');
+			var tmplId = this.router[hash]['tmplId']; 
 			/*动态模板*/
 			if(tmplUrl) {
 				tmpl.fn.ajax({
