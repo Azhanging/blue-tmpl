@@ -61,24 +61,28 @@
 	TmplRouter.prototype = {
 		constructor: TmplRouter,
 		init: function(opts) {
+
 			var _this = this;
+
 			this.config = fn.extend(fn.copy(config), opts);
+
 			this.router = {};
+
 			setRouter.call(this, this.config.router ? this.config.router : {});
-			//			this.router = this.config.router ? this.config.router : {};
+
 			this.tmpl = tmpl;
-			//设置methods
-			setInstance.call(this, 'methods');
-			//设置data
-			setInstance.call(this, 'data');
-			//处理别名内容
-			setPaths.call(this, this.router);
-			//设置hash
-			setHashEvent.call(this);
-			//初始化好了初始化hash
-			this.hashChange();
-			//所有完毕后的钩子
-			fn.run(this.config.mounted, this);
+
+			setInstance.call(this, 'methods'); //设置methods
+
+			setInstance.call(this, 'data'); //设置data
+
+			setPaths.call(this, this.router); //处理别名内容 
+
+			setHashEvent.call(this); //设置hash
+
+			this.hashChange(); //初始化好了初始化hash
+
+			fn.run(this.config.mounted, this); //所有完毕后的钩子
 		},
 		/*设置路由路径*/
 		set: function(routerOpts) {
@@ -94,23 +98,32 @@
 		},
 		//hash改变调用
 		hashChange: function() {
-			//获取hash
-			var hash = window.location.hash.replace('#', '');
-			//获取路由绑定的节点
-			var routerBtns = fn.getEls(this.config.routerLink);
-			//视图容器
-			var viewEl = fn.getEl(this.config.routerView);
-			//如果不存在hash设置为根目录
-			if(hash === '') hash = '/';
-			//判断是不是别名的路由
-			if(this.alias[hash]) hash = getPathAlias.apply(this, [hash, viewEl, null]);
-			//存在路由绑定
-			if(routerBtns.length === 0) return this;
-			//error页面
-			if(!this.alias[hash] && !this.router[hash]) {
+
+			var path = window.location.hash.replace('#', '').split('?');
+
+			var hash = path[0]; //获取hash
+
+			var search = path[1]; //获取参数
+
+			var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
+
+			var viewEl = fn.getEl(this.config.routerView); //视图容器
+
+			if(hash === '') hash = '/'; //如果不存在hash设置为根目录
+
+			if(this.alias[hash]) hash = getPathAlias.apply(this, [{
+				path: path.join(''),
+				hash: hash,
+				search: search
+			}, viewEl, null]); //判断是不是别名的路由
+
+			if(routerBtns.length === 0) return this; //存在路由绑定
+
+			if(!this.alias[hash] && !this.router[hash]) { //error页面
 				this.config.error.call(this);
 				return;
 			}
+
 			hashChange.apply(this, [routerBtns, hash, viewEl]);
 		},
 		go: function(page) {
@@ -128,12 +141,12 @@
 		/*获取模板*/
 		getTmpl: function(el, hash) {
 			var _this = this;
-			//查看当前的路由模板是否加载回来了
-			if((!this.router[hash]) || this.router[hash]['temp'].childNodes.length > 0 || this.router[hash]['view'].length > 0) return;
-			//获取请求的url
-			var tmplUrl = this.router[hash]['tmplUrl']; 
-			//获取静态模板的id
-			var tmplId = this.router[hash]['tmplId']; 
+
+			if((!this.router[hash]) || this.router[hash]['temp'].childNodes.length > 0 || this.router[hash]['view'].length > 0) return; //查看当前的路由模板是否加载回来了
+
+			var tmplUrl = this.router[hash]['tmplUrl']; //获取请求的url
+
+			var tmplId = this.router[hash]['tmplId']; //获取静态模板的id
 			/*动态模板*/
 			if(tmplUrl) {
 				tmpl.fn.ajax({
@@ -144,8 +157,37 @@
 					}
 				});
 			} else if(tmplId) {
-				/*非动态模板*/
-				_this.router[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId))));
+				_this.router[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板
+			}
+		},
+		/*获取参数*/
+		query: function(searchs) {
+			if(!fn.isStr(search)) return {};
+			var query = {};
+			var search = searchs.split('&');
+			fn.each(search, function(_search, index) {
+				var temp = _search.split('=');
+				if(temp.length !== 1) {
+					var key = temp[0];
+					var value = temp[1];
+					query[key] = value;
+				}
+			});
+			return query;
+		},
+		/*获取参数*/
+		search: function(el, search) {
+		    var path = tmpl.attr(el,'href').split('?');
+			if(search) {
+			    if(fn.isObj(search)){
+			        search = fn.serialize(search);
+			    }
+                path[1] = search;
+                tmpl.attr(el,{
+                    href:path.join('?')
+                });
+			}else {
+                return path[1];
 			}
 		}
 	}
@@ -165,19 +207,35 @@
 	/*hashChange的处理*/
 	function hashChange(routerBtns, hash, viewEl) {
 		var _this = this;
-		//处理回调
-		var cb = null;
 
 		var alinkEl = null;
+
+		var hashPath = null;
+
+		var hashSearch = null;
+
 		//修改对应的状态
 		fn.each(routerBtns, function(el, index) {
-			var href = tmpl.attr(el, 'href').replace('#', '');
+
+			var path = tmpl.attr(el, 'href').replace('#', '').split('?');
+
+			var href = path[0];
+
+			var search = path[1] ? path[1] : '';
+
 			if(href === hash) {
+
+				hashPath = path.join('?');
+
+				hashSearch = search;
+
 				alinkEl = el; //保存按钮节点
+
 				_this.getTmpl(el, hash); //默认动态加载模块
 
 				//是否存在最后一个路由地址
 				if(lastRouter) {
+
 					/*如果不是匹配的路由视图，则不显示在路由视图中*/
 					fn.each(_this.router[lastRouter]['view'], function(el, index) {
 						_this.router[lastRouter]['temp'].appendChild(el);
@@ -195,7 +253,6 @@
 				tmpl.addClass(el, _this.config.activeClassName); //修改路由link的样式
 
 				lastRouter = hash; //记录最后的路由路径
-
 			} else {
 				/*存在配置路由*/
 				if(_this.router[href]) {
@@ -209,23 +266,34 @@
 
 				tmpl.removeClass(el, _this.config.activeClassName);
 			}
+
+			if(_this.router[href]) {
+				_this.router[href]['path'] = {
+					path: path.join(''),
+					hash: href,
+					search: search
+				}
+			}
 		});
 
-		cb = _this.router[hash]['cb']; //路由回调
-
-		if(fn.isFn(cb)) cb.apply(_this, [hash, viewEl, alinkEl]); //路由回调
+		if(fn.isFn(this.config.routerChange)) {
+			this.config.routerChange.apply(_this, [{
+				path: hashPath,
+				hash: hash,
+				search: hashSearch
+            }, viewEl, alinkEl]); //路由回调   
+		}
 	}
-
 	/*检查当前路径是否存在别名*/
+
 	function getPathAlias(path, viewEl, el) {
-		var alias = this.alias[path];
+		var alias = this.alias[path.hash];
 		var cb = null;
-		if(this.router[path]) {
-			cb = this.router[path]['cb'];
-			if(fn.isFn(cb)) cb.apply(this, [path, viewEl, el]);
+		if(this.router[path.hash]) {
+			if(fn.isFn(this.config.routerChange)) this.config.routerChange.apply(this, [path, viewEl, el]);
 		}
 		if(this.alias[alias]) {
-			return getPathAlias.apply(this, [alias, viewEl, el]);
+			return getPathAlias.apply(this, [path, viewEl, el]);
 		} else return alias;
 	}
 

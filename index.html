@@ -51,13 +51,13 @@
 			<div style="height:38px;display: none;" id="d"></div>
 			<ul class="reset-ul row t-c background-white" id="top">
 				<li class="col-xs-2">
-					<a href="#/tm1" class="tmpl-router reset-a on-get-tmpl block pd-10">tm1</a>
+					<a href="#/tm1?a=2&b=3" class="tmpl-router reset-a on-get-tmpl block pd-10">tm1</a>
 				</li>
 				<li class="col-xs-2">
-					<a href="#/tm2" class="tmpl-router reset-a on-get-tmpl block pd-10">tm2</a>
+					<a href="#/tm2?a=4&b=1" class="tmpl-router reset-a on-get-tmpl block pd-10">tm2</a>
 				</li>
 				<li class="col-xs-2">
-					<a href="#/tm3" class="tmpl-router reset-a on-get-tmpl block pd-10">tm3</a>
+					<a href="#/tm3?a=4&b=12" class="tmpl-router reset-a on-get-tmpl block pd-10">tm3</a>
 				</li>
 				<li class="col-xs-2">
 					<a href="#/tm8" class="tmpl-router reset-a on-get-tmpl block pd-10">tm8</a>
@@ -112,105 +112,50 @@
 					},
 					router: {
 						'/tm1': {
-							tmplUrl:"./php/get_tmpl.php?tmpl=tmpl1",
-							alias:'/tm2/tm2-2/tm2-2-1',
-							cb: function(hash, viewEl, el) {
-								console.log(this, hash);
-							},
+							tmplUrl: "./php/get_tmpl.php?tmpl=tmpl1",
+							alias: '/tm2/tm2-2/tm2-2-1',
 							modules: {
 								'/tm1-1': {
-									alias:'/tm1/index',
-									cb: function(hash, viewEl, el) {
-										console.log(this, hash);
-									},
+									tmplUrl: "./php/get_tmpl.php?tmpl=tmpl1",
+									alias: '/tm1/index',
 									modules: {
 										'/tm1-1-1': {
-											cb: function(hash, viewEl, el) {
-												console.log(this, hash);
-											},
-											modules:{
-												'/a':{
-													cb:function(){
-														
-													}
-												}
+											modules: {
+												'/a': {}
 											}
 										},
-										'/tm1-1-2': {
-											cb: function(hash, viewEl, el) {
-												console.log(this, hash);
-											}
-										}
+										'/tm1-1-2': {}
 									}
 								},
 								'/tm1-2': {
-									cb: function(hash, viewEl, el) {
-										console.log(this, hash);
-									},
 									modules: {
-										'/tm1-2-1': {
-											cb: function(hash, viewEl, el) {
-												console.log(this, hash);
-											}
-										},
-										'/tm1-2-2': {
-											cb: function(hash, viewEl, el) {
-												console.log(this, hash);
-											}
-										}
+										'/tm1-2-1': {},
+										'/tm1-2-2': {}
 									}
 								},
 							}
 						},
 						'/tm2': {
-							tmplUrl:"./php/get_tmpl.php?tmpl=tmpl2",
-							alias:'/',
-							cb: function(hash, viewEl, el) {
-//								console.log(this, hash);
-							},
+							tmplUrl: "./php/get_tmpl.php?tmpl=tmpl2",
+							alias: '/',
 							modules: {
 								'/tm2-1': {
-									cb: function(hash, viewEl, el) {
-										console.log(this, hash);
-									},
 									modules: {
-										'/tm2-1-1': {
-											cb: function(hash, viewEl, el) {
-												console.log(this, hash);
-											}
-										},
-										'/tm2-1-2': {
-											cb: function(hash, viewEl, el) {
-												console.log(this, hash);
-											}
-										}
+										'/tm2-1-1': {},
+										'/tm2-1-2': {}
 									}
 								},
 								'/tm2-2': {
-									cb: function(hash, viewEl, el) {
-										console.log(this, hash);
-									},
 									modules: {
-										'/tm2-2-1': {
-											cb: function(hash, viewEl, el) {
-												console.log(this, hash);
-											}
-										},
-										'/tm2-2-2': {
-											cb: function(hash, viewEl, el) {
-												console.log(this, hash);
-											}
-										}
+										'/tm2-2-1': {},
+										'/tm2-2-2': {}
 									}
 								},
 							}
 						},
 						'/tm3': {
-							tmplUrl:"./php/get_tmpl.php?tmpl=tmpl3",
-							alias: '/tm6',
-							cb: function(hash, viewEl, el) {
-								console.log(this, hash);
-							}
+							tmplUrl: "./php/get_tmpl.php?tmpl=tmpl3",
+							alias: '/tm6'
 						},
 						'/tm6': {
 							cb: function(hash, viewEl, el) {
@@ -218,22 +163,12 @@
 							}
 						},
 						'/tm8': {
-							tmplId:"tmp4",
-							alias: '/tm9',
-							cb: function(hash, viewEl, el) {
-								console.log(this, hash);
-							}
+							tmplId: "tmp4",
+							alias: '/tm9'
 						},
-						'/tm9': {
-							cb: function(hash, viewEl, el) {
-								console.log(this, hash);
-							}
-						},
+						'/tm9': {},
 						'/tm10': {
-							tmplUrl:"./php/get_tmpl.php?tmpl=tmpl2",
-							cb: function(hash, viewEl, el) {
-								console.log(this, hash);
-							}
+							tmplUrl: "./php/get_tmpl.php?tmpl=tmpl2"
 						}
 					},
 					error: function() {
@@ -242,6 +177,14 @@
 						setTimeout(function() {
 							_this.redirect('/');
 						}, 1000);
+					},
+					/*hash更新后的钩子*/
+					routerChange:function(path,viewEl,el){
+						console.log(path,viewEl,el);
+						if(path.path){
+							
+						}
+						console.log(this.query(path.search));
 					},
 					mounted: function() {}
 				});
