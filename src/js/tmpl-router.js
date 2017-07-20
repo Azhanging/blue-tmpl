@@ -14,7 +14,7 @@
 		(global ? (global.TmplRouter = factory()) : {});
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
-
+	
 	/*默认配置*/
 	var config = {
 		created: function() {},
@@ -75,8 +75,10 @@
 			setInstance.call(this, 'methods'); //设置methods
 
 			setInstance.call(this, 'data'); //设置data
+			
+			keepLive.call(this);	//设置保持状态
 
-			setPaths.call(this, this.router); //处理别名内容 
+			setPaths.call(this, this.router); //处理路由详情 
 
 			setHashEvent.call(this); //设置hash
 
@@ -130,6 +132,7 @@
 			if(fn.isNum(page)) history.go(page);
 		},
 		redirect: function(hash) {
+			hash = hash.replace('#', '');
 			var href = location.href.split('#');
 			if(hash === '/') {
 				location.href = href[0];
@@ -177,18 +180,25 @@
 		},
 		/*获取参数*/
 		search: function(el, search) {
-		    var path = tmpl.attr(el,'href').split('?');
+			var path = tmpl.attr(el, 'href').split('?');
 			if(search) {
-			    if(fn.isObj(search)){
-			        search = fn.serialize(search);
-			    }
-                path[1] = search;
-                tmpl.attr(el,{
-                    href:path.join('?')
-                });
-			}else {
-                return path[1];
+				if(fn.isObj(search)) {
+					search = fn.serialize(search);
+				}
+				path[1] = search;
+				tmpl.attr(el, {
+					href: path.join('?')
+				});
+			} else {
+				return path[1];
 			}
+		},
+		/*获取hash，不带参数*/
+		getHash:function(hash){
+			var path = '';
+			if(hash.indexOf('#') === -1) path = hash.split('?');
+			else path = hash.replace('#', '').split('?'); 
+			return path[0]; 
 		}
 	}
 
@@ -210,9 +220,9 @@
 
 		var alinkEl = null;
 
-		var hashPath = null;
+		var hashPath = hash;
 
-		var hashSearch = null;
+		var hashSearch = '';
 
 		//修改对应的状态
 		fn.each(routerBtns, function(el, index) {
@@ -224,6 +234,8 @@
 			var search = path[1] ? path[1] : '';
 
 			if(href === hash) {
+				
+				_this.currentRouter = href;//保存当前的路由
 
 				hashPath = path.join('?');
 
@@ -235,38 +247,32 @@
 
 				//是否存在最后一个路由地址
 				if(lastRouter) {
-
 					/*如果不是匹配的路由视图，则不显示在路由视图中*/
-					fn.each(_this.router[lastRouter]['view'], function(el, index) {
-						_this.router[lastRouter]['temp'].appendChild(el);
-					});
-
-					_this.router[lastRouter]['view'] = [];
+					hideTmplEl.call(_this, lastRouter);
 				}
 
-				viewEl.appendChild(_this.router[href]['temp']); //更新view层
-
-				fn.each(tmpl.children(viewEl), function(el, index) { //保存view层节点
-					_this.router[href]['view'].push(el);
-				});
+				showTmplEl.apply(_this, [href, viewEl]);
 
 				tmpl.addClass(el, _this.config.activeClassName); //修改路由link的样式
 
 				lastRouter = hash; //记录最后的路由路径
+				
+				/*是否使用了保存之前的状态*/
+				if(_this.config.keepLive && _this.router[href]['keepLive']) setScrollTop.call(this,_this.router[href]['scrollTop']);
+				else setScrollTop.call(this,0);
+				
 			} else {
 				/*存在配置路由*/
-				if(_this.router[href]) {
-					/*如果不是匹配的路由视图，则不显示在路由视图中*/
-					fn.each(_this.router[href]['view'], function(el, index) {
-						_this.router[href]['temp'].appendChild(el);
-					});
-
-					_this.router[href]['view'] = [];
-				}
+				if(_this.router[href]) hideTmplEl.call(_this, href); //如果不是匹配的路由视图，则不显示在路由视图中
 
 				tmpl.removeClass(el, _this.config.activeClassName);
 			}
-
+			
+			/*如果设置的节点没有绑定到对应的节点上，*/
+			if(!alinkEl){
+				_this.currentRouter = hash;
+			}
+			
 			if(_this.router[href]) {
 				_this.router[href]['path'] = {
 					path: path.join(''),
@@ -284,8 +290,47 @@
             }, viewEl, alinkEl]); //路由回调   
 		}
 	}
-	/*检查当前路径是否存在别名*/
+	
+	/*设置保持状态*/
+	function keepLive(){
+		var _this = this;
+		if(!this.config.keepLive) return;
+		fn.on(window,'scroll',function(event){
+			if(_this.router[_this.currentRouter] && _this.router[_this.currentRouter]['keepLive']) 
+				_this.router[_this.currentRouter]['scrollTop'] = document.body.scrollTop || document.documentElement.scrollTop;
+		});
+	}
+	
+	/*设置scrollTop*/
+	function setScrollTop(num){
+		if(!fn.isNum(num)) return 0; 
+		try{
+			document.body.scrollTop = parseFloat(num); 
+		}catch(e){
+			document.documentElement.scrollTop = parseFloat(num);
+		}
+	}
 
+	/*保存节点信息*/
+	function hideTmplEl(hash) {
+		var _this = this;
+		/*如果不是匹配的路由视图，则不显示在路由视图中*/
+		fn.each(_this.router[hash]['view'], function(el, index) {
+			_this.router[hash]['temp'].appendChild(el);
+		});
+		this.router[hash]['view'] = [];
+	}
+
+	/*显示节点信息*/
+	function showTmplEl(hash, viewEl) {
+		var _this = this;
+		viewEl.appendChild(this.router[hash]['temp']); //更新view层
+		fn.each(tmpl.children(viewEl), function(el, index) { //保存view层节点
+			_this.router[hash]['view'].push(el);
+		});
+	}
+
+	/*检查当前路径是否存在别名*/
 	function getPathAlias(path, viewEl, el) {
 		var alias = this.alias[path.hash];
 		var cb = null;
@@ -306,16 +351,21 @@
 		});
 	}
 
-	//处理路径
+	//初始处理路由信息
 	function setPaths(routes) {
 		var _this = this;
 		this.alias = {};
 		fn.each(routes, function(router, path) {
 			var alias = router.alias;
-			/*设置视图节点*/
-			_this.router[path]['view'] = [];
-			/*设置临时存放节点*/
-			_this.router[path]['temp'] = document.createDocumentFragment();
+			
+			_this.router[path]['view'] = [];//设置视图节点
+			
+			if(_this.router[path]['keepLive'] === undefined){
+				_this.router[path]['keepLive'] = true;	//默认设置保持节点为true,全局设定状态的时候是支持保持状态的	
+			}
+			
+			_this.router[path]['temp'] = document.createDocumentFragment();//设置临时存放节点
+			
 			//存在别名
 			if(alias) {
 				_this.alias[alias] = path;

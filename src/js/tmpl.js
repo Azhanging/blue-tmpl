@@ -164,7 +164,7 @@
 			var result = '';
 			for(var k in data) {
 				if(data.hasOwnProperty(k)) {
-					result = result + k + '=' + data[k] + '&';
+					result = result + k + '=' + encodeURIComponent(data[k]) + '&';
 				}
 			}
 			return result.substring(0, result.length - 1);

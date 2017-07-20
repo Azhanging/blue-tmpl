@@ -63,7 +63,7 @@
 					<a href="#/tm8" class="tmpl-router reset-a on-get-tmpl block pd-10">tm8</a>
 				</li>
 				<li class="col-xs-2">
-					<a href="#/tm9" class="tmpl-router reset-a on-get-tmpl block pd-10">tm9</a>
+					<a href="#/tm9?a=1" class="tmpl-router reset-a on-get-tmpl block pd-10">tm9</a>
 				</li>
 				<li class="col-xs-2">
 					<a href="#/tm10" class="tmpl-router reset-a on-get-tmpl block pd-10">tm10</a>
@@ -104,6 +104,7 @@
 
 				Tmpl.install(TmplRouter);
 				router = new TmplRouter({
+					keepLive: true,
 					data: {
 						a: 1
 					},
@@ -114,6 +115,7 @@
 						'/tm1': {
 							tmplUrl: "./php/get_tmpl.php?tmpl=tmpl1",
 							alias: '/tm2/tm2-2/tm2-2-1',
+							keepLive: true,
 							modules: {
 								'/tm1-1': {
 									tmplUrl: "./php/get_tmpl.php?tmpl=tmpl1",
@@ -138,6 +140,7 @@
 						'/tm2': {
 							tmplUrl: "./php/get_tmpl.php?tmpl=tmpl2",
 							alias: '/',
+							keepLive: false,
 							modules: {
 								'/tm2-1': {
 									modules: {
@@ -179,10 +182,17 @@
 						}, 1000);
 					},
 					/*hash更新后的钩子*/
-					routerChange:function(path,viewEl,el){
-						console.log(path,viewEl,el);
-						if(path.path){
-							
+					routerChange: function(path, viewEl, el) {
+						var _this = this;
+						console.log(path, viewEl, el);
+						if(path.hash === '/tm1') {
+							if(el) {
+								this.search(el, {
+									a: new Date(),
+									b: new Date()
+								});
+								this.redirect(this.tmpl.attr(el, 'href'));
+							}
 						}
 						console.log(this.query(path.search));
 					},
