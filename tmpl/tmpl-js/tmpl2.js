@@ -13,10 +13,14 @@ _require.define('tmpl2', function() {
 				}
 			},
 			mounted: function() {
-				this.add();
+				if(this.fn.getEl('tmp2')){
+					this.add();	
+				}	
 			},
 			events: function() {
-				this.on('on-add-tm2', 'click', this.add);
+				if(this.fn.getEl('tmp2')){	
+					this.on(this.fn.getEl('tmp2'),'on-add-tmpl', 'click', this.add);		
+				}
 			}
 		});
 	}

@@ -14,7 +14,7 @@
 		(global ? (global.TmplRouter = factory()) : {});
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
-	
+
 	/*默认配置*/
 	var config = {
 		created: function() {},
@@ -75,8 +75,8 @@
 			setInstance.call(this, 'methods'); //设置methods
 
 			setInstance.call(this, 'data'); //设置data
-			
-			keepLive.call(this);	//设置保持状态
+
+			keepLive.call(this); //设置保持状态
 
 			setPaths.call(this, this.router); //处理路由详情 
 
@@ -125,8 +125,13 @@
 				this.config.error.call(this);
 				return;
 			}
+			
+			var _path = {path:path.join(''),hash:hash,search:search};
+			
+			/*路由进入的钩子*/
+			fn.run(this.config.routerEnter, this, [_path, viewEl]);
 
-			hashChange.apply(this, [routerBtns, hash, viewEl]);
+			hashChange.apply(this, [routerBtns, _path, viewEl]);
 		},
 		go: function(page) {
 			if(fn.isNum(page)) history.go(page);
@@ -153,6 +158,7 @@
 			/*动态模板*/
 			if(tmplUrl) {
 				tmpl.fn.ajax({
+					async: false,
 					url: tmplUrl,
 					success: function(data) {
 						_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
@@ -194,11 +200,11 @@
 			}
 		},
 		/*获取hash，不带参数*/
-		getHash:function(hash){
+		getHash: function(hash) {
 			var path = '';
 			if(hash.indexOf('#') === -1) path = hash.split('?');
-			else path = hash.replace('#', '').split('?'); 
-			return path[0]; 
+			else path = hash.replace('#', '').split('?');
+			return path[0];
 		}
 	}
 
@@ -215,12 +221,14 @@
 	}
 
 	/*hashChange的处理*/
-	function hashChange(routerBtns, hash, viewEl) {
+	function hashChange(routerBtns, path, viewEl) {
 		var _this = this;
 
 		var alinkEl = null;
 
-		var hashPath = hash;
+		var hashPath = path.hash;
+		
+		var hash = path.hash;
 
 		var hashSearch = '';
 
@@ -234,8 +242,8 @@
 			var search = path[1] ? path[1] : '';
 
 			if(href === hash) {
-				
-				_this.currentRouter = href;//保存当前的路由
+
+				_this.currentRouter = href; //保存当前的路由
 
 				hashPath = path.join('?');
 
@@ -256,23 +264,21 @@
 				tmpl.addClass(el, _this.config.activeClassName); //修改路由link的样式
 
 				lastRouter = hash; //记录最后的路由路径
-				
+
 				/*是否使用了保存之前的状态*/
-				if(_this.config.keepLive && _this.router[href]['keepLive']) setScrollTop.call(this,_this.router[href]['scrollTop']);
-				else setScrollTop.call(this,0);
-				
+				if(_this.config.keepLive && _this.router[href]['keepLive']) setScrollTop.call(this, _this.router[href]['scrollTop']);
+				else setScrollTop.call(this, 0);
+
 			} else {
 				/*存在配置路由*/
 				if(_this.router[href]) hideTmplEl.call(_this, href); //如果不是匹配的路由视图，则不显示在路由视图中
 
 				tmpl.removeClass(el, _this.config.activeClassName);
 			}
-			
+
 			/*如果设置的节点没有绑定到对应的节点上，*/
-			if(!alinkEl){
-				_this.currentRouter = hash;
-			}
-			
+			if(!alinkEl) _this.currentRouter = hash;
+
 			if(_this.router[href]) {
 				_this.router[href]['path'] = {
 					path: path.join(''),
@@ -282,31 +288,29 @@
 			}
 		});
 
-		if(fn.isFn(this.config.routerChange)) {
-			this.config.routerChange.apply(_this, [{
-				path: hashPath,
-				hash: hash,
-				search: hashSearch
-            }, viewEl, alinkEl]); //路由回调   
-		}
+		fn.run(this.config.routerEntered, this, [{
+			path: hashPath,
+			hash: hash,
+			search: hashSearch
+        }, viewEl, alinkEl]);
 	}
-	
+
 	/*设置保持状态*/
-	function keepLive(){
+	function keepLive() {
 		var _this = this;
 		if(!this.config.keepLive) return;
-		fn.on(window,'scroll',function(event){
-			if(_this.router[_this.currentRouter] && _this.router[_this.currentRouter]['keepLive']) 
+		fn.on(window, 'scroll', function(event) {
+			if(_this.router[_this.currentRouter] && _this.router[_this.currentRouter]['keepLive'])
 				_this.router[_this.currentRouter]['scrollTop'] = document.body.scrollTop || document.documentElement.scrollTop;
 		});
 	}
-	
+
 	/*设置scrollTop*/
-	function setScrollTop(num){
-		if(!fn.isNum(num)) return 0; 
-		try{
-			document.body.scrollTop = parseFloat(num); 
-		}catch(e){
+	function setScrollTop(num) {
+		if(!fn.isNum(num)) return 0;
+		try {
+			document.body.scrollTop = parseFloat(num);
+		} catch(e) {
 			document.documentElement.scrollTop = parseFloat(num);
 		}
 	}
@@ -335,7 +339,8 @@
 		var alias = this.alias[path.hash];
 		var cb = null;
 		if(this.router[path.hash]) {
-			if(fn.isFn(this.config.routerChange)) this.config.routerChange.apply(this, [path, viewEl, el]);
+			fn.run(this.config.routerEnter, this, [path, viewEl, el]);
+			fn.run(this.config.routerEntered, this, [path, viewEl, el]);
 		}
 		if(this.alias[alias]) {
 			return getPathAlias.apply(this, [path, viewEl, el]);
@@ -357,15 +362,15 @@
 		this.alias = {};
 		fn.each(routes, function(router, path) {
 			var alias = router.alias;
-			
-			_this.router[path]['view'] = [];//设置视图节点
-			
-			if(_this.router[path]['keepLive'] === undefined){
-				_this.router[path]['keepLive'] = true;	//默认设置保持节点为true,全局设定状态的时候是支持保持状态的	
+
+			_this.router[path]['view'] = []; //设置视图节点
+
+			if(_this.router[path]['keepLive'] === undefined) {
+				_this.router[path]['keepLive'] = true; //默认设置保持节点为true,全局设定状态的时候是支持保持状态的	
 			}
-			
-			_this.router[path]['temp'] = document.createDocumentFragment();//设置临时存放节点
-			
+
+			_this.router[path]['temp'] = document.createDocumentFragment(); //设置临时存放节点
+
 			//存在别名
 			if(alias) {
 				_this.alias[alias] = path;

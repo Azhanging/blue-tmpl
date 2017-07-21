@@ -4,18 +4,24 @@ _require.define('tmpl3', function() {
 		new Tmpl({
 			el: "tmpl3",
 			data: {
-				i: 0
+				i: 0,
+				isReady:false
 			},
 			methods: {
 				add: function() {
-					this.data([this.i++, this.i++, this.i++, this.i++]).appendTo(this.childrens(this.fn.getEl('tmp3'), 'content')[0]);
+					this.data([this.i++, this.i++, this.i++, this.i++])
+						.appendTo(this.childrens(this.fn.getEl('tmp3'), 'content')[0]);
 				}
 			},
 			mounted: function() {
-				this.add();
+				if(this.fn.getEl('tmp3')){
+					this.add();	
+				}
 			},
 			events: function() {
-				this.on('on-add-tm3', 'click', this.add);
+				if(this.fn.getEl('tmp3')){
+					this.on(this.fn.getEl('tmp3'), 'on-add-tmpl', 'click', this.add);	
+				}
 			}
 		});
 	}

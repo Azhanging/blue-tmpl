@@ -19,10 +19,15 @@ _require.define('tmpl1', function() {
 				}
 			},
 			mounted: function() {
-				this.add();
+				if(this.fn.getEl('tmp1')){
+					this.isReady = true;
+					this.add();	
+				}
 			},
 			events: function() {
-				this.on('on-add-tm1', 'click', this.add);
+				if(this.fn.getEl('tmp3')){
+					this.on('on-add-tm1', 'click', this.add);	
+				}
 			}
 		});
 	}

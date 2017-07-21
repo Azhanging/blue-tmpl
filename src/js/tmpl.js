@@ -58,6 +58,17 @@
 				};
 			}
 		})(),
+		off: (function() {
+			if(typeof document.removeEventListener === 'function') {
+				return function(el, type, fn) {
+					el.addEventListener(type, fn, false);
+				}
+			} else {
+				return function(el, type, fn) {
+					el.detachEvent('on' + type, fn);
+				};
+			}
+		})(),
 		each: function(obj, cb) {
 			var i = 0,
 				len = obj.length;
@@ -132,7 +143,9 @@
 			var xhr = new XMLHttpRequest();
 			//连接类型
 			options.type = (options.type ? options.type.toUpperCase() : 'GET');
-
+			//超时
+			xhr.timeout = options.timeout && options.async !== false ? options.timeout : 0;
+			
 			if(options.type === "GET") {
 				xhr.open(options.type, (function() {
 					return options.url.indexOf('?') ? options.url + _this.serialize(options.data) : options.url + '?' + _this.serialize(options.data)
@@ -152,6 +165,7 @@
 					}
 				}
 			}, false);
+			
 			//send指令
 			if(options.type === "GET") {
 				xhr.send();
@@ -284,10 +298,10 @@
 			}
 			//初始化事件
 			setEvent.call(this);
-			//设置事件
-			this.fn.run(this.config.events, this);
 			//所有完毕后的钩子
 			this.fn.run(this.config.mounted, this);
+			//设置事件
+			this.fn.run(this.config.events, this);
 		},
 		/*绑定临时数据*/
 		data: function(data) {
@@ -302,22 +316,37 @@
 			setDom.call(this);
 		},
 		//添加事件
-		on: function(exp, type, fn) {
-			if(this.eventType.indexOf(type) == -1) setEntrust.apply(this, [type, fn]);
-			//查找现在的节点是否存在事件
-			if(!this.events[type]) this.events[type] = {};
-			//当前的事件是否有设置
-			if(!this.events[type][exp]) this.events[type][exp] = [];
-			this.events[type][exp].push(fn);
-			return this;
+		on: function(elContext, exp, type, fn) {
+			if(arguments.length === 4) {
+				if(this.eventType.indexOf(type) == -1) setEntrust.apply(this, [elContext, type, fn]);
+				//查找现在的节点是否存在事件
+				if(!this.events[type]) this.events[type] = {};
+				//当前的事件是否有设置
+				if(!this.events[type][exp]) this.events[type][exp] = [];
+				this.events[type][exp].push(fn);
+				return this;
+			} else if(arguments.length === 3) {
+				var _this = this;
+				fn = type;
+				type = exp;
+				this.fn.on(elContext, type, function(event) {
+					fn.call(_this, event);
+				});
+				return this;
+			}
 		},
 		router: function(options) {
 			this.router[options.path] = options.content;
 		},
 		//移除事件
-		off: function(exp, type, fn) {
-			var eventIndex = this.events[type][exp].indexOf(fn);
-			if(eventIndex != -1) this.events[type][exp].splice(eventIndex, 1);
+		off: function(elContext, exp, type, fn) {
+			if(arguments.length === 4) {
+				var eventIndex = this.events[type][exp].indexOf(fn);
+				if(eventIndex != -1) this.events[type][exp].splice(eventIndex, 1);
+			} else if(arguments.length === 3) {
+				/*删除事件*/
+				this.fn.off(elContext, type, fn);
+			}
 			return this;
 		},
 		//继承处理实例
@@ -464,8 +493,8 @@
 		//获取直接的当个子节点
 		children: function(el) {
 			var els = [];
-			this.fn.each(el.childNodes,function(child){
-				if(child.nodeType === 1){
+			this.fn.each(el.childNodes, function(child) {
+				if(child.nodeType === 1) {
 					els.push(child);
 				}
 			});
@@ -635,9 +664,9 @@
 	}
 
 	//设置主的委托事件
-	function setEntrust(type, fn) {
+	function setEntrust(elContext, type, fn) {
 		var _this = this;
-		this.fn.on(document, type, function(event) {
+		this.fn.on(elContext, type, function(event) {
 			var ev = event || window.event;
 			var el = ev.target || ev.srcElement;
 			var eventType = _this.events[type];
@@ -653,6 +682,7 @@
 		this.eventType.push(type);
 	}
 
+	//把路由实例挂靠到模板中
 	function setRouter() {
 		if(this.fn.isObj(this.config.router)) this.router = this.config.router;
 	}
