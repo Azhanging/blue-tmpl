@@ -75,6 +75,8 @@
 			setInstance.call(this, 'methods'); //设置methods
 
 			setInstance.call(this, 'data'); //设置data
+			
+			setRouterStatus.call(this);
 
 			keepLive.call(this); //设置保持状态
 
@@ -130,6 +132,11 @@
 			
 			/*路由进入的钩子*/
 			fn.run(this.config.routerEnter, this, [_path, viewEl]);
+			
+			/*修改路由状态*/
+			if(this.router[hash]['routerStatus'] !== undefined){
+				this.routerStatus = true;
+			}
 
 			hashChange.apply(this, [routerBtns, _path, viewEl]);
 		},
@@ -163,10 +170,14 @@
 					success: function(data) {
 						_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
 						filterTextNode.call(this, _this.router[hash]['temp']);
+						_this.routerStatus = false;
+					},error:function(data){
+						_this.routerStatus = true;
 					}
 				});
 			} else if(tmplId) {
 				_this.router[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板
+				_this.routerStatus = true;
 			}
 		},
 		/*获取参数*/
@@ -206,6 +217,18 @@
 			else path = hash.replace('#', '').split('?');
 			return path[0];
 		}
+	}
+	
+	/*设置路由的状态是够允许跳转*/
+	function setRouterStatus(){
+		var _this = this;
+		this.routerStatus = true;
+		var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
+		fn.each(routerBtns,function(routerBtn,index){
+			fn.on(routerBtn,'click',function(event){
+				if(!_this.routerStatus) event.preventDefault();
+			});
+		});
 	}
 
 	/*设置路由的路径*/
@@ -340,6 +363,12 @@
 		var cb = null;
 		if(this.router[path.hash]) {
 			fn.run(this.config.routerEnter, this, [path, viewEl, el]);
+			
+			/*修改路由状态*/
+			if(this.router[path.hash]['routerStatus'] !== undefined){
+				this.routerStatus = true;
+			}
+			
 			fn.run(this.config.routerEntered, this, [path, viewEl, el]);
 		}
 		if(this.alias[alias]) {

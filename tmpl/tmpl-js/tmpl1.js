@@ -1,14 +1,18 @@
-_require.define('tmpl1', function() {
+_require.define(function() {
 	var Tmpl = _require('tmpl');
+	
+	var changeStatus = _require('@base-js/changeStatus.js');
+
 	function tmpl1() {
 		new Tmpl({
 			el: "tmpl1",
 			data: {
+				isReady: false,
 				i: 0
 			},
 			methods: {
 				add: function() {
-					this.data([this.i++, this.i++, this.i++, this.i++])
+					this.data([this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++])
 						.appendTo(this.childrens(this.fn.getEl('tmp1'), 'content')[0]);
 				},
 				showDetailed: function(event, el) {
@@ -19,15 +23,11 @@ _require.define('tmpl1', function() {
 				}
 			},
 			mounted: function() {
-				if(this.fn.getEl('tmp1')){
-					this.isReady = true;
-					this.add();	
-				}
+				this.add();
 			},
 			events: function() {
-				if(this.fn.getEl('tmp3')){
-					this.on('on-add-tm1', 'click', this.add);	
-				}
+				this.on(this.fn.getEl('tmp1'), 'on-add-tmpl', 'click', this.add);
+				changeStatus();
 			}
 		});
 	}

@@ -28,44 +28,8 @@
 </script>
 
 <script type="text/javascript">
-	_require.defineId('tmpl1', function() {
-		var Tmpl = _require('tmpl');
-
-		function tmpl1() {
-			new Tmpl({
-				el: "tmpl1",
-				data: {
-					isReady: false,
-					i: 0
-				},
-				methods: {
-					add: function() {
-						this.data([this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++])
-							.appendTo(this.childrens(this.fn.getEl('tmp1'), 'content')[0]);
-					},
-					showDetailed: function(event, el) {
-						var content = this.html(el);
-						var wrap = this.fn.getEl('detailed');
-						this.html(wrap, content);
-						this.toggle(wrap);
-					}
-				},
-				mounted: function() {
-					if(this.fn.getEl('tmp1')) {
-						this.add();
-					}
-				},
-				events: function() {
-					if(this.fn.getEl('tmp1')) {
-						this.on(this.fn.getEl('tmp1'), 'on-add-tmpl', 'click', this.add);
-					}
-				}
-			});
-		}
-		return tmpl1;
-	});
-
+	_require.loadModules('@tjs/tmpl1.js');
 	_require.use(function() {
-		_require('tmpl1')();
+		_require('@tjs/tmpl1.js')();
 	});
 </script>

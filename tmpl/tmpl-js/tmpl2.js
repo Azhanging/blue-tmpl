@@ -1,5 +1,6 @@
-_require.define('tmpl2', function() {
+_require.define(function() {
 	var Tmpl = _require('tmpl');
+	var changeStatus = _require('@base-js/changeStatus.js');
 	return function tmpl2() {
 		new Tmpl({
 			el: "tmpl2",
@@ -13,14 +14,11 @@ _require.define('tmpl2', function() {
 				}
 			},
 			mounted: function() {
-				if(this.fn.getEl('tmp2')){
-					this.add();	
-				}	
+				this.add();	
 			},
 			events: function() {
-				if(this.fn.getEl('tmp2')){	
-					this.on(this.fn.getEl('tmp2'),'on-add-tmpl', 'click', this.add);		
-				}
+				this.on(this.fn.getEl('tmp2'),'on-add-tmpl', 'click', this.add);	
+				changeStatus();
 			}
 		});
 	}

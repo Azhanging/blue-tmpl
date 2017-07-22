@@ -9,12 +9,18 @@
 (function(global, factory) {
 	if(typeof _require === 'function') {
 		_require.defineId('tmpl', factory);
+	} else if(typeof exports === 'object' && typeof module === 'object') {
+		module.exports = factory();
+	} else if(typeof define === 'function' && define.amd) {
+		define("tmpl", [], factory);
 	} else {
 		(global ? (global.Tmpl = factory()) : {});
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
 
 	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST, INCLUDE, INCLUDE_NULL;
+
+	var inBrowser = typeof window !== 'undefined';
 
 	/*配置信息*/
 	var config = {
@@ -48,6 +54,7 @@
 			return el && el.nodeType;
 		},
 		on: (function() {
+			if(!inBrowser) return;
 			if(typeof document.addEventListener === 'function') {
 				return function(el, type, fn) {
 					el.addEventListener(type, fn, false);
@@ -59,6 +66,7 @@
 			}
 		})(),
 		off: (function() {
+			if(!inBrowser) return;
 			if(typeof document.removeEventListener === 'function') {
 				return function(el, type, fn) {
 					el.addEventListener(type, fn, false);
@@ -145,7 +153,7 @@
 			options.type = (options.type ? options.type.toUpperCase() : 'GET');
 			//超时
 			xhr.timeout = options.timeout && options.async !== false ? options.timeout : 0;
-			
+
 			if(options.type === "GET") {
 				xhr.open(options.type, (function() {
 					return options.url.indexOf('?') ? options.url + _this.serialize(options.data) : options.url + '?' + _this.serialize(options.data)
@@ -156,16 +164,21 @@
 			xhr.setRequestHeader('Content-Type', options.contentType ? options.contentType : 'application/x-www-form-urlencoded; charset=UTF-8');
 			//响应事件
 			xhr.addEventListener('readystatechange', function() {
-				var data = JSON.parse(xhr.responseText);
+				try {
+					var data = JSON.parse(xhr.responseText);
+				} catch(e) {
+					var data = xhr.responseText;
+				}
+
 				if(xhr.readyState == 4) {
 					if(xhr.status == 200) {
-						_this.isFn(options.success) ? (options.success(data)) : null;
+						_this.cb(options.success, _this, [data]);
 					} else if(xhr.status >= 400) {
-						_this.isFn(options.error) ? (options.error(data)) : null;
+						_this.cb(options.error, _this, [data]);
 					}
 				}
 			}, false);
-			
+
 			//send指令
 			if(options.type === "GET") {
 				xhr.send();
@@ -200,22 +213,25 @@
 			}
 		}
 
-		if(!document.getElementsByClassName) {
-			document.getElementsByClassName = function(className, element) {
-				var children = (element || document).getElementsByTagName('*');
-				var elements = new Array();
-				for(var i = 0; i < children.length; i++) {
-					var child = children[i];
-					var classNames = child.className.split(' ');
-					for(var j = 0; j < classNames.length; j++) {
-						if(classNames[j] == className) {
-							elements.push(child);
-							break;
+		/*只在浏览器环境使用*/
+		if(inBrowser) {
+			if(!document.getElementsByClassName) {
+				document.getElementsByClassName = function(className, element) {
+					var children = (element || document).getElementsByTagName('*');
+					var elements = new Array();
+					for(var i = 0; i < children.length; i++) {
+						var child = children[i];
+						var classNames = child.className.split(' ');
+						for(var j = 0; j < classNames.length; j++) {
+							if(classNames[j] == className) {
+								elements.push(child);
+								break;
+							}
 						}
 					}
-				}
-				return elements;
-			};
+					return elements;
+				};
+			}
 		}
 	})();
 
@@ -276,10 +292,18 @@
 		constructor: Tmpl,
 		/*初始化*/
 		init: function() {
+			var _this = this;
 			//构建开始的钩子
 			this.fn.run(this.config.created, this);
 			//初始配置信息
-			this.el = this.fn.getEl(this.config.el);
+			this.el = (function(){
+				if(inBrowser) {
+					return _this.fn.getEl(_this.config.el)
+				} else {
+					return _this.config.el;
+				}
+			})();
+			
 			//初始化方法
 			setInstance.call(this, 'methods');
 			//初始化数据
@@ -288,10 +312,17 @@
 			setRouter.call(this);
 			//查找模板
 			if(this.el) {
-				this.template = this.el.innerHTML;
-
-				this.config.template = this.el.innerHTML;
-
+				
+				this.template = (function() {
+					if(inBrowser) {
+						_this.config.template = _this.el.innerHTML;
+						return _this.el.innerHTML;
+					} else {
+						_this.config.template = _this.el;
+						return _this.el;
+					}
+				})();
+				
 				setRegExp.call(this);
 				//转化为js执行
 				setDom.call(this);
@@ -592,24 +623,28 @@
 			return this;
 		},
 		create: function(dom) {
-			var fragment = document.createDocumentFragment();
-			var tempEl = document.createElement('div');
-			tempEl.innerHTML = dom;
-			while(tempEl.childNodes.length !== 0) {
-				var child = tempEl.childNodes[0];
-				var childHtml = child.innerHTML;
-				if(child.tagName === 'SCRIPT') {
-					var newScript = document.createElement('script');
-					newScript.innerHTML = childHtml;
-					this.fn.each(child.attributes, function(attr) {
-						if(!attr) true;
-						newScript.setAttribute(attr.name, attr.value);
-					});
-					this.remove(child);
-					child = newScript;
+			var fragment = dom;
+			if(inBrowser){				
+				fragment = document.createDocumentFragment();
+				var tempEl = document.createElement('div');
+				tempEl.innerHTML = dom;
+				while(tempEl.childNodes.length !== 0) {
+					var child = tempEl.childNodes[0];
+					var childHtml = child.innerHTML;
+					if(child.tagName === 'SCRIPT') {
+						var newScript = document.createElement('script');
+						newScript.innerHTML = childHtml;
+						this.fn.each(child.attributes, function(attr) {
+							if(!attr) true;
+							newScript.setAttribute(attr.name, attr.value);
+						});
+						this.remove(child);
+						child = newScript;
+					}
+					fragment.appendChild(child);
 				}
-				fragment.appendChild(child);
 			}
+			
 			return fragment;
 		},
 		append: function(el, child) {
@@ -629,6 +664,15 @@
 			ev.cancelBubble = true;
 		}
 	};
+
+	/*允许错误*/
+	function tryRun(resolve, reject) {
+		try {
+			return resolve.call(this);
+		} catch(e) {
+			return reject.call(this);
+		}
+	}
 
 	//绑定相关函数
 	function bindFn(el, className, type) {

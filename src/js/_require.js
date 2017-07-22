@@ -31,17 +31,9 @@
 				return -1;
 			}
 		}
-
-		//不兼容IE8代理数据
-		if(navigator.userAgent.indexOf('MSIE 8.0') == -1) {
-			//共享变量
-			Object.defineProperty(global, 'G', {
-				value: {},
-				enumerable: true,
-				configurable: false,
-				writable: false
-			});
-		}
+		
+		/*代理变量*/
+		window._GLOBAL_ = {};
 
 		//map
 		if(!isFn(Array.prototype.map)) {
