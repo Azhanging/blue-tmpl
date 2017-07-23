@@ -1,0 +1,16 @@
+<% for(var i = 0;i<data.length;i++){ %>
+	<div class="g-media mg-t-10 pd-10  g-bg-danger">
+		<div class="g-media-body">
+			<h4 class="g-media-title">模板2-<%= data[i] %></h4>
+			<p class="g-media-content on-show-detailed">
+				<%= data %>
+			</p>
+			<div class="g-media-other-msg">
+				<time><%= new Date() %></time>
+			</div>
+		</div>
+		<div class="g-media-head g-media-head-right">
+			<img src="" class="wh-64 radius-50perc" />
+		</div>
+	</div>
+<% } %>

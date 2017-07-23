@@ -1,6 +1,6 @@
 /*!
  * 
- * tmpl-router.js v1.0.2
+ * tmpl-router.js v1.0.1
  * (c) 2016-2017 Blue
  * https://github.com/azhanging/tmpl
  * Released under the MIT License.

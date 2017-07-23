@@ -1,0 +1,31 @@
+<tmpl-base file="__BASE__/base.tmpl"></tmpl-base>
+
+<tmpl-block name="body">
+	<% for(var i = 0;i<data.length;i++){ %>
+		<div class="g-media mg-t-10 pd-10  g-bg-primary">
+			<div class="g-media-head">
+				<img src="" class="wh-64 radius-50perc" />
+			</div>
+			<div class="g-media-body">
+				<h4 class="g-media-title">模板1-<%= data[i] %></h4>
+				<p class="g-media-content on-show-detailed">
+					<%= data %>
+				</p>
+				<div class="g-media-other-msg">
+					<time><a href="#/tm1/index"><%= new Date() %></a></time>
+				</div>
+			</div>
+		</div>
+	<% } %>
+	<div>__TMPL__</div>
+	<tmpl-include name="__TMPL__/tmpl2.tmpl"></tmpl-include>
+	<tmpl-include name="__TMPL__/tmpl3.tmpl"></tmpl-include>
+</tmpl-block>
+
+<tmpl-block name="header">
+	<header>
+		<tmpl-include name="__TMPL__/tmpl10.tmpl"></tmpl-include>
+		<title>title</title>
+	</header>
+</tmpl-block>
+

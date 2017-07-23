@@ -1,6 +1,6 @@
 /*!
  * 
- * 			tmpl.js v1.0.1
+ * 			tmpl.js v1.0.3
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 		
@@ -18,9 +18,11 @@
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
 
-	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST, INCLUDE, INCLUDE_NULL;
+	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST, INCLUDE, INCLUDE_NULL, BLOCK, BASE;
 
 	var inBrowser = typeof window !== 'undefined';
+
+	if(!inBrowser) var fs = require('fs');
 
 	/*配置信息*/
 	var config = {
@@ -214,24 +216,22 @@
 		}
 
 		/*只在浏览器环境使用*/
-		if(inBrowser) {
-			if(!document.getElementsByClassName) {
-				document.getElementsByClassName = function(className, element) {
-					var children = (element || document).getElementsByTagName('*');
-					var elements = new Array();
-					for(var i = 0; i < children.length; i++) {
-						var child = children[i];
-						var classNames = child.className.split(' ');
-						for(var j = 0; j < classNames.length; j++) {
-							if(classNames[j] == className) {
-								elements.push(child);
-								break;
-							}
+		if(inBrowser && !document.getElementsByClassName) {
+			document.getElementsByClassName = function(className, element) {
+				var children = (element || document).getElementsByTagName('*');
+				var elements = new Array();
+				for(var i = 0; i < children.length; i++) {
+					var child = children[i];
+					var classNames = child.className.split(' ');
+					for(var j = 0; j < classNames.length; j++) {
+						if(classNames[j] == className) {
+							elements.push(child);
+							break;
 						}
 					}
-					return elements;
-				};
-			}
+				}
+				return elements;
+			};
 		}
 	})();
 
@@ -288,6 +288,9 @@
 		constructor.install(this);
 	}
 
+	//设置路径别名常量
+	Tmpl.alias = {};
+
 	Tmpl.prototype = {
 		constructor: Tmpl,
 		/*初始化*/
@@ -296,14 +299,14 @@
 			//构建开始的钩子
 			this.fn.run(this.config.created, this);
 			//初始配置信息
-			this.el = (function(){
+			this.el = (function() {
 				if(inBrowser) {
 					return _this.fn.getEl(_this.config.el)
 				} else {
 					return _this.config.el;
 				}
 			})();
-			
+
 			//初始化方法
 			setInstance.call(this, 'methods');
 			//初始化数据
@@ -312,7 +315,7 @@
 			setRouter.call(this);
 			//查找模板
 			if(this.el) {
-				
+
 				this.template = (function() {
 					if(inBrowser) {
 						_this.config.template = _this.el.innerHTML;
@@ -322,7 +325,7 @@
 						return _this.el;
 					}
 				})();
-				
+
 				setRegExp.call(this);
 				//转化为js执行
 				setDom.call(this);
@@ -624,7 +627,7 @@
 		},
 		create: function(dom) {
 			var fragment = dom;
-			if(inBrowser){				
+			if(inBrowser) {
 				fragment = document.createDocumentFragment();
 				var tempEl = document.createElement('div');
 				tempEl.innerHTML = dom;
@@ -644,7 +647,7 @@
 					fragment.appendChild(child);
 				}
 			}
-			
+
 			return fragment;
 		},
 		append: function(el, child) {
@@ -781,15 +784,26 @@
 		//转义双引号
 		QUEST = /"/g;
 		//引入模板
-		INCLUDE = /<tmpl name=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl>/g;
+		INCLUDE = /<tmpl-include name=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g;
 		//空模板
-		INCLUDE_NULL = /<tmpl\s*?>[\s\S]*?<\/tmpl>/g;
+		INCLUDE_NULL = /<tmpl-include\s*?>[\s\S]*?<\/tmpl-include>/g;
+		//嵌入block块
+		BLOCK = /<tmpl-block name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g;
+		//base路径解析
+		BASE = /<tmpl-base file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-base>/g;
 	}
 
 	//初始化dom生成
 	function setDom() {
-		//先设置获取include的引入模板
-		replaceInclude.call(this);
+	    
+		//node中使用block
+		if(!inBrowser) {
+			replaceBlock.call(this);
+		}
+		/*重新检查依赖里面有没有引入的数据*/
+		replaceAlias.call(this);
+        replaceInclude.call(this);
+
 		var script = this.template.match(SCRIPT_REGEXP);
 		var echoScript = this.template.match(ECHO_SCRIPT_REGEXP);
 		var replaceScript = setSeize.call(this);
@@ -842,17 +856,90 @@
 		//找不到include//查找的id和include匹配的数量必须相同
 		if(includeTmpl.length === 0 || this.fn.clearNull(includeId)
 			.length === 0 ||
-			!(includeTmpl.length > 0 && includeId.length > 0 && includeId.length === includeTmpl.length)) return;
+			!(includeTmpl.length > 0 &&
+				includeId.length > 0 &&
+				includeId.length === includeTmpl.length
+			)) return;
 
 		this.fn.each(includeId, function(id, index) {
-			var el = _this.fn.getEl(id);
 			var replaceInclude = new RegExp(initRegExp.call(_this, includeTmpl[index]), 'g');
-			if(el) _this.template = _this.template.replace(replaceInclude, _this.html(el));
-			else _this.template = _this.template.replace(replaceInclude, '');
+			/*浏览器环境下执行*/
+			if(inBrowser) {
+				var el = _this.fn.getEl(id);
+				if(el) _this.template = _this.template.replace(replaceInclude, _this.html(el));
+				else _this.template = _this.template.replace(replaceInclude, '');
+			} else {
+				/*node环境下执行*/
+				try {
+					var tmpl = fs.readFileSync(id, {
+						encoding: 'UTF8'
+					});
+					_this.template = _this.template.replace(replaceInclude, tmpl);
+				} catch(e) {
+					_this.template = _this.template.replace(replaceInclude, '');
+				}
+			}
 		});
 
 		includeTmpl = this.fn.unique(this.template.match(INCLUDE));
 		if(includeTmpl.length > 0) replaceInclude.call(this);
+	}
+
+	/*替换Block块内容*/
+	function replaceBlock() {
+	    
+	    //先设置获取include的引入模板
+        replaceAlias.call(this);
+	    
+		var baseFile = this.fn.unique(this.template.match(BASE));
+		/*只获取第一个base的名字*/
+		var baseFileName = baseFile.toString()
+			.replace(BASE, "$2")
+			.split(',')[0];
+
+		var _this = this;
+
+		var blockTmpl = this.fn.unique(this.template.match(BLOCK));
+
+		var tmpl = fs.readFileSync(baseFileName, {
+			encoding: 'UTF8'
+		});
+
+		var baseTmpl = tmpl.match(BLOCK);
+
+		var baseBlockName = baseTmpl.toString()
+			.replace(BLOCK, "$2")
+			.split(',');
+
+		this.fn.each(baseBlockName, function(name, index) {
+			var replaceBlock = new RegExp(initRegExp.call(_this, baseTmpl[index]), 'g');
+			var hasBlock = false;
+
+			_this.fn.each(blockTmpl, function(blocktmpl, _index) {
+				BLOCK.test(blocktmpl);
+				//匹配到name的
+				if(name === RegExp.$2) {
+					tmpl = tmpl.replace(replaceBlock, RegExp.$3);
+					hasBlock = true;
+				}
+				BLOCK.lastIndex = 0;
+			});
+
+			if(!hasBlock) {
+				tmpl = tmpl.replace(replaceBlock, '');
+			}
+		});
+
+		_this.template = tmpl;
+	}
+
+	/*替换别名的常量*/
+	function replaceAlias() {
+		var _this = this;
+		var constructor = this.constructor;
+		this.fn.each(constructor.alias, function(replaceAlias, alias) {
+			_this.template = _this.template.replace(new RegExp(initRegExp.call(_this, alias), 'g'), replaceAlias);
+		});
 	}
 
 	//设置占位
