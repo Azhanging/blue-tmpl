@@ -8,7 +8,6 @@
  */
 
 (function(global, factory) {
-
 	if(typeof _require === 'function') {
 		_require.defineId('tmpl-router', factory);
 	} else if(typeof exports === 'object' && typeof module === 'object') {
@@ -22,14 +21,11 @@
 
 	/*默认配置*/
 	var config = {
-		created: function() {},
 		routerLink: 'tmpl-router', //.tmpl-router						
 		routerLinkActive: 'tmpl-router-active', //.tmpl-router-active
 		routerView: 'tmpl-router-view', //#tmpl-router-view
 		data: {},
-		methods: {},
-		error: function() {},
-		mounted: function() {}
+		methods: {}
 	}
 
 	var _Tmpl = null;
@@ -42,9 +38,11 @@
 
 	//设置路由参数
 	function TmplRouter(opts) {
+	    
+	    if(window.hasTmplRouter) return {};
+	    
 		this.init(opts);
 	}
-
 	//安装插件
 	TmplRouter.install = function(Tmpl) {
 		if(this.installed) return TmplRouter;
@@ -67,7 +65,7 @@
 	TmplRouter.prototype = {
 		constructor: TmplRouter,
 		init: function(opts) {
-
+		    
 			var _this = this;
 
 			this.router = {};
@@ -111,29 +109,29 @@
 		//hash改变调用
 		hashChange: function() {
 
-			var path = window.location.hash.replace('#','');
+			var path = window.location.hash.replace('#', '');
 
-			var hash = this.getHash(path);//获取hash
+			var hash = this.getHash(path); //获取hash
 
 			var search = this.search(path); //获取参数
 
 			var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
 
 			var viewEl = fn.getEl(this.config.routerView); //视图容器
-			
-			var hasAlias = false;		//是否有别名
+
+			var hasAlias = false; //是否有别名
 
 			if(hash === '') hash = '/'; //如果不存在hash设置为根目录
 
 			if(this.alias[hash]) {
 				hasAlias = true;
-				hash = getPathAlias.apply(this, [path, viewEl, null]); //判断是不是别名的路由	
+				hash = getPathAlias.apply(this, [(hash === '/' ? hash : path), viewEl, null]); //判断是不是别名的路由	
 			}
 
 			if(routerBtns.length === 0) return this; //存在路由绑定
 
 			if(!this.alias[hash] && !this.router[hash]) { //error页面
-				this.config.error.call(this);
+				fn.run(this.config.error, this);
 				return;
 			}
 
@@ -144,11 +142,9 @@
 			if(this.router[hash]['routerStatus'] !== undefined) {
 				this.routerStatus = true;
 			}
-			
-			/*如果是存在别名路径，返回代理的那个路径*/
-			if(hasAlias) path = hash;
 
-			hashChange.apply(this, [routerBtns, path, viewEl]);
+			/*如果是存在别名路径，返回代理的那个路径*/
+			hashChange.apply(this, [routerBtns, (hasAlias ? hash : path), viewEl]);
 		},
 		go: function(page) {
 			if(fn.isNum(page)) history.go(page);
@@ -212,12 +208,12 @@
 		},
 		/*获取参数*/
 		search: function(el, search) {
-			try{
-				var path = tmpl.attr(el, 'href').split('?');	
-			}catch(e){
+			try {
+				var path = tmpl.attr(el, 'href').split('?');
+			} catch(e) {
 				var path = el.split('?');
 			}
-			
+
 			if(search) {
 				if(fn.isObj(search)) {
 					search = fn.serialize(search);
@@ -317,7 +313,7 @@
 			/*如果设置的节点没有绑定到对应的节点上*/
 			if(!alinkEl)
 				_this.currentRouter = hash;
-				
+
 		});
 
 		fn.run(this.config.routerEntered, this, [path, viewEl, alinkEl]);
@@ -376,9 +372,10 @@
 			}
 
 			fn.run(this.config.routerEntered, this, [path, viewEl, el]);
+
 		}
 		if(this.alias[alias]) {
-			return getPathAlias.apply(this, [path, viewEl, el]);
+			return getPathAlias.apply(this, [alias, viewEl, el]);
 		} else return alias;
 	}
 

@@ -61,7 +61,7 @@ _require.define(function() {
 			},
 			'/tm3': {
 				tmplUrl: "./php/get_tmpl4.php?tmpl=tmpl3",
-				alias: '/tm6'
+				alias: '/tm8'
 			},
 			'/tm6': {},
 			'/tm8': {

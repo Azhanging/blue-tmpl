@@ -81,9 +81,9 @@
 		<div id="detailed" style="display: none;" class="on-close"></div>
 
 		<!--路由显示容器-->
-		<div id="tmpl-router-view" class="row">
+		<div id="tmpl-router-view" class="row"></div>
 
-		</div>
+		<a href="#/d" class="tmpl-router-1">New Router</a>
 
 		<script src="src/js/_require.js" type="text/javascript" charset="utf-8"></script>
 		<script src="src/js/tmpl.js" type="text/javascript" charset="utf-8"></script>
@@ -105,17 +105,23 @@
 
 				var Tmpl = _require('tmpl');
 				var TmplRouter = _require('tmpl-router');
-				
+
 				/*使用路由模块*/
-				try{
-					var router = _require('@base-js/router.js');	
-				}catch(e){
-					console.log(e);
-				}
-				
+				var router = _require('@base-js/router.js');
+
+				Tmpl.install(TmplRouter);
+
+				new TmplRouter({
+					routerLink: 'tmpl-router-1',
+					router: {
+						'/d': {
+							tmplId:'tmp4'
+						}
+					}
+				});
 
 				_GLOBAL_['router'] = router;
-				
+
 				var app = new Tmpl({
 					methods: {
 						showDetailed: function(event, el) {
@@ -136,4 +142,5 @@
 			});
 		</script>
 	</body>
+
 </html>
