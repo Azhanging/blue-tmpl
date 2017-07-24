@@ -1,6 +1,6 @@
 # Tmpl
 
-##### 更新时间：2017年7月22日15:10:34
+##### 更新时间：2017年7月24日09:27:16
 
 支持IE5-IE11, EDGE , chrome , firefox
 
@@ -8,15 +8,24 @@
 
 #### new Tepl(options)：
 
-##### options中的参数
+##### 特别说明一下，在默认的模板中的上下文this都是指向当前模板的实例对象上，里面还有一个代理this的变量_this_，为了在一个函数作用域内方便查找当前模板的实例this对象；
 
-#### 特别说明一下，在默认的模板中的上下文this都是指向当前模板的实例对象上，里面还有一个代理this的变量_this，为了在一个函数作用域内方便查找当前模板的实例this对象；
+****
 
-*************
+#### 静态方法：
 
-#### 支持tmpl引入（新）
+**Tmpl.install(constructor):**安装插件
+
+**Tmpl.alias(constructor):**一些别名的常量，替换到模板中对应别名的常量值
+
+*******
+
+#### options中的参数：
+
+##### 支持tmpl引入
 
 在模板用可以使用
+
 ```html
 <script type="text/template" id="tmpl">
 	<tmpl name="tmpl1"></tmpl>
@@ -45,7 +54,74 @@
 
 
 
-**动态模板**：默认模板中的include中引入是不存在的，会被忽略掉，可以动态添加原来插入不存在的模板，使用update方法更新模板即可；
+**动态模板**：默认模板中的<tmpl-include name="tmplId"></tmpl-include>中引入是不存在的，会被忽略掉，可以动态添加原来插入不存在的模板，使用实例方法update更新模板即可，更新后的是存在<tmpl-include name="tmplId"></tmpl-include>中找到的动态模块。
+
+**************
+
+#### PS：nodejs中的用法，不需要包含script；只能作为解析模板内容，对应的Tmpl中有关dom的方法无法使用：（nodejs环境中的tmpl-include是使用file来索引文件的地址，在nodejs环境中使用了tmpl-include是使用name来索引文件地址是不不做任何的处理的，同理在浏览器环境中，tmpl-include[file] 也是不做任何处理的，需要区分两个环境的使用）；
+
+在**nodejs**环境中使用，<tmpl-include file="path"></tmpl-include>，name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个layout的文件，<tmpl-layout file="layout.tmpl"></tmpl-layout>。
+
+```html
+<!-layout.tmpl->
+<html>
+  <body>
+  	<header>
+    	<tmpl-block name="header"></tmpl-block>	
+    </header>
+    <main>
+    	<tmpl-block name="main"></tmpl-block>	
+    </main>
+  </body>
+</html>
+```
+
+```html
+<!-include.tmpl->
+<div>
+  include content
+</div>
+```
+
+```html
+<!-index.tmpl->
+<tmpl-layout file="layout.tmpl"></tmpl-layout> <!-设置包含当前tmpl的文件->
+
+<tmpl-block name="header">
+	<div>
+    	我是header的内容
+  	</div>
+</tmpl-block>
+
+<tmpl-block name="main">
+	<div>
+    	我是main的内容
+  	</div>
+  <tmpl-include file="include.tmpl"></tmpl-include>
+</tmpl-block>
+
+```
+
+```html
+<!-这是解析的内容->
+<html>
+  <body>
+  	<header>
+    	<div>
+    		我是header的内容
+  		</div>
+    </header>
+    <main>
+    	<div>
+            我是main的内容
+        </div>
+        <div>
+          include content
+        </div>
+    </main>
+  </body>
+</html>
+```
 
 *************
 
@@ -88,7 +164,6 @@
 
 app.a // 1
 app.b // 2
-
 ```
 
 ```html
@@ -110,7 +185,6 @@ app.b // 2
 		}
 	}).data(null).appendTo('app');
 </script>
-
 ```
 渲染后的结果
 
@@ -168,6 +242,8 @@ app.b // 2
 
 *************
 
+### 钩子函数：
+
 ##### events : 模板加载完毕后事件处理可以写在这里
 
 ```html
@@ -182,9 +258,18 @@ app.b // 2
 }
 </script>
 ```
-*************
-
 ##### mounted : 模板加载完毕后调用的钩子函数，this指向实例对象；
+
+```html
+<script id="temp" type="text/template">
+...
+{
+	mounted:function(){
+		console.log('success!');
+	}
+}
+</script>
+```
 
 *************
 
@@ -195,17 +280,21 @@ app.b // 2
 	appendTo(el,cb):把绑定的数据模板添加到指定的el的子节点上,cb为回调；
 	inserBefore(el,ex,cb):把绑定的数据模板添加到指定的el的ex子节点前,cb为回调；
 
-**on(bindClassName,eventType,fn)**: 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
+*****
+
+**on(bindEl[,bindClassName],eventType,fn)**: 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
 on中的fn默认带回两个参数(event,el);
 
 ```javascript
 app.on('on-add','click',this.add);
 ```
 
-**off(bindClassName,eventType,fn)** : 移除事件，参数配置和on方法一样；对当前绑定委托事件移除对应的处理绑定
+**off(bindEl[,bindClassName],eventType,fn)** : 移除事件，参数配置和on方法一样；对当前绑定委托事件移除对应的处理绑定
 ```javascript
 app.off('on-add','click',this.add);
 ```
+
+*******
 
 **bind(el,bindClassName)** : 某个元素的事件中的绑定
 
@@ -221,10 +310,33 @@ app.unbind(buttonEl,'on-add');
 
 **replaceBind(el,bindClassName)** : 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
 
+******
+
 ```javascript
 app.replaceBind(buttonEl,{'on-add':'on-replaceAdd'}); // class="on-replaceAdd"
 ```
 
+**addClass(el,bindClassName)** : 某个元素的事件中的绑定
+
+```javascript
+app.addClass(buttonEl,'className className');
+```
+
+**removeClass(el,bindClassName)** : 某个元素的事件中的绑定
+
+```javascript
+app.removeClass(buttonEl,'className className');
+```
+
+**replaceClass(el,bindClassName)** : 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
+
+```javascript
+app.replaceClass(buttonEl,{'className':'newClassName'}); // class="on-replaceAdd"
+```
+
+**hasClass(el,className)：**el元素中是否存在对应的className。返回true || false;
+
+******
 
 **attr(el,attrName)** : 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的Tmpl实例对象：
 
@@ -285,13 +397,14 @@ app.prop(div,{id:"prop",class:"name",'bind-id':"'123'+1"});
 // div['bind-id'] => 1231
 ```
 
+*****
+
 **html(el,string)**:设置el中的innerHTML，如果不传参数，为获取innerHTML；
 
 ```html
 app.html(el,'123'); // 设置innerHTML <div>123</div>
 
 app.html(el); // 123
-
 ```
 
 **val(el,string)**:设置el中的value，如果不传参数，为获取value；
@@ -307,6 +420,8 @@ app.val(el); // 返回 123
 app.text(el,'123'); // 设置value el.textContent === '123' //true
 app.text(el); // 返回 123
 ```
+
+******
 
 **parent(el,hasClassName)**:获取父节点，如果第二参数为className，则查询第一个找到匹配的父类的节点；
 
@@ -436,19 +551,37 @@ app.prevAll(el3);  //返回  [el1,el2]
 app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 ```
 
+******
+
+**append(el,child)**：给节点插入子节点
+
 **show(el)**：显示el，设置display为初始值
 
 **hide(el)**：隐藏el，设置display为'none'
 
+**toggle(el)**：切换el状态
+
 **remove(el)**：删除节点
 
-**create(elString)**：创建一个新的节点，参数为一个节点字符串，返回一个节点文档对象
+**create(elString)**：创建一个新的节点，参数为一个节点字符串，返回一个节点文档对象,最外层的script的会被重新包装好，可允许的script；
 
-**update()**：更新模板，主要是使用在动态模板中使用；具体查看<include />的用法
+**update()**：更新模板，主要是使用在动态模板中使用；具体查看<tmpl-include></tmpl-include>的用法
+
+**cb(fn)**：设置回调函数执行；
+
+**preventDefault(fn)**：取消冒泡事件
+
+******
+
+
 
 #### 一些常用的方法：
 
-在tmpl的实例中，可以使用.fn中的方法
+在tmpl的实例中，可以使用.fn中的方法（Fn类）；
+
+**.getEl(exp)**:返回获取到的节点
+
+**.getEls(exp)**:返回获取到的节点数组
 
 **.isArr(array)**:检测是否为数组，返回true/false;
 
@@ -468,14 +601,116 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 
 **.clearNull(arr)**:清除数组中的空白值，返回清除完的数组;
 
-**.run(fn，context)**:在指定作用域内运行fn;
+**.run(fn,context,args)**:在指定作用域内运行fn;
 
-**.cb(fn，context)**:在指定作用域内运行fn;
+**.cb(fn,context,args)**:在指定作用域内运行fn;
 
+**.unique(arr)**:数组中去重
 
+**.trimArr(arr)**:清空空值的数组
+
+**.copy(obj)**:深拷贝
+
+**.serialize(obj)**:序列化表单内容
 
 
 
 # Tmpl-Router 路由插件
 
-##### 更新时间：2017年7月4日09:21:38
+##### 更新时间：2017年7月24日10:28:38
+
+支持IE9-IE11, EDGE , chrome , firefox
+
+## 构造对象 TmplRouter
+
+#### new TmplRouter(options)：
+
+##### options中的参数：
+
+**routerLink:**绑定路由的className。默认值：'tmpl-router'
+
+**routerLinkActive:**绑定被选中时候的className，默认值：'tmpl-router-active'
+
+**routerView:**点击路由链接切换的视图容器
+
+**data:**数据存储，data中的所有值都会挂在到实例对象中作为实例属性
+
+**methods:**实例中的方法
+
+**keepLive:**view层中的显示状态是否保持住，比如你在模块中加载了比较长的数据，并且往下滚动了一段距离，如果在切换了路径路径，则重新切回来的时候是保持你原来离开的样子的
+
+**router:**配置路由信息，类型为Object类型，key为路由的路径，value为一个Object，配置信息如下：
+
+* **tmplUrl:**异步加载模块的url地址,返回的数据为。异步模块会自动处理routerStatus的状态，不需要手动设定
+```javascript
+{
+	tmpl:"<div>domString</div>"
+}
+```
+异步的模块会存在一个问题，
+假设异步模块中异步加载的dom类型中存在script请求，
+这时候还没请求回来的就被切换到下一个路由，
+则运行script中的内容会找不到上一个路由view层中的dom节点，存在报错；
+所以设定routerStart的值来判断路由是够允许下一个跳转。
+
+
+* **tmplId:** 这种的非异步模块，把对应模块script的id写在这个参数，id模块会自动处理routerStatus的状态，不需要设定
+
+* **routerStatus:** 如果路由中不存在异步模块或者是静态的id模块，就需要设定这个值来作为状态告诉路由是允许做下一跳的；
+
+* **alias:** 别名路径,如果访问的为别名路径，则跳转到对应的
+
+* **keepLive:**在实例中的keepLive设置为true的情况下，这里的keepLive才会生效，这里的keepLive是为了让部分view层不保持状态使用的，false则不保持状态；
+
+* **modules:**这里的modules设置为当前路由路径下一层路径的路由配置，配置信息个router的配置信息一样
+
+```javascript
+'/tm1': {
+	tmplUrl: "./php/get_tmpl.php?tmpl=tmpl1",
+	alias: '/tm2',
+	keepLive: true,
+	modules: {
+		'/tm1-1': {
+			tmplUrl: "./php/get_tmpl.php?tmpl=tmpl1",
+			alias: '/tm1/index',
+			modules: {
+				'/tm1-1-1': {
+					modules: {
+						'/a': {}
+					}
+				}
+			}
+		}
+	}
+}
+```
+上列的路由会解析为个路径，modules里面的路径都是根据外层的路径累加的：
+
+```javascript
+'/tm1'
+'/tm1/tm1-1'
+'/tm1/tm1-1/tm1-1-1'
+```
+
+### 路由钩子
+
+**created:**创建路由成功后的回调信息
+
+**error:**错误的路由指向回调
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

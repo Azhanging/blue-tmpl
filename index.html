@@ -107,7 +107,12 @@
 				var TmplRouter = _require('tmpl-router');
 				
 				/*使用路由模块*/
-				var router = _require('@base-js/router.js');
+				try{
+					var router = _require('@base-js/router.js');	
+				}catch(e){
+					console.log(e);
+				}
+				
 
 				_GLOBAL_['router'] = router;
 				

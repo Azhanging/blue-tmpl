@@ -1,4 +1,4 @@
-<tmpl-base file="__BASE__/base.tmpl"></tmpl-base>
+<tmpl-layout file="__BASE__/base.tmpl"></tmpl-layout>
 
 <tmpl-block name="body">
 	<% for(var i = 0;i<data.length;i++){ %>
@@ -18,8 +18,8 @@
 		</div>
 	<% } %>
 	<div>__TMPL__</div>
-	<tmpl-include name="__TMPL__/tmpl2.tmpl"></tmpl-include>
-	<tmpl-include name="__TMPL__/tmpl3.tmpl"></tmpl-include>
+	<tmpl-include file="__TMPL__/tmpl2.tmpl"></tmpl-include>
+	<tmpl-include file="__TMPL__/tmpl3.tmpl"></tmpl-include>
 </tmpl-block>
 
 <tmpl-block name="header">

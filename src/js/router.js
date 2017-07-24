@@ -6,7 +6,7 @@ _require.define(function() {
 
 	Tmpl.install(TmplRouter);
 	
-	var router = new TmplRouter({
+	router = new TmplRouter({
 		keepLive: true,
 		data: {
 			a: 1
@@ -66,8 +66,7 @@ _require.define(function() {
 			'/tm6': {},
 			'/tm8': {
 				tmplId: "tmp4",
-				alias: '/tm9',
-				routerStatus:true
+				alias: '/tm9'
 			},
 			'/tm9': {
 				routerStatus:true
