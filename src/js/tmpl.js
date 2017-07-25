@@ -630,14 +630,67 @@
 	};
 
 	/*动画*/
-	Tmpl.prototype.animate = function(el, animate, time) {
+	Tmpl.prototype.animate = function(el, animate, time, cb) {
+	    
 		var _this = this;
-		this.fn.each(animate, function(val, type) {
-			var t = setInterval(function() {
-				var val = _this.css(el,type);
+		
+		if(!el) return;
+
+		el.timer = setInterval(function() {
+
+			var animateStatus = true;
+
+			_this.fn.each(animate, function(val, type) {
+
+				var speed = 0;
+
+				var cssVal = 0;
+
+				if(type === 'opacity') {
+				    
+					cssVal = Number(_this.css(el, 'opacity')) * 100;
+					
+				} else if(type === 'scrollTop'){
+				    
+				    cssVal = Math.ceil(document.documentElement.scrollTop || document.body.scrollTop);
+				    
+				    var maxScrollTop = Math.ceil(document.body.scrollHeight - window.innerHeight);
+				    
+				    if(val > maxScrollTop) {
+				        val = maxScrollTop;
+				        animate['scrollTop'] = maxScrollTop; 
+				    }
+				    
+				}else {
+					cssVal = parseInt(_this.css(el, type));
+				}
+
+				speed = (val - cssVal) / 8;
+
+				speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+
+				var setVal = {};
+
+				if(type === 'opacity') {
+					setVal['opacity'] = (cssVal + speed) / 100;
+					_this.css(el, setVal);
+				} else if(type === 'scrollTop'){
+				    _this.setScrollTop(cssVal + speed);
+				}else {
+					setVal[type] = cssVal + speed + 'px';
+					_this.css(el, setVal);
+				}
 				
-			}, time / 60);
-		});
+				if(parseInt(val) !== cssVal) {
+					animateStatus = false;
+				}
+			});
+
+			if(animateStatus) {
+				clearInterval(el.timer);
+			}
+
+		}, time / 60);
 	};
 
 	/*操作css*/
@@ -646,8 +699,8 @@
 		if(this.fn.isStr(css)) {
 			return this.curCss(el, css);
 		} else if(this.fn.isObj(css)) {
-		//设置style
-			this.setStyle(el,css);
+			//设置style
+			this.setStyle(el, css);
 			return this;
 		}
 	};
@@ -677,10 +730,10 @@
 			return document.documentElement.currentStyle[_css];
 		}
 	};
-	
+
 	/*设置css*/
-	Tmpl.prototype.setStyle = function(el,css){
-		this.fn.each(css,function(style,cssName){
+	Tmpl.prototype.setStyle = function(el, css) {
+		this.fn.each(css, function(style, cssName) {
 			el.style[cssName] = style;
 		});
 	};
@@ -762,12 +815,8 @@
 
 	/*设置滚动条高度*/
 	Tmpl.prototype.setScrollTop = function(top, animate) {
-		if(animate) {
-
-		} else {
-			document.body.scrollTop = top;
-			document.documentElement.scrollTop = top;
-		}
+		document.body.scrollTop = top;
+		document.documentElement.scrollTop = top;
 	}
 
 	//绑定相关函数

@@ -275,9 +275,10 @@
 			var anchorEl = fn.getEl(anchorId);
 			
 			if(fn.isEl(anchorEl)) {
-				tmpl.setScrollTop(tmpl.offset(anchorEl).top + anchorOffsetTop);
+				tmpl.animate(document,{
+				    'scrollTop':tmpl.offset(anchorEl).top + anchorOffsetTop    
+				},1000);
 			}
-			
 		});
 	}
 

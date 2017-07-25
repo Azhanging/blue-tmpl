@@ -5,6 +5,13 @@
 		<meta charset="UTF-8">
 		<title></title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
+		<script src="http://libs.baidu.com/jquery/2.0.0/jquery.js"></script>
+		<style type="text/css">
+			#app{
+				background-color: red;
+				height:2100px;
+			}
+		</style>
 	</head>
 
 	<body class="on-add">
@@ -43,10 +50,6 @@
 			<% 
 				var aaa = 1234; 
 				var bb = 123;
-				if(aaa != 1){
-					console.log(index++);
-					console.log(_this);
-				}
 			%>
 			<div class="<%= aaa %> on-class on-mouse">event</div>
 			<% for(var i = 0;i<data.length;i++){ %>
@@ -90,7 +93,7 @@
 			<%}%>
 		</script>
 
-		<script src="src/js/tmlp.js" type="text/javascript" charset="utf-8"></script>
+		<script src="src/js/tmpl.js" type="text/javascript" charset="utf-8"></script>
 
 		<script>
 			new Tmpl({
@@ -134,12 +137,12 @@
 					}
 				},
 				events: function() {
-					this.on('on-add', 'click', this.add);
-					this.on('on-add1', 'click', this.add);
-					this.on('on-add1', 'mouseover', this.add);
-					this.on('on-mouse', 'mouseover', this.mouse);
-					this.on('on-class', 'click', this.mouse);
-					this.on('on-add-d', 'dblclick', this.mouse);
+					this.on(document,'on-add', 'click', this.add);
+					this.on(document,'on-add1', 'click', this.add);
+					this.on(document,'on-add1', 'mouseover', this.add);
+					this.on(document,'on-mouse', 'mouseover', this.mouse);
+					this.on(document,'on-class', 'click', this.mouse);
+					this.on(document,'on-add-d', 'dblclick', this.mouse);
 				},
 				mounted: function() {
 					console.log('is OK');
