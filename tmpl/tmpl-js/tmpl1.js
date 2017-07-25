@@ -4,6 +4,11 @@ _require.define(function() {
 	var changeStatus = _require('@base-js/changeStatus.js');
 
 	function tmpl1() {
+		
+		var mBtn = new Tmpl({
+			el:"m-btn"
+		});
+		
 		new Tmpl({
 			el: "tmpl1",
 			data: {
@@ -12,8 +17,10 @@ _require.define(function() {
 			},
 			methods: {
 				add: function() {
-					this.data([this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++, this.i++])
+					
+					this.data([++this.i])
 						.appendTo(this.childrens(this.fn.getEl('tmp1'), 'content')[0]);
+					mBtn.data([this.i]).appendTo(this.fn.getEl('tmp1'));
 				},
 				showDetailed: function(event, el) {
 					var content = this.html(el);

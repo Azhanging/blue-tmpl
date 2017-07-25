@@ -571,6 +571,10 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 
 **preventDefault(fn)**：取消冒泡事件
 
+**offset(el)**：获取当前元素对应到页面顶部的高度
+
+**setScrollTop(topNumber)**：设置scroll的位置
+
 ******
 
 
@@ -633,7 +637,7 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 
 **routerView:**点击路由链接切换的视图容器
 
-**data:**数据存储，data中的所有值都会挂在到实例对象中作为实例属性
+**data:**数据存储，data中的所有值都会挂在到实例对象中作为实例属性（Data类）
 
 **methods:**实例中的方法
 
@@ -642,6 +646,7 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 **router:**配置路由信息，类型为Object类型，key为路由的路径，value为一个Object，配置信息如下：
 
 * **tmplUrl:**异步加载模块的url地址,返回的数据为。异步模块会自动处理routerStatus的状态，不需要手动设定
+
 ```javascript
 {
 	tmpl:"<div>domString</div>"

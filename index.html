@@ -6,6 +6,7 @@
 		<title>模板</title>
 		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 		<link rel="stylesheet" type="text/css" href="src/css/component.css" />
+		<script src="http://libs.baidu.com/jquery/1.8.3/jquery.js"></script>
 	</head>
 
 	<body>
@@ -83,8 +84,6 @@
 		<!--路由显示容器-->
 		<div id="tmpl-router-view" class="row"></div>
 
-		<a href="#/d" class="tmpl-router-1">New Router</a>
-
 		<script src="src/js/_require.js" type="text/javascript" charset="utf-8"></script>
 		<script src="src/js/tmpl.js" type="text/javascript" charset="utf-8"></script>
 		<script src="src/js/tmpl-router.js" type="text/javascript" charset="utf-8"></script>
@@ -122,7 +121,7 @@
 
 				_GLOBAL_['router'] = router;
 
-				var app = new Tmpl({
+				app = new Tmpl({
 					methods: {
 						showDetailed: function(event, el) {
 							var content = this.html(el);

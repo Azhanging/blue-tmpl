@@ -76,11 +76,11 @@ _require.define(function() {
 			}
 		},
 		error: function() {
-			var _this = this;
-			console.log('error');
-			setTimeout(function() {
-				_this.redirect('/');
-			}, 1000);
+//			var _this = this;
+//			console.log('error');
+//			setTimeout(function() {
+//				_this.redirect('/');
+//			}, 1000);
 		},
 		routerEnter: function(path, viewEl) {
 			console.log('跳转中。。。');

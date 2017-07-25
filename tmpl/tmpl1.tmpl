@@ -10,7 +10,7 @@
 
 <script type="text/template" id="tmpl1">
 	<% for(var i = 0;i<data.length;i++){ %>
-	<div class="g-media mg-t-10 pd-10  g-bg-primary">
+	<div class="g-media mg-t-10 pd-10  g-bg-primary" id="id<%= data[i] %>">
 		<div class="g-media-head">
 			<img src="" class="wh-64 radius-50perc" />
 		</div>
@@ -29,20 +29,20 @@
 	<tmpl-include name="temp-1"></tmpl-include>
 	<tmpl-include name="temp-3"></tmpl-include>
 	<tmpl-include name="temp-2"></tmpl-include>
-
-	<tmpl-block name="id">
-		<div>123456</div>
-	</tmpl-block>
-
+	
 </script>
 
-<script type="text/template" id="temp-1">
+<script type="text/template" id="m-btn">
+	<a href="javascript:;" class='tmpl-router-anchor g-btn g-btn-primary' tmpl-anchor="id<%= data%>" tmpl-anchor-top="-38"><%= data%></a>
+</script>
+
+<!--<script type="text/template" id="temp-1">
 	<div>123</div>
 </script>
 
 <script type="text/template" id="temp-2">
 	<div>456</div>
-</script>
+</script>-->
 
 <script type="text/javascript">
 	_require.loadModules('@tjs/tmpl1.js');
