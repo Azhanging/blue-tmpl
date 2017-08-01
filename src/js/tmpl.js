@@ -257,25 +257,25 @@
 	var fn = new Fn();
 
 	/*
-	 *	Data代理实例
+	 *	Render代理实例
 	 * */
 	/*针对tmpl中的数据流*/
-	function Data(options) {
+	function Render(options) {
 		this.init(options);
 	}
 
-	Data.prototype.init = function(options) {
+	Render.prototype.init = function(options) {
 		this.tmpl = options.tmpl;
 		this.data = options.data;
 		this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
 		this.fragment = this.setDom();
 	};
 
-	Data.prototype.setDom = function() {
+	Render.prototype.setDom = function() {
 		return this.tmpl.create(this.dom);
 	};
 
-	Data.prototype.appendTo = function(el, cb) {
+	Render.prototype.appendTo = function(el, cb) {
 		var fn = this.tmpl.fn;
 
 		if(el.nodeType === 1) el.appendChild(this.fragment);
@@ -285,7 +285,7 @@
 		return this.tmpl;
 	};
 
-	Data.prototype.insertBefore = function() {
+	Render.prototype.insertBefore = function() {
 		var fn = this.tmpl.fn;
 		fn.getEl(el).insertBefore(this.fragment, ex);
 		fn.cb(cb, this.tmpl);
@@ -351,9 +351,9 @@
 		fn.run(this.config.events, this);
 	};
 
-	Tmpl.prototype.data = function(data) {
+	Tmpl.prototype.render = function(data) {
 		var _this = this;
-		return new Data({
+		return new Render({
 			tmpl: _this,
 			data: data
 		});
@@ -944,15 +944,15 @@
 		//转义双引号
 		QUEST = /"/g;
 		//引入模板
-		INCLUDE_ID = /<tmpl-include name=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g;
+		INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g;
 		//引入模板
-		INCLUDE_FILE = /<tmpl-include .*? file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g;
+		INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g;
 		//空模板
 		INCLUDE_NULL = /<tmpl-include\s*?>[\s\S]*?<\/tmpl-include>/g;
 		//嵌入block块
-		BLOCK = /<tmpl-block .*? name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g;
+		BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g;
 		//base路径解析
-		BASE = /<tmpl-layout .*? file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-layout>/g;
+		BASE = /<tmpl-layout .*?file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-layout>/g;
 	}
 
 	//初始化dom生成
@@ -1058,6 +1058,9 @@
 
 	/*替换Block块内容*/
 	function replaceBlock() {
+		
+		var _this = this;
+		
 		//先设置获取include的引入模板
 		replaceAlias.call(this);
 
@@ -1066,8 +1069,9 @@
 		var baseFileName = baseFile.toString()
 			.replace(BASE, "$2")
 			.split(',')[0];
-
-		var _this = this;
+		
+		/*如果不存在block的内容，直接跳出*/
+		if(baseFileName === '') return;
 
 		var blockTmpl = fn.unique(this.template.match(BLOCK));
 

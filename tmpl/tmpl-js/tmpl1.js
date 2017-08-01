@@ -18,9 +18,9 @@ _require.define(function() {
 			methods: {
 				add: function() {
 					
-					this.data([++this.i])
+					this.render([++this.i])
 						.appendTo(this.childrens(this.fn.getEl('tmp1'), 'content')[0]);
-					mBtn.data([this.i]).appendTo(this.fn.getEl('tmp1'));
+					mBtn.render([this.i]).appendTo(this.fn.getEl('tmp1'));
 				},
 				showDetailed: function(event, el) {
 					var content = this.html(el);

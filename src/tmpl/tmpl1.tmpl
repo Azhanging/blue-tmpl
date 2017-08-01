@@ -18,8 +18,11 @@
 		</div>
 	<% } %>
 	<div>__TMPL__</div>
-	<tmpl-include file="__TMPL__/tmpl2.tmpl"></tmpl-include>
-	<tmpl-include file="__TMPL__/tmpl3.tmpl"></tmpl-include>
+	<% for(var j = 0;j<2;j++){ %>
+		<%= i %>
+		<tmpl-include file="__TMPL__/tmpl2.tmpl"></tmpl-include>
+		<tmpl-include file="__TMPL__/tmpl3.tmpl"></tmpl-include>	
+	<% } %>
 </tmpl-block>
 
 <tmpl-block name="header">

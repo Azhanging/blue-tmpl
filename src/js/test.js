@@ -34,7 +34,7 @@ http.createServer(function(req,res){
 		'Content-Type':'text-plain'
 	});
 	
-	res.write(t.data(data).dom);
+	res.write(t.render(data).dom);
 	
 	res.end();
 	

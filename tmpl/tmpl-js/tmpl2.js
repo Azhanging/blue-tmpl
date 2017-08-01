@@ -9,7 +9,7 @@ _require.define(function() {
 			},
 			methods: {
 				add: function() {
-					this.data([this.i++, this.i++, this.i++, this.i++])
+					this.render([this.i++, this.i++, this.i++, this.i++])
 						.appendTo(this.childrens(this.fn.getEl('tmp2'), 'content')[0]);
 				}
 			},
