@@ -1,8 +1,8 @@
 # Tmpl
 
-##### 更新时间：2017年7月24日09:27:16
+##### 更新时间：2017年8月2日17:30:01
 
-支持IE5-IE11, EDGE , chrome , firefox
+支持IE8-EDGE , chrome , firefox
 
 ## 构造对象 Tmpl
 
@@ -60,10 +60,10 @@
 
 #### PS：nodejs中的用法，不需要包含script；只能作为解析模板内容，对应的Tmpl中有关dom的方法无法使用：（nodejs环境中的tmpl-include是使用file来索引文件的地址，在nodejs环境中使用了tmpl-include是使用name来索引文件地址是不不做任何的处理的，同理在浏览器环境中，tmpl-include[file] 也是不做任何处理的，需要区分两个环境的使用）；
 
-在**nodejs**环境中使用，<tmpl-include file="path"></tmpl-include>，name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个layout的文件，<tmpl-layout file="layout.tmpl"></tmpl-layout>。
+在**nodejs**环境中使用，<tmpl-include file="path"></tmpl-include>，name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个extends的文件，<tmpl-extends file="extends.tmpl"></tmpl-extends>。
 
 ```html
-<!-layout.tmpl->
+<!-extends.tmpl->
 <html>
   <body>
   	<header>
@@ -85,7 +85,7 @@
 
 ```html
 <!-index.tmpl->
-<tmpl-layout file="layout.tmpl"></tmpl-layout> <!-设置包含当前tmpl的文件->
+<tmpl-extends file="extends.tmpl"></tmpl-extends> <!-设置包含当前tmpl的文件->
 
 <tmpl-block name="header">
 	<div>
@@ -183,7 +183,7 @@ app.b // 2
 			c:3,
 			d:4
 		}
-	}).data(null).appendTo('app');
+	}).render(null).appendTo('app');
 </script>
 ```
 渲染后的结果
@@ -208,7 +208,7 @@ app.b // 2
 </script>
 
 <script>
-	new Tmpl({el:"tmpl"}).data({title:'我是标题'，content:"我是内容"}).appendTo('app');
+	new Tmpl({el:"tmpl"}).render({title:'我是标题'，content:"我是内容"}).appendTo('app');
 </script>
 
 ```
@@ -231,7 +231,7 @@ app.b // 2
 {
 	methods:{
 		add:function(event,el){
-			this.data(arr).appendTo("#app",function(){
+			this.render(arr).appendTo("#app",function(){
 				console.log('success');
 			});
 		}
@@ -275,7 +275,7 @@ app.b // 2
 
 #### 实例方法：
 
-**data(data)**:绑定数据到当前模板实例上，返回一个Data的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：
+**render(data)**:绑定数据到当前模板实例上，返回一个Render的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：
 
 	appendTo(el,cb):把绑定的数据模板添加到指定的el的子节点上,cb为回调；
 	inserBefore(el,ex,cb):把绑定的数据模板添加到指定的el的ex子节点前,cb为回调；
@@ -575,6 +575,8 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 
 **setScrollTop(topNumber)**：设置scroll的位置
 
+**htmlEncode(htmlString)**: 转义html标签
+
 ******
 
 
@@ -637,7 +639,7 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 
 **routerView:**点击路由链接切换的视图容器
 
-**data:**数据存储，data中的所有值都会挂在到实例对象中作为实例属性（Data类）
+**data:**数据存储，data中的所有值都会挂在到实例对象中作为实例属性
 
 **methods:**实例中的方法
 

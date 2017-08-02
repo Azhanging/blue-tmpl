@@ -1,4 +1,4 @@
-<tmpl-layout file="__BASE__/base.tmpl"></tmpl-layout>
+<tmpl-extends file="__BASE__/base.tmpl"></tmpl-extends>
 
 <tmpl-block name="body">
 	<% for(var i = 0;i<data.length;i++){ %>
@@ -20,8 +20,12 @@
 	<div>__TMPL__</div>
 	<% for(var j = 0;j<2;j++){ %>
 		<%= i %>
-		<tmpl-include file="__TMPL__/tmpl2.tmpl"></tmpl-include>
-		<tmpl-include file="__TMPL__/tmpl3.tmpl"></tmpl-include>	
+		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl"></tmpl-include>
+		<tmpl-include file="__TMPL__/tmpl3.tmpl"></tmpl-include>
+		<%= '\<div\>123\<\/div\>' %>
+		<textarea>
+			<%=  %>
+		</textarea>
 	<% } %>
 </tmpl-block>
 

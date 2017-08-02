@@ -18,7 +18,25 @@
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
 
-	var SCRIPT_REGEXP, ECHO_SCRIPT_REGEXP, REPLACE_ECHO_SCRIPT_OPEN_TAG, OPEN_TAG_REGEXP, CLOSE_TAG_REGEXP, FILTER_TRANFORM, QUEST, INCLUDE_ID, INCLUDE_FILE, INCLUDE_NULL, BLOCK, BASE;
+	var SCRIPT_REGEXP,
+		ECHO_SCRIPT_REGEXP,
+		REPLACE_ECHO_SCRIPT_OPEN_TAG,
+		OPEN_TAG_REGEXP,
+		CLOSE_TAG_REGEXP,
+		//过滤转义字符
+		FILTER_TRANFORM = /[\\\b\\\t\\\r\\\f\\\n]/g,
+		//转义双引号
+		QUEST = /"/g,
+		//引入模板
+		INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g,
+		//引入模板
+		INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g,
+		//空模板
+		INCLUDE_NULL = /<tmpl-include\s*?>[\s\S]*?<\/tmpl-include>/g,
+		//嵌入block块
+		BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
+		//base路径解析
+		EXTENDS = /<tmpl-extends .*?file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-extends>/g;
 
 	var inBrowser = typeof window !== 'undefined';
 
@@ -41,8 +59,8 @@
 
 		/*只在浏览器环境使用*/
 		if(inBrowser && !document.getElementsByClassName) {
-			Element.prototype.getElementsByClassName = function(className) {
-				var children = document.getElementsByTagName('*');
+			document.getElementsByClassName = function(className,el) {
+				var children = (el || document).getElementsByTagName('*');
 				var elements = new Array();
 				for(var i = 0; i < children.length; i++) {
 					var child = children[i];
@@ -68,9 +86,9 @@
 		methods: {}
 	};
 
-	//事件兼容处理
 	function Fn() {}
 
+	/*常用的方法*/
 	Fn.prototype.isArr = function(array) {
 		return array instanceof Array;
 	};
@@ -95,6 +113,7 @@
 		return !!(el && el.nodeType);
 	};
 
+	//设置事件
 	Fn.prototype.on = (function() {
 		if(!inBrowser) return;
 		if(typeof document.addEventListener === 'function') {
@@ -107,7 +126,7 @@
 			};
 		}
 	})();
-
+	//移除事件
 	Fn.prototype.off = (function() {
 		if(!inBrowser) return;
 		if(typeof document.removeEventListener === 'function') {
@@ -121,6 +140,7 @@
 		}
 	})();
 
+	//遍历
 	Fn.prototype.each = function(obj, cb) {
 		var i = 0,
 			len = obj.length;
@@ -134,7 +154,7 @@
 			}
 		}
 	};
-
+	//获取节点
 	Fn.prototype.getEl = function(exp) {
 		if(!exp) return null;
 		if(!this.isFn(document.querySelector))
@@ -143,7 +163,7 @@
 		var el = document.getElementById(exp);
 		return getEl !== null ? getEl : (el ? el : null);
 	};
-
+	//获取多个节点
 	Fn.prototype.getEls = function(exp) {
 		if(!exp) return null;
 		if(!this.isFn(document.querySelectorAll))
@@ -152,19 +172,19 @@
 		var el = document.getElementsByClassName(exp);
 		return getEls.length > 0 ? getEls : (el ? el : []);
 	};
-
+	//合并
 	Fn.prototype.extend = function(obj, options) {
 		this.each(options, function(option, key) {
 			obj[key] = option;
 		});
 		return obj;
 	};
-
+	//回调
 	Fn.prototype.cb = function(cb, context, args) {
 		args = args ? args : [];
 		this.isFn(cb) ? (cb.apply(context, args)) : null;
 	};
-
+	//执行函数
 	Fn.prototype.run = function(cb, context, args) {
 		this.cb(cb, context, args);
 	};
@@ -195,7 +215,7 @@
 	/*深拷贝*/
 	Fn.prototype.copy = function(obj) {
 		if(this.isObj(obj) || this.isArr(obj))
-			return JSON.parse(JSON.stringify(obj));
+			return JSON.parse(JSON.stringify(obj));	
 		return null;
 	};
 
@@ -264,6 +284,7 @@
 		this.init(options);
 	}
 
+	//初始化
 	Render.prototype.init = function(options) {
 		this.tmpl = options.tmpl;
 		this.data = options.data;
@@ -271,10 +292,12 @@
 		this.fragment = this.setDom();
 	};
 
+	//创建节点
 	Render.prototype.setDom = function() {
 		return this.tmpl.create(this.dom);
 	};
 
+	//在父节点中插入解析后的模板
 	Render.prototype.appendTo = function(el, cb) {
 		var fn = this.tmpl.fn;
 
@@ -285,7 +308,8 @@
 		return this.tmpl;
 	};
 
-	Render.prototype.insertBefore = function() {
+	//在el子节点ex中插入解析后的模板
+	Render.prototype.insertBefore = function(el, ex) {
 		var fn = this.tmpl.fn;
 		fn.getEl(el).insertBefore(this.fragment, ex);
 		fn.cb(cb, this.tmpl);
@@ -293,9 +317,8 @@
 	};
 
 	/*
-	 *	Tmpl实例
+	 *	Tmpl构造
 	 * */
-	/*实例构造*/
 	function Tmpl(opts) {
 		this.config = fn.extend(fn.copy(config), opts);
 		this.init();
@@ -309,6 +332,7 @@
 	//设置路径别名常量
 	Tmpl.alias = {};
 
+	//初始化构造
 	Tmpl.prototype.init = function() {
 		var _this = this;
 		//构建开始的钩子
@@ -351,6 +375,7 @@
 		fn.run(this.config.events, this);
 	};
 
+	//解析模板
 	Tmpl.prototype.render = function(data) {
 		var _this = this;
 		return new Render({
@@ -359,11 +384,13 @@
 		});
 	};
 
+	//添加数据更新模板
 	Tmpl.prototype.update = function() {
 		this.template = this.config.template;
 		setDom.call(this);
 	};
 
+	//绑定事件
 	Tmpl.prototype.on = function(elContext, exp, type, cb) {
 		if(arguments.length === 4) {
 			if(this.eventType.indexOf(type) == -1) setEntrust.apply(this, [elContext, type, cb]);
@@ -384,6 +411,7 @@
 		}
 	};
 
+	//取消绑定事件
 	Tmpl.prototype.off = function(elContext, exp, type, cb) {
 		if(arguments.length === 4) {
 			var eventIndex = this.events[type][exp].indexOf(cb);
@@ -397,6 +425,7 @@
 
 	Tmpl.prototype.fn = fn;
 
+	//设置事件委托的class
 	Tmpl.prototype.bind = function(el, bind) {
 		bindFn.apply(this, [el, bind, 'bind']);
 		return this;
@@ -611,6 +640,7 @@
 		return siblings;
 	};
 
+	//显示
 	Tmpl.prototype.hide = function(el, time) {
 
 		var opacity = this.css(el, 'opacity');
@@ -626,26 +656,30 @@
 		return this;
 	};
 
+	//隐藏
 	Tmpl.prototype.show = function(el, time) {
 
 		var opactiy = el.opactiy ? el.opactiy : 100;
 
 		if(fn.isNum(time)) {
-		    
-		    this.css(el,{opacity:0});
-		    
+
+			this.css(el, {
+				opacity: 0
+			});
+
 			el.style.display = '';
-			
+
 			this.animate(el, {
 				opacity: opactiy
 			}, time);
-			
+
 		} else {
 			el.style.display = '';
 		}
 		return this;
 	};
 
+	/*切换显示状态*/
 	Tmpl.prototype.toggle = function(el, time) {
 		var _this = this;
 		if(el.style.display === '') _this.hide(el, time);
@@ -843,6 +877,11 @@
 		document.documentElement.scrollTop = top;
 	}
 
+	/*转义*/
+	Tmpl.prototype.htmlEncode = function(htmlString) {
+		return htmlString.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	}
+
 	//绑定相关函数
 	function bindFn(el, className, type) {
 		var _className = el.className.split(' ');
@@ -939,20 +978,6 @@
 		OPEN_TAG_REGEXP = new RegExp(open_tag, 'g');
 		//替换输出的结束表达式
 		CLOSE_TAG_REGEXP = new RegExp(close_tag, 'g');
-		//过滤转义字符
-		FILTER_TRANFORM = /[\\\b\\\t\\\r\\\f\\\n]/g;
-		//转义双引号
-		QUEST = /"/g;
-		//引入模板
-		INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g;
-		//引入模板
-		INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g;
-		//空模板
-		INCLUDE_NULL = /<tmpl-include\s*?>[\s\S]*?<\/tmpl-include>/g;
-		//嵌入block块
-		BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g;
-		//base路径解析
-		BASE = /<tmpl-layout .*?file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-layout>/g;
 	}
 
 	//初始化dom生成
@@ -966,6 +991,7 @@
 		replaceAlias.call(this);
 		/*清除遗留的block块*/
 		clearBlock.call(this);
+		/*替换include中的内容*/
 		replaceInclude.call(this);
 
 		var script = this.template.match(SCRIPT_REGEXP);
@@ -1001,6 +1027,7 @@
 		});
 
 		this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
+
 	};
 
 	/*替换include引入的模板*/
@@ -1058,18 +1085,18 @@
 
 	/*替换Block块内容*/
 	function replaceBlock() {
-		
+
 		var _this = this;
-		
+
 		//先设置获取include的引入模板
 		replaceAlias.call(this);
 
-		var baseFile = fn.unique(this.template.match(BASE));
+		var baseFile = fn.unique(this.template.match(EXTENDS));
 		/*只获取第一个base的名字*/
 		var baseFileName = baseFile.toString()
-			.replace(BASE, "$2")
+			.replace(EXTENDS, "$2")
 			.split(',')[0];
-		
+
 		/*如果不存在block的内容，直接跳出*/
 		if(baseFileName === '') return;
 
@@ -1118,7 +1145,7 @@
 
 	/*清除多余的block块*/
 	function clearBlock() {
-		this.template = this.template.replace(BASE, '').replace(BLOCK, '');
+		this.template = this.template.replace(EXTENDS, '').replace(BLOCK, '');
 	}
 
 	//设置占位

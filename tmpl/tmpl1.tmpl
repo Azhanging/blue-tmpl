@@ -10,7 +10,7 @@
 
 <script type="text/template" id="tmpl1">
 	<% for(var i = 0;i<data.length;i++){ %>
-	<div class="g-media mg-t-10 pd-10  g-bg-primary" id="id<%= data[i] %>" style="display: none;">
+	<div class="g-media mg-t-10 pd-10  g-bg-primary" id="id<%= data[i] %>">
 		<div class="g-media-head">
 			<img src="" class="wh-64 radius-50perc" />
 		</div>
@@ -25,6 +25,8 @@
 		</div>
 	</div>
 	<% } %>
+	
+	<%= _this_.htmlEncode('<div name="123" haha="456" >123</div>') %>
 
 	<% for(var j = 0;j<2;j++){ %>
 		<tmpl-include name="temp-1"></tmpl-include>
