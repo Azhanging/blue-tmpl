@@ -54,23 +54,32 @@
 
 
 
-**动态模板**：默认模板中的<tmpl-include name="tmplId"></tmpl-include>中引入是不存在的，会被忽略掉，可以动态添加原来插入不存在的模板，使用实例方法update更新模板即可，更新后的是存在<tmpl-include name="tmplId"></tmpl-include>中找到的动态模块。
+**动态模板**：默认模板中的```<tmpl-include name="tmplId"></tmpl-include>```中引入是不存在的，会被忽略掉，可以动态添加原来插入不存在的模板，使用实例方法update更新模板即可，更新后的是存在```<tmpl-include name="tmplId"></tmpl-include>```中找到的动态模块。
 
 **************
 
-#### PS：nodejs中的用法，不需要包含script；只能作为解析模板内容，对应的Tmpl中有关dom的方法无法使用：（nodejs环境中的tmpl-include是使用file来索引文件的地址，在nodejs环境中使用了tmpl-include是使用name来索引文件地址是不不做任何的处理的，同理在浏览器环境中，tmpl-include[file] 也是不做任何处理的，需要区分两个环境的使用）；
+#### PS：nodejs中的用法，不需要包含script；
+只能作为解析模板内容，对应的Tmpl中有关dom的方法无法使用：
+（nodejs环境中的```tmpl-include```是使用file来索引文件的地址，
+在nodejs环境中使用了```tmpl-include```是使用name来索引文件地址是不不做任何的处理的，
+同理在浏览器环境中，```tmpl-include[file]``` 也是不做任何处理的，
+需要区分两个环境的使用）；
 
-在**nodejs**环境中使用，<tmpl-include file="path"></tmpl-include>，name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个extends的文件，<tmpl-extends file="extends.tmpl"></tmpl-extends>。
+在**nodejs**环境中使用，```<tmpl-include file="path"></tmpl-include> ```，name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个extends的文件，```<tmpl-extends file="extends.tmpl"></tmpl-extends>```。
 
 ```html
 <!-extends.tmpl->
 <html>
   <body>
   	<header>
-    	<tmpl-block name="header"></tmpl-block>	
+    	<tmpl-block name="header">
+    		<div>假设这个block是不存在的，这里就会显示出来</div>
+    	</tmpl-block>	
     </header>
     <main>
-    	<tmpl-block name="main"></tmpl-block>	
+    	<tmpl-block name="main">
+    		<div>假设这个block是不存在的，这里就会显示出来</div>
+    	</tmpl-block>	
     </main>
   </body>
 </html>
@@ -97,7 +106,9 @@
 	<div>
     	我是main的内容
   	</div>
-  <tmpl-include file="include.tmpl"></tmpl-include>
+  <tmpl-include file="include.tmpl">
+  		<div>假设这个block是不存在的，这里就会显示出来</div>
+  </tmpl-include>
 </tmpl-block>
 
 ```

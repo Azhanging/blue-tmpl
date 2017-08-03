@@ -19,18 +19,22 @@
 })(typeof window !== 'undefined' ? window : this, function() {
 
 	var SCRIPT_REGEXP,
+	   /*输出script*/
 		ECHO_SCRIPT_REGEXP,
+		/*替换输出script*/
 		REPLACE_ECHO_SCRIPT_OPEN_TAG,
+		/*起始*/
 		OPEN_TAG_REGEXP,
+		/*闭合*/
 		CLOSE_TAG_REGEXP,
 		//过滤转义字符
 		FILTER_TRANFORM = /[\\\b\\\t\\\r\\\f\\\n]/g,
 		//转义双引号
 		QUEST = /"/g,
 		//引入模板
-		INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g,
+		INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
 		//引入模板
-		INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-include>/g,
+		INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
 		//空模板
 		INCLUDE_NULL = /<tmpl-include\s*?>[\s\S]*?<\/tmpl-include>/g,
 		//嵌入block块
@@ -59,7 +63,7 @@
 
 		/*只在浏览器环境使用*/
 		if(inBrowser && !document.getElementsByClassName) {
-			document.getElementsByClassName = function(className,el) {
+			document.getElementsByClassName = function(className, el) {
 				var children = (el || document).getElementsByTagName('*');
 				var elements = new Array();
 				for(var i = 0; i < children.length; i++) {
@@ -215,7 +219,7 @@
 	/*深拷贝*/
 	Fn.prototype.copy = function(obj) {
 		if(this.isObj(obj) || this.isArr(obj))
-			return JSON.parse(JSON.stringify(obj));	
+			return JSON.parse(JSON.stringify(obj));
 		return null;
 	};
 
@@ -930,7 +934,8 @@
 
 	//把路由实例挂靠到模板中
 	function setRouter() {
-		if(fn.isObj(this.config.router)) this.router = this.config.router;
+		if(fn.isObj(this.config.router))
+			this.router = this.config.router;
 	}
 
 	//初始化时间中的参数
@@ -997,7 +1002,8 @@
 		var script = this.template.match(SCRIPT_REGEXP);
 		var echoScript = this.template.match(ECHO_SCRIPT_REGEXP);
 		var replaceScript = setSeize.call(this);
-		var echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/);
+		var echoString = replaceScript
+			.split(/___SCRIPT___|___ECHO_SCRIPT___/);
 		var domString = [];
 
 		if(!script) script = [];
@@ -1013,10 +1019,12 @@
 			/*恢复正则的索引位置*/
 			ECHO_SCRIPT_REGEXP.lastIndex = 0;
 			if(ECHO_SCRIPT_REGEXP.test(_string)) {
-				script[index] = _string.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(")
+				script[index] = _string
+					.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(")
 					.replace(CLOSE_TAG_REGEXP, ");");
 			} else {
-				script[index] = _string.replace(OPEN_TAG_REGEXP, '')
+				script[index] = _string
+					.replace(OPEN_TAG_REGEXP, '')
 					.replace(CLOSE_TAG_REGEXP, '');
 			}
 		});
@@ -1063,8 +1071,10 @@
 			/*浏览器环境下执行*/
 			if(inBrowser) {
 				var el = fn.getEl(id);
-				if(el) _this.template = _this.template.replace(replaceInclude, _this.html(el));
-				else _this.template = _this.template.replace(replaceInclude, '');
+				if(el) _this.template = _this.template
+					.replace(replaceInclude, _this.html(el));
+				else _this.template = _this.template
+					.replace(replaceInclude, includeTmpl[index].replace(include, '$3'));
 			} else {
 				/*node环境下执行*/
 				try {
@@ -1073,7 +1083,8 @@
 					});
 					_this.template = _this.template.replace(replaceInclude, tmpl);
 				} catch(e) {
-					_this.template = _this.template.replace(replaceInclude, '');
+					_this.template = _this.template
+						.replace(replaceInclude, includeTmpl[index].replace(include, '$3'));
 				}
 			}
 		});
@@ -1126,8 +1137,9 @@
 				BLOCK.lastIndex = 0;
 			});
 
+			/*如果当前的block是在extends的模板中不存在，则显示默认里面的*/
 			if(!hasBlock) {
-				tmpl = tmpl.replace(replaceBlock, '');
+				tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(BLOCK, '$3'));
 			}
 		});
 
@@ -1139,7 +1151,8 @@
 		var _this = this;
 		var constructor = this.constructor;
 		fn.each(constructor.alias, function(replaceAlias, alias) {
-			_this.template = _this.template.replace(new RegExp(initRegExp.call(_this, alias), 'g'), replaceAlias);
+			_this.template = _this.template
+				.replace(new RegExp(initRegExp.call(_this, alias), 'g'), replaceAlias);
 		});
 	}
 
@@ -1150,7 +1163,8 @@
 
 	//设置占位
 	function setSeize() {
-		var replaceScript = this.template.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___')
+		var replaceScript = this.template
+			.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___')
 			.replace(SCRIPT_REGEXP, '___SCRIPT___');
 		return replaceScript;
 	}

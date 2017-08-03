@@ -6,17 +6,22 @@
 	</head>
 	<body>
 		
-		<tmpl-block name="title1">
-			我是title1的东西
-		</tmpl-block>
-		
 		<tmpl-block name="title">
-			我是title的东西
+		</tmpl-block>
+		<tmpl-block name="title">
+			<div>没有title</div>
 		</tmpl-block>
 		<div>
-			<tmpl-block name="header"></tmpl-block>
+			<tmpl-block name="header">
+				没有header部分
+			</tmpl-block>
 		</div>
-		<tmpl-block name="body"></tmpl-block>
+		<tmpl-block name="body">
+			没有body部分
+		</tmpl-block>
+		<tmpl-block name="footer">
+			<div>没有footer</div>
+		</tmpl-block>
 		<script type="text/template">
 			<tmpl-include name="name"></tmpl-include>
 		</script>

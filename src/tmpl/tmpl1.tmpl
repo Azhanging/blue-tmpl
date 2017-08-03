@@ -21,10 +21,11 @@
 	<% for(var j = 0;j<2;j++){ %>
 		<%= i %>
 		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl"></tmpl-include>
-		<tmpl-include file="__TMPL__/tmpl3.tmpl"></tmpl-include>
-		<%= '\<div\>123\<\/div\>' %>
+		<tmpl-include file="__TMPL__/tmpl3.tmpl">
+			<div>并没有tmpl3.tmpl</div>
+		</tmpl-include>
 		<textarea>
-			<%=  %>
+			<%= _this_ %>
 		</textarea>
 	<% } %>
 </tmpl-block>

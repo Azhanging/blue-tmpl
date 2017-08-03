@@ -30,7 +30,9 @@
 
 	<% for(var j = 0;j<2;j++){ %>
 		<tmpl-include name="temp-1"></tmpl-include>
-		<tmpl-include name="temp-3"></tmpl-include>
+		<tmpl-include name="temp-3">
+			<div>没有就显示我</div>
+		</tmpl-include>
 		<tmpl-include name="temp-2"></tmpl-include>	
 	<% } %>
 </script>
