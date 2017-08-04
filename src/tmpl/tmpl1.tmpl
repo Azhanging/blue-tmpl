@@ -1,6 +1,6 @@
 <tmpl-extends file="__BASE__/base.tmpl"></tmpl-extends>
 
-<tmpl-block name="body">
+<tmpl-block name="append:body">
 	<% for(var i = 0;i<data.length;i++){ %>
 		<div class="g-media mg-t-10 pd-10  g-bg-primary">
 			<div class="g-media-head">
@@ -30,10 +30,11 @@
 	<% } %>
 </tmpl-block>
 
-<tmpl-block name="header">
+<tmpl-block name="append:header">
 	<header>
 		<tmpl-include name="__TMPL__/tmpl10.tmpl"></tmpl-include>
-		<title>title</title>
+		<h1>title123</h1>
 	</header>
 </tmpl-block>
+
 

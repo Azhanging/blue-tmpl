@@ -54,7 +54,11 @@
 
 
 
-**动态模板**：默认模板中的```<tmpl-include name="tmplId"></tmpl-include>```中引入是不存在的，会被忽略掉，可以动态添加原来插入不存在的模板，使用实例方法update更新模板即可，更新后的是存在```<tmpl-include name="tmplId"></tmpl-include>```中找到的动态模块。
+**动态模板**：
+默认模板中的```<tmpl-include name="tmplId"></tmpl-include>```
+中引入是不存在的，会被忽略掉，可以动态添加原来插入不存在的模板，
+使用实例方法update更新模板即可，更新后的是存在
+```<tmpl-include name="tmplId"></tmpl-include>```中找到的动态模块。
 
 **************
 
@@ -65,7 +69,11 @@
 同理在浏览器环境中，```tmpl-include[file]``` 也是不做任何处理的，
 需要区分两个环境的使用）；
 
-在**nodejs**环境中使用，```<tmpl-include file="path"></tmpl-include> ```，name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个extends的文件，```<tmpl-extends file="extends.tmpl"></tmpl-extends>```。
+在**nodejs**环境中使用，```<tmpl-include file="path"></tmpl-include> ```，
+name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个extends的文件，
+```<tmpl-extends file="extends.tmpl"></tmpl-extends>```。
+如果索引的block是不存在的，会使用base中的block块默认的内容。
+也可使用append:加到block的name中，这样设置的节点为在默认内容后插入。
 
 ```html
 <!-extends.tmpl->
@@ -300,26 +308,26 @@ on中的fn默认带回两个参数(event,el);
 app.on('on-add','click',this.add);
 ```
 
-**off(bindEl[,bindClassName],eventType,fn)** : 移除事件，参数配置和on方法一样；对当前绑定委托事件移除对应的处理绑定
+**off(bindEl[,bindClassName],eventType,fn)**: 移除事件，参数配置和on方法一样；对当前绑定委托事件移除对应的处理绑定
 ```javascript
 app.off('on-add','click',this.add);
 ```
 
 *******
 
-**bind(el,bindClassName)** : 某个元素的事件中的绑定
+**bind(el,bindClassName)**: 某个元素的事件中的绑定
 
 ```javascript
 app.bind(buttonEl,'on-add');
 ```
 
-**unbind(el,bindClassName)** : 某个元素的事件中的绑定
+**unbind(el,bindClassName)**: 某个元素的事件中的绑定
 
 ```javascript
 app.unbind(buttonEl,'on-add');
 ```
 
-**replaceBind(el,bindClassName)** : 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
+**replaceBind(el,bindClassName)**: 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
 
 ******
 
@@ -327,19 +335,19 @@ app.unbind(buttonEl,'on-add');
 app.replaceBind(buttonEl,{'on-add':'on-replaceAdd'}); // class="on-replaceAdd"
 ```
 
-**addClass(el,bindClassName)** : 某个元素的事件中的绑定
+**addClass(el,bindClassName)**: 某个元素的事件中的绑定
 
 ```javascript
 app.addClass(buttonEl,'className className');
 ```
 
-**removeClass(el,bindClassName)** : 某个元素的事件中的绑定
+**removeClass(el,bindClassName)**: 某个元素的事件中的绑定
 
 ```javascript
 app.removeClass(buttonEl,'className className');
 ```
 
-**replaceClass(el,bindClassName)** : 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
+**replaceClass(el,bindClassName)**: 某个元素的事件中的绑定,第二个参数为对象，key为需要修改的key，value为替换的值
 
 ```javascript
 app.replaceClass(buttonEl,{'className':'newClassName'}); // class="on-replaceAdd"
@@ -349,7 +357,7 @@ app.replaceClass(buttonEl,{'className':'newClassName'}); // class="on-replaceAdd
 
 ******
 
-**attr(el,attrName)** : 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的Tmpl实例对象：
+**attr(el,attrName)**: 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的Tmpl实例对象：
 
 ```html
 <div bind-id="123 + 456"> 元素 </div>
@@ -672,11 +680,11 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 所以设定routerStart的值来判断路由是够允许下一个跳转。
 
 
-* **tmplId:** 这种的非异步模块，把对应模块script的id写在这个参数，id模块会自动处理routerStatus的状态，不需要设定
+* **tmplId:**这种的非异步模块，把对应模块script的id写在这个参数，id模块会自动处理routerStatus的状态，不需要设定
 
-* **routerStatus:** 如果路由中不存在异步模块或者是静态的id模块，就需要设定这个值来作为状态告诉路由是允许做下一跳的；
+* **routerStatus:**如果路由中不存在异步模块或者是静态的id模块，就需要设定这个值来作为状态告诉路由是允许做下一跳的；
 
-* **alias:** 别名路径,如果访问的为别名路径，则跳转到对应的
+* **alias:**别名路径,如果访问的为别名路径，则跳转到对应的
 
 * **keepLive:**在实例中的keepLive设置为true的情况下，这里的keepLive才会生效，这里的keepLive是为了让部分view层不保持状态使用的，false则不保持状态；
 

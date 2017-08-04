@@ -39,6 +39,10 @@
 		INCLUDE_NULL = /<tmpl-include\s*?>[\s\S]*?<\/tmpl-include>/g,
 		//嵌入block块
 		BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
+		//append_block
+		BLOCK_APPEND = /^append:/,
+		//inser_block
+		BLOCK_INSETR = /^insert:/,
 		//base路径解析
 		EXTENDS = /<tmpl-extends .*?file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-extends>/g;
 
@@ -1129,9 +1133,17 @@
 
 			fn.each(blockTmpl, function(blocktmpl, _index) {
 				BLOCK.test(blocktmpl);
+				var _name = RegExp.$2;
+				var blockContent = RegExp.$3;
 				//匹配到name的
-				if(name === RegExp.$2) {
-					tmpl = tmpl.replace(replaceBlock, RegExp.$3);
+				if(name === _name) {
+					tmpl = tmpl.replace(replaceBlock, blockContent);
+					hasBlock = true;
+				}else if(BLOCK_APPEND.test(_name) && name === _name.replace(BLOCK_APPEND,'')){
+					tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(BLOCK,"$3") + blockContent);
+					hasBlock = true;
+				}else if(BLOCK_INSETR.test(_name) && name === _name.replace(BLOCK_INSETR,'')){
+					tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(BLOCK,"$3"));
 					hasBlock = true;
 				}
 				BLOCK.lastIndex = 0;
@@ -1175,7 +1187,7 @@
 			.replace(QUEST, '\\\"');
 	}
 
-	Tmpl.version = "v1.0.2";
+	Tmpl.version = "v1.0.3";
 
 	return Tmpl;
 });
