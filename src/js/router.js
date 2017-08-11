@@ -15,6 +15,10 @@ _require.define(function() {
 
 		},
 		router: {
+			'/detail':{
+				tmplUrl: "./php/get_tmpl.php?tmpl=detail",
+				routerStatus:true
+			},
 			'/tm1': {
 				tmplUrl: "./php/get_tmpl.php?tmpl=tmpl1",
 				alias: '/tm2/tm2-2/tm2-2-1',

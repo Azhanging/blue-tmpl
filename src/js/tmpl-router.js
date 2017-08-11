@@ -168,7 +168,7 @@
 	};
 
 	/*获取模板*/
-	TmplRouter.prototype.getTmpl = function(el, hash) {
+	TmplRouter.prototype.getTmpl = function(hash) {
 		var _this = this;
 
 		if((!this.router[hash]) || this.router[hash]['temp'].childNodes.length > 0 || this.router[hash]['view'].length > 0) return; //查看当前的路由模板是否加载回来了
@@ -304,6 +304,18 @@
 		var alinkEl = null;
 
 		var hash = this.getHash(path);
+		
+		_this.getTmpl(hash); //默认动态加载模块
+		
+		//是否存在最后一个路由地址
+		if(lastRouter) {
+			/*如果不是匹配的路由视图，则不显示在路由视图中*/
+			hideTmplEl.call(_this, lastRouter);
+		}
+		
+		lastRouter = hash; //记录最后的路由路径
+
+		showTmplEl.apply(_this, [hash, viewEl]);	//显示路由的view
 
 		//修改对应的状态
 		fn.each(routerBtns, function(el, index) {
@@ -320,19 +332,7 @@
 
 				alinkEl = el; //保存按钮节点
 
-				_this.getTmpl(el, hash); //默认动态加载模块
-
-				//是否存在最后一个路由地址
-				if(lastRouter) {
-					/*如果不是匹配的路由视图，则不显示在路由视图中*/
-					hideTmplEl.call(_this, lastRouter);
-				}
-
-				showTmplEl.apply(_this, [href, viewEl]);
-
 				tmpl.addClass(el, _this.config.routerLinkActive); //修改路由link的样式
-
-				lastRouter = hash; //记录最后的路由路径
 
 				/*是否使用了保存之前的状态*/
 				if(_this.config.keepLive && _this.router[href]['keepLive'])
