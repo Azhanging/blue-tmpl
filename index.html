@@ -105,11 +105,16 @@
 				var Tmpl = _require('tmpl');
 				var TmplRouter = _require('tmpl-router');
 
+				/* 安装插件 */
+				Tmpl.install(TmplRouter);
+				
 				/*使用路由模块*/
 				var router = _require('@base-js/router.js');
+				
+				/* 代理变量 */
+				_GLOBAL_['router'] = router;
 
-				Tmpl.install(TmplRouter);
-
+				// 一个window中只能实例化一个路由
 				new TmplRouter({
 					routerLink: 'tmpl-router-1',
 					router: {
@@ -118,10 +123,9 @@
 						}
 					}
 				});
-
-				_GLOBAL_['router'] = router;
-
-				app = new Tmpl({
+	
+				/* 实例模板  */
+				var app = new Tmpl({
 					methods: {
 						showDetailed: function(event, el) {
 							var content = this.html(el);

@@ -1,12 +1,11 @@
 _require.define(function() {
 	var Tmpl = _require('tmpl');
+	
 	var TmplRouter = _require('tmpl-router');
-
-	var changeStatus = _require('@base-js/changeStatus.js');
 
 	Tmpl.install(TmplRouter);
 	
-	router = new TmplRouter({
+	var router = new TmplRouter({
 		keepLive: true,
 		data: {
 			a: 1
@@ -41,7 +40,7 @@ _require.define(function() {
 							'/tm1-2-1': {},
 							'/tm1-2-2': {}
 						}
-					},
+					}
 				}
 			},
 			'/tm2': {
@@ -64,12 +63,12 @@ _require.define(function() {
 				}
 			},
 			'/tm3': {
-				tmplUrl: "./php/get_tmpl4.php?tmpl=tmpl3",
-				alias: '/tm8'
+				tmplUrl: "./php/get_tmpl4.php?tmpl=tmpl3"
 			},
 			'/tm6': {},
 			'/tm8': {
-				tmplId: "tmp4",
+				tmplUrl: "./php/get_tmpl.php?tmpl=tmpl5",
+				routerStatus:true,
 				alias: '/tm9'
 			},
 			'/tm9': {

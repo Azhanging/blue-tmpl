@@ -80,7 +80,7 @@
 
 		setInstance.call(this, 'data'); //设置data
 
-		setRouterStatus.call(this); //设置路由链接的状态
+		setRouterLinkStatus.call(this); //设置路由链接的状态
 
 		setRouterAnchor.call(this); //设置路由的锚点形式
 
@@ -246,7 +246,7 @@
 	};
 
 	/*设置路由的状态是够允许跳转*/
-	function setRouterStatus() {
+	function setRouterLinkStatus() {
 		var _this = this;
 		
 		this.routerStatus = true;
@@ -316,6 +316,8 @@
 		lastRouter = hash; //记录最后的路由路径
 
 		showTmplEl.apply(_this, [hash, viewEl]);	//显示路由的view
+		
+		setRouterStatus.call(this,hash);              //设置路由的链接状态
 
 		//修改对应的状态
 		fn.each(routerBtns, function(el, index) {
@@ -353,6 +355,14 @@
 		});
 
 		fn.run(this.config.routerEntered, this, [path, viewEl, alinkEl]);
+	}
+	
+	/* 设置路由的状态，针对没有方法加载的路由模板中存在方法的 */
+	function setRouterStatus(hash){
+	    /*修改路由状态*/
+        if(this.router[hash]['routerStatus'] !== undefined) {
+            this.routerStatus = true;
+        }
 	}
 
 	/*设置保持状态*/
@@ -401,14 +411,7 @@
 		var cb = null;
 		if(this.router[hash]) {
 			fn.run(this.config.routerEnter, this, [path, viewEl, el]);
-
-			/*修改路由状态*/
-			if(this.router[hash]['routerStatus'] !== undefined) {
-				this.routerStatus = true;
-			}
-
 			fn.run(this.config.routerEntered, this, [path, viewEl, el]);
-
 		}
 		if(this.alias[alias]) {
 			return getPathAlias.apply(this, [alias, viewEl, el]);
