@@ -9,13 +9,12 @@
 </div>
 
 <script type="text/template" id="tmpl1">
-	<% for(var i = 0;i<data.length;i++){ %>
-	<div class="g-media mg-t-10 pd-10  g-bg-primary" id="id<%= data[i] %>">
+	<div class="g-media mg-t-10 pd-10  g-bg-primary" id="id<%= _this_.i %>">
 		<div class="g-media-head">
 			<img src="" class="wh-64 radius-50perc" />
 		</div>
 		<div class="g-media-body">
-			<h4 class="g-media-title"><a href="#/detail">模板1-<%= data[i] %></a></h4>
+			<h4 class="g-media-title"><a href="#/detail?id=<%= _this_.i %>">模板1-<%= _this_.i %></a></h4>
 			<p class="g-media-content on-show-detailed">
 				<%= data %>
 			</p>
@@ -24,7 +23,6 @@
 			</div>
 		</div>
 	</div>
-	<% } %>
 	
 	<%= _this_.htmlEncode('<div name="123" haha="456" >123</div>') %>
 
@@ -38,7 +36,7 @@
 </script>
 
 <script type="text/template" id="m-btn">
-	<a href="javascript:;" class='tmpl-router-anchor g-btn g-btn-primary' tmpl-anchor="id<%= data%>" tmpl-anchor-top="-38"><%= data%></a>
+	<a href="javascript:;" class='tmpl-router-anchor g-btn g-btn-primary' tmpl-anchor="id<%= data%>" tmpl-anchor-top="-38"><%= data %></a>
 </script>
 
 <script type="text/template" id="temp-1">

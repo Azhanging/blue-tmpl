@@ -9,7 +9,7 @@
    	
    	$tmpl_data['tmpl'] = $get_tmpl;
    	
-// 	sleep(1);
+// 	sleep(2);
    	
 	echo json_encode($tmpl_data,0);
 	

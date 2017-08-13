@@ -1,7 +1,7 @@
 _require.define(function() {
 	var Tmpl = _require('tmpl');
 	
-	var changeStatus = _require('@base-js/changeStatus.js');
+	console.log(Tmpl.router);
 
 	function tmpl1() {
 		
@@ -17,10 +17,18 @@ _require.define(function() {
 			},
 			methods: {
 				add: function() {
-					
-					this.render([++this.i])
-						.appendTo(this.childrens(this.fn.getEl('tmp1'), 'content')[0]);
-					mBtn.render([this.i]).appendTo(this.fn.getEl('tmp1'));
+				    var _this = this;
+				    $.ajax({
+				        url:'/php/get_data.php',
+				        data:{
+				            page:_this.i++
+				        },
+				        success:function(data){
+				            console.log(data);
+				            _this.render(data).appendTo(_this.childrens(_this.fn.getEl('tmp1'), 'content')[0]);
+                            mBtn.render([_this.i]).appendTo(_this.fn.getEl('tmp1'));
+				        }
+				    });
 				},
 				showDetailed: function(event, el) {
 					var content = this.html(el);
@@ -34,7 +42,7 @@ _require.define(function() {
 			},
 			events: function() {
 				this.on(this.fn.getEl('tmp1'), 'on-add-tmpl', 'click', this.add);
-				changeStatus();
+				Tmpl.router.changeRoutereStatus(true);
 			}
 		});
 	}

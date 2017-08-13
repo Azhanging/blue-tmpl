@@ -61,7 +61,7 @@
 					<a href="#/tm3?a=4&b=12" class="tmpl-router reset-a on-get-tmpl block pd-10">tm3</a>
 				</li>
 				<li class="col-xs-2">
-					<a href="#/tm8" class="tmpl-router reset-a on-get-tmpl block pd-10">tm8</a>
+					<a href="#/detail" class="tmpl-router reset-a on-get-tmpl block pd-10">详情detail</a>
 				</li>
 				<li class="col-xs-2">
 					<a href="#/tm9?a=1" class="tmpl-router reset-a on-get-tmpl block pd-10">tm9</a>
@@ -95,37 +95,28 @@
 					'base-js': 'src/js'
 				},
 				paths: [
-					'@base-js/router.js',
-					'@base-js/changeStatus.js'
+					'@base-js/tmpl.js',
+					'@base-js/tmpl-router.js',
+					'@base-js/router.js'
 				]
 			});
 
 			_require.use(function() {
 
 				var Tmpl = _require('tmpl');
+				
 				var TmplRouter = _require('tmpl-router');
 
 				/* 安装插件 */
 				Tmpl.install(TmplRouter);
 				
 				/*使用路由模块*/
-				var router = _require('@base-js/router.js');
+				_require('@base-js/router.js');
 				
-				/* 代理变量 */
-				_GLOBAL_['router'] = router;
-
-				// 一个window中只能实例化一个路由
-				new TmplRouter({
-					routerLink: 'tmpl-router-1',
-					router: {
-						'/d': {
-							tmplId:'tmp4'
-						}
-					}
-				});
+				Tmpl.aaa = 123;
 	
 				/* 实例模板  */
-				var app = new Tmpl({
+				new Tmpl({
 					methods: {
 						showDetailed: function(event, el) {
 							var content = this.html(el);

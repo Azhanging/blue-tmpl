@@ -98,7 +98,7 @@
 
 	/*常用的方法*/
 	Fn.prototype.isArr = function(array) {
-		return array instanceof Array;
+		return array instanceof Array || !!(array && array.length);
 	};
 
 	Fn.prototype.isObj = function(obj) {
@@ -149,7 +149,7 @@
 	})();
 
 	//遍历
-	Fn.prototype.each = function(obj, cb) {
+	Fn.prototype.each = function(obj, cb) { 
 		var i = 0,
 			len = obj.length;
 		if(this.isArr(obj)) {
@@ -158,7 +158,7 @@
 			}
 		} else {
 			for(i in obj) {
-				if(obj.hasOwnProperty(i)) cb(obj[i], i);
+				if(i && obj.hasOwnProperty(i)) cb(obj[i], i);
 			}
 		}
 	};

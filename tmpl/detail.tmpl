@@ -1,3 +1,17 @@
 <div class="row view" id="tmp1">
-	detail
+	
 </div>
+
+<script type="text/template" id="detail">
+	<div>
+		<h3><%= data['title'] %></h3>
+		<p><%= data['content'] %></p>	
+	</div>
+</script>
+
+<script type="text/javascript">
+	_require.loadModules('@tjs/detail.js');
+	_require.use(function() {
+		_require('@tjs/detail.js');
+	});
+</script>

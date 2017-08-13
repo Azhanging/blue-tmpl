@@ -44,7 +44,7 @@ gulp.task('concat', function() {
 var watch = function(type) {
 	gulp.watch(src.watch[type].path, function(ev) {
 		gulp.start(src.watch[type].task);
-		console.log("修改路径:" + ev.path + ',修改类型:' + ev.type);
+		console.log("修改路径:" + ev.path + ',修改类型:' + ev.type + ' time：' + new Date());
 	});
 }
 

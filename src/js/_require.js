@@ -1,6 +1,6 @@
 /*!
  * 
- * _require.js v1.0.5
+ * _require.js v1.0.6
  * (c) 2016-2017 Blue
  * https://github.com/azhanging/_require
  * Released under the MIT License.
@@ -31,9 +31,6 @@
 				return -1;
 			}
 		}
-		
-		/*代理变量*/
-		window._GLOBAL_ = {};
 
 		//map
 		if(!isFn(Array.prototype.map)) {
@@ -62,10 +59,6 @@
 
 	})();
 
-	function isObj(obj) {
-		return obj instanceof Object && !(obj instanceof Array) && obj !== null;
-	}
-
 	function isArr(array) {
 		return array instanceof Array;
 	}
@@ -80,20 +73,23 @@
 
 	//获取模块
 	function _require(path) {
-		//获取路径模块
-		var getModules = _require.modules.installedModules[getUrl(path)];
-		//获取不到路径模块为id模块
-		if(!getModules) {
+	    var installModules = _require.modules.installedModules;
+		var getModules = installModules[getUrl(path)]; //获取路径模块
+
+		if(!getModules) { //获取不到路径模块为id模块
 			//获取的可能是id
 			try {
-				return new _require.modules.installedModules[path]._export_();
+			    isRequire(installModules[path]);
+				return installModules[path]._export_;
+				
 			} catch(e) {
 				error(1, path);
 			}
 		} else if(getModules) {
 			//获取不到路径模块
 			try {
-				return new getModules._export_();
+			    isRequire(getModules);
+				return getModules._export_;
 			} catch(e) {
 				error(1, path);
 			}
@@ -102,6 +98,17 @@
 			error(1, path);
 		}
 	}
+	
+	//用来检查是否require
+	function isRequire(module){
+	    if(!module.isRequire){
+           module.isRequire = true; 
+           module._export_ = new module._export_();
+        }
+	}
+
+	/*代理变量*/
+	_require._GLOBAL_ = {};
 
 	//获取根路径
 	_require.origin = (function() {
@@ -137,7 +144,7 @@
 		}
 
 		_require.baseUrl = options.baseUrl ? options.baseUrl : _require.origin;
-
+        
 		_require.alias = options.alias;
 		//加载模块
 		loadModules(setUrl(options.paths));
@@ -246,7 +253,7 @@
 		}
 	}
 
-	//检查路径是开始还是结束的
+	//检查路径是开始还是结束的 
 	var hasSprit = {
 		start: function(path) {
 			if(/^\//.test(path)) {
@@ -297,106 +304,120 @@
 		return _path;
 	}
 
-	var scriptModules = [],
-		status = true;
+    
+	var scriptModules = [],    // script模块队列
+		status = true;        // script模块队列的状态
 
 	//加载模块
 	function loadModules(paths) {
 		var modules = _require.modules;
-		if(!(paths instanceof Array)) {
-			return;
-		}
+		
+		if(!(paths instanceof Array)) return;
+		
 		for(var index = 0; index < paths.length; index++) {
+		    
 			var path = paths[index]; //获取加载模块的列表
-			if(hasModule(path)) { //查看当前的路径是否已经记载的模块					
-				continue;
-			}
+			
+			//查看当前的路径是否已经记载的模块
+			if(hasModule(path)) continue;
+			
 			var scriptElement = document.createElement('script');
+			
 			scriptElement.src = path;
 			//当前模块添加到列表中
 			modules.modulesLists.push(path);
+			
 			//设置当前模块加载状态
-			modules.installedModules[path] = {};
-			modules.installedModules[path].loaded = false;
-			//监听模块状态
-			(function(index, path, scriptElement) {
-				//处理scripr加载完毕后的处理
-				function scriptEventHandler() {
-					status = true;
-					//设置接口
-					set_export(path);
-					//检查当前模块是全部否完成
-					isLoad();
-
-					if(scriptModules.length > 0) {
-						status = false;
-						scriptModules.shift()();
-					}
-				}
-
-				scriptElement.onload = function() {
-					scriptEventHandler();
-				};
-				scriptElement.onerror = function() {
-					error(1, path);
-					scriptEventHandler();
-				};
-
-				if(status) {
-					status = false;
-					document.getElementsByTagName('head')[0].appendChild(scriptElement);
-				} else {
-					scriptModules.push(function() {
-						document.getElementsByTagName('head')[0].appendChild(scriptElement)
-					});
-				}
-
-			})(index, path, scriptElement);
-
+			modules.installedModules[path] = {
+			    loaded:false
+			};
+			
+			// 创建script，监听加载
+			listenScriptModule(path, scriptElement);
 		}
 	}
+	
+	
+	// listen script 模块监听
+	function listenScriptModule(path, scriptElement){
+	    
+        scriptElement.onload = function() {
+            scriptEventHandler(path);
+        };
+        scriptElement.onerror = function() {
+            error(1, path);
+            scriptEventHandler(path);
+        };
+
+        if(status) {
+            status = false;
+            document.getElementsByTagName('head')[0].appendChild(scriptElement);
+        } else {
+            scriptModules.push(function() {
+                document.getElementsByTagName('head')[0].appendChild(scriptElement)
+            });
+        }
+	}
+	
+	//处理scripr加载完毕后的处理
+    function scriptEventHandler(path) {
+        status = true;
+        //设置接口
+        set_export(path);
+        //检查当前模块是全部否完成
+        isLoad();
+
+        if(scriptModules.length > 0) {
+            status = false;
+            scriptModules.shift()();
+        }
+    }
+	
 
 	//设置接口
 	function set_export(path) {
 		var installModules = _require.modules.installedModules;
-
 		//设置最后加载的模块已经模块路径
 		if(path) {
-			installModules[path]._export_ = lastLoadModuleHandler;
-			installModules[path].dep = lastDepModules;
-			//修改当前模块加载状态
-			installModules[path].loaded = true;
+			installModules[path] = {
+				_export_: lastLoadModuleHandler,
+				dep: lastDepModules,
+				loaded: true,
+				isRequire: false
+			}
 		}
+		
 		//是否存在设置id的模块
 		if(lastLoadId) {
-			installModules[lastLoadId] = {};
-			//设置id的模块
-			installModules[lastLoadId]._export_ = lastLoadModuleHandler;
-			installModules[lastLoadId].dep = lastDepModules;
-			installModules[lastLoadId].loaded = true;
+			installModules[lastLoadId] = {
+				lastLoadId: {},
+				_export_: lastLoadModuleHandler,
+				dep: lastDepModules,
+				loaded: true,
+				isRequire: false
+			}
 		}
 
 		//初始化所有的及接口配置
-		lastLoadId = null;
-		lastLoadModuleHandler = function() {
-			return function() {}
-		};
-		lastDepModules = [];
+		resetLastModuleConfig();
+	}
+	
+	/* 重置最后的模块配置 */
+	function resetLastModuleConfig(){
+	    lastLoadId = null;
+        lastLoadModuleHandler = function() {return function() {}};
+        lastDepModules = [];
 	}
 
 	//检测是否存在了模块
 	function hasModule(path) {
-		if(_require.modules.modulesLists.indexOf(path) === -1) {
-			return false;
-		}
+		if(_require.modules.modulesLists.indexOf(path) === -1) return false;
 		return true;
 	}
 
 	//检测是否为id模块
 	function isIdModule(path) {
-		if(/\.js/.test(path)) {
-			return false;
-		}
+		if(/\.js/.test(path)) return false;
 		return true;
 	}
 
@@ -405,9 +426,7 @@
 		var modules = _require.modules;
 		var isLoad = Object.keys(modules.installedModules);
 		for(var index = 0; index < isLoad.length; index++) {
-			if(modules.installedModules[isLoad[index]].loaded === false) {
-				return false;
-			}
+			if(modules.installedModules[isLoad[index]].loaded === false) return false;
 		}
 		runUse();
 	}

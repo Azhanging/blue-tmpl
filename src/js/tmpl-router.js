@@ -25,6 +25,7 @@
 		routerLinkActive: 'tmpl-router-active', //.tmpl-router-active
 		routerView: 'tmpl-router-view', //#tmpl-router-view
 		routerAnchor: 'tmpl-router-anchor', //锚点用的class
+		anchorTime:1000,  //默认锚点路由 1000/17
 		data: {},
 		methods: {}
 	};
@@ -82,7 +83,7 @@
 
 		setRouterLinkStatus.call(this); //设置路由链接的状态
 
-		setRouterAnchor.call(this); //设置路由的锚点形式
+		setRouterAnchor.call(this,this.config.anchorTime); //设置路由的锚点形式
 
 		keepLive.call(this); //设置保持状态
 
@@ -118,8 +119,6 @@
 
 		var hash = this.getHash(path); //获取hash
 
-		var search = this.search(path); //获取参数
-
 		var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
 
 		var viewEl = fn.getEl(this.config.routerView); //视图容器
@@ -145,7 +144,7 @@
 
 		/*修改路由状态*/
 		if(this.router[hash]['routerStatus'] !== undefined) {
-			this.routerStatus = true;
+			this.changeRoutereStatus(true);
 		}
 
 		/*如果是存在别名路径，返回代理的那个路径*/
@@ -171,7 +170,7 @@
 	TmplRouter.prototype.getTmpl = function(hash) {
 		var _this = this;
 
-		if((!this.router[hash]) || this.router[hash]['temp'].childNodes.length > 0 || this.router[hash]['view'].length > 0) return; //查看当前的路由模板是否加载回来了
+		if((!this.router[hash]) || this.router[hash]['view'].length > 0 || this.router[hash]['temp'].childNodes.length > 0) return; //查看当前的路由模板是否加载回来了
 
 		var tmplUrl = this.router[hash]['tmplUrl']; //获取请求的url
 
@@ -179,31 +178,46 @@
 
 		/*动态模板*/
 		if(tmplUrl) {
-			tmpl.fn.ajax({
-				async: false,
-				url: tmplUrl,
-				success: function(data) {
-					_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
-					filterTextNode.call(this, _this.router[hash]['temp']);
-					_this.routerStatus = false;
-				},
-				error: function(data) {
-					_this.routerStatus = true;
-				}
-			});
+		    try{		        
+		        tmpl.fn.ajax({
+		        	async: false,
+		        	url: tmplUrl,
+		        	success: function(data) {
+		        		_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
+		        		filterTextNode.call(this, _this.router[hash]['temp']);
+		        		_this.changeRoutereStatus(false);
+		        	},
+		        	error: function(data) {
+		        		_this.changeRoutereStatus(true);
+		        	}
+		        });
+		    }catch(e){
+		        $.ajax({
+		            async: false,
+                    url: tmplUrl,
+		            success: function(data) {
+                        _this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
+                        filterTextNode.call(this, _this.router[hash]['temp']);
+                        _this.changeRoutereStatus(false);
+                    },
+                    error: function(data) {
+                        _this.changeRoutereStatus(true);
+                    }
+		        });
+		    }
 		} else if(tmplId) {
 			try {
 				_this.router[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板	
 			} catch(e) {
 				_this.router[hash]['temp'].appendChild(tmpl.create(''));
 			}
-			_this.routerStatus = true;
+			_this.changeRoutereStatus(true);
 		}
 	};
 
-	/*获取参数*/
+	/*返回参数对象*/
 	TmplRouter.prototype.query = function(searchs) {
-		if(!fn.isStr(search)) return {};
+		if(!fn.isStr(searchs)) return {};
 		var query = {};
 		var search = searchs.split('&');
 		fn.each(search, function(_search, index) {
@@ -217,7 +231,7 @@
 		return query;
 	};
 
-	/*获取参数*/
+	/*获取|设置hash-url参数*/
 	TmplRouter.prototype.search = function(el, search) {
 		try {
 			var path = tmpl.attr(el, 'href').split('?');
@@ -238,46 +252,53 @@
 		}
 	};
 
-	/*获取hash，不带参数*/
+	/*分离hash和hash-search，只取hash*/
 	TmplRouter.prototype.getHash = function(hash) {
+		if(hash === undefined) hash = window.location.hash.replace('#', '');
 		var path = '';
 		path = hash.replace('#', '').split('?');
 		return path[0];
 	};
 
+	/* 修改路由link的点击的状态 */
+	TmplRouter.prototype.changeRoutereStatus = function(status) {
+		this.routerStatus = status;
+	}
+
 	/*设置路由的状态是够允许跳转*/
 	function setRouterLinkStatus() {
+
 		var _this = this;
-		
-		this.routerStatus = true;
-		
+
+		this.changeRoutereStatus(true);
+
 		var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
-		
 		fn.each(routerBtns, function(routerBtn, index) {
 			fn.on(routerBtn, 'click', function(event) {
 				if(!_this.routerStatus) event.preventDefault();
 			});
 		});
+
 	}
 
 	/*设置路由的锚点形式*/
-	function setRouterAnchor() {
+	function setRouterAnchor(time) {
 		var _this = this;
 		//获取路由绑定的节点
 		tmpl.on(document, this.config.routerAnchor, 'click', function(event, el) {
 
 			var anchorId = tmpl.attr(el, 'tmpl-anchor');
-			
+
 			var anchorOffsetTop = tmpl.attr(el, 'tmpl-anchor-top');
-			
+
 			anchorOffsetTop = fn.isNum(anchorOffsetTop) ? Number(anchorOffsetTop) : 0;
 
 			var anchorEl = fn.getEl(anchorId);
-			
+
 			if(fn.isEl(anchorEl)) {
-				tmpl.animate(document,{
-				    'scrollTop':tmpl.offset(anchorEl).top + anchorOffsetTop    
-				},1000);
+				tmpl.animate(document, {
+					'scrollTop': tmpl.offset(anchorEl).top + anchorOffsetTop
+				}, time);
 			}
 		});
 	}
@@ -304,20 +325,20 @@
 		var alinkEl = null;
 
 		var hash = this.getHash(path);
-		
+
 		_this.getTmpl(hash); //默认动态加载模块
-		
+
 		//是否存在最后一个路由地址
 		if(lastRouter) {
 			/*如果不是匹配的路由视图，则不显示在路由视图中*/
 			hideTmplEl.call(_this, lastRouter);
 		}
-		
+
 		lastRouter = hash; //记录最后的路由路径
 
-		showTmplEl.apply(_this, [hash, viewEl]);	//显示路由的view
-		
-		setRouterStatus.call(this,hash);              //设置路由的链接状态
+		showTmplEl.apply(_this, [hash, viewEl]); //显示路由的view
+
+		setRouterStatus.call(this, hash); //设置路由的链接状态
 
 		//修改对应的状态
 		fn.each(routerBtns, function(el, index) {
@@ -325,8 +346,6 @@
 			var path = tmpl.attr(el, 'href');
 
 			var href = _this.getHash(path);
-
-			var search = _this.search(path);
 
 			if(href === hash) {
 
@@ -356,13 +375,13 @@
 
 		fn.run(this.config.routerEntered, this, [path, viewEl, alinkEl]);
 	}
-	
+
 	/* 设置路由的状态，针对没有方法加载的路由模板中存在方法的 */
-	function setRouterStatus(hash){
-	    /*修改路由状态*/
-        if(this.router[hash]['routerStatus'] !== undefined) {
-            this.routerStatus = true;
-        }
+	function setRouterStatus(hash) {
+		/*修改路由状态*/
+		if(this.router[hash]['routerStatus'] !== undefined) {
+			this.changeRoutereStatus(true);
+		}
 	}
 
 	/*设置保持状态*/
@@ -421,7 +440,7 @@
 	/*清空空的文本节点*/
 	function filterTextNode(parentEl) {
 		fn.each(parentEl.childNodes, function(el, index) {
-			if(el.nodeType === 3 && el.textContent.trim() === '') {
+			if(el && el.nodeType === 3 && el.textContent.trim() === '') {
 				tmpl.remove(el);
 			}
 		});
@@ -455,11 +474,14 @@
 		var _this = this;
 		if(!window.hasTmplRouter) {
 			//修改hash时触发修改
-			fn.on(window, 'hashchange', function(event) {
-				var hash = window.location.hash;
-				_this.hashChange();
-				tmpl.preventDefault(event);
-			});
+			window.onhashchange = function(event){
+			    var hash = window.location.hash;
+                _this.hashChange();
+                tmpl.preventDefault(event);
+			}
+//			fn.on(window, 'hashchange', function(event) {
+//				
+//			});
 			window.hasTmplRouter = true;
 		}
 	}

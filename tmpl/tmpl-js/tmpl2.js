@@ -1,6 +1,5 @@
 _require.define(function() {
 	var Tmpl = _require('tmpl');
-	var changeStatus = _require('@base-js/changeStatus.js');
 	return function tmpl2() {
 		new Tmpl({
 			el: "tmpl2",
@@ -18,7 +17,7 @@ _require.define(function() {
 			},
 			events: function() {
 				this.on(this.fn.getEl('tmp2'),'on-add-tmpl', 'click', this.add);	
-				changeStatus();
+				Tmpl.router.changeRoutereStatus(true);
 			}
 		});
 	}
