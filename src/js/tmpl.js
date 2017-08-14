@@ -158,7 +158,7 @@
 			}
 		} else {
 			for(i in obj) {
-				if(i && obj.hasOwnProperty(i)) cb(obj[i], i);
+				if(obj.hasOwnProperty(i)) cb(obj[i], i);
 			}
 		}
 	};
