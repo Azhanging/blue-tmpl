@@ -2,10 +2,8 @@ _require.define(function() {
 
 	function routerEntered(path, el) {
 		var _path = this.getHash(path);
-//		alert(_path === '/detail');
 		switch(_path) {
 			case '/detail':
-//			    alert('detail。。。。。。');
 				this.search(el, this.search(path));
 				break;
 			default:

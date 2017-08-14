@@ -1,7 +1,4 @@
 _require.define(['@base-js/routerHandler.js','tmpl'],function(routerHandler,Tmpl) {
-//	var Tmpl = _require('tmpl');
-	
-//	var routerHandler = _require('@base-js/routerHandler.js');
 
 	var TmplRouter = _require('tmpl-router');
 
@@ -78,8 +75,6 @@ _require.define(['@base-js/routerHandler.js','tmpl'],function(routerHandler,Tmpl
 		},
 		mounted: function() {}
 	});
-	
-	Tmpl.router = router;
 
 	return router;
 });

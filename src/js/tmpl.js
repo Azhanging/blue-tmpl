@@ -939,7 +939,7 @@
 	//把路由实例挂靠到模板中
 	function setRouter() {
 		if(fn.isObj(this.config.router))
-			this.router = this.config.router;
+			this.constructor.router = this.config.router;
 	}
 
 	//初始化时间中的参数

@@ -113,9 +113,7 @@
 				Tmpl.install(TmplRouter);
 				
 				/*使用路由模块*/
-				_require('@base-js/router.js');
-				
-				Tmpl.aaa = 123;
+				var router = _require('@base-js/router.js');
 	
 				/* 实例模板  */
 				new Tmpl({
@@ -133,8 +131,10 @@
 					events: function() {
 						this.on(document, 'on-show-detailed', 'click', this.showDetailed);
 						this.on(document, 'on-close', 'click', this.showDetailed);
-					}
+					},
+					router:router
 				});
+				
 			});
 		</script>
 	</body>
