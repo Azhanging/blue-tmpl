@@ -55,10 +55,10 @@
 
 
 **动态模板**：
-默认模板中的```<tmpl-include name="tmplId"></tmpl-include>```
+默认模板中的```<tmpl-include name="tmplId"/>```
 中引入是不存在的，会被忽略掉，可以动态添加原来插入不存在的模板，
 使用实例方法update更新模板即可，更新后的是存在
-```<tmpl-include name="tmplId"></tmpl-include>```中找到的动态模块。
+```<tmpl-include name="tmplId"/>```中找到的动态模块。
 
 **************
 
@@ -69,7 +69,7 @@
 同理在浏览器环境中，```tmpl-include[file]``` 也是不做任何处理的，
 需要区分两个环境的使用）；
 
-在**nodejs**环境中使用，```<tmpl-include file="path"></tmpl-include> ```，
+在**nodejs**环境中使用，```<tmpl-include file="path"/>```，
 name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个extends的文件，
 ```<tmpl-extends file="extends.tmpl"></tmpl-extends>```。
 如果索引的block是不存在的，会使用base中的block块默认的内容。
@@ -114,9 +114,7 @@ name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-
 	<div>
     	我是main的内容
   	</div>
-  <tmpl-include file="include.tmpl">
-  		<div>假设这个block是不存在的，这里就会显示出来</div>
-  </tmpl-include>
+  <tmpl-include file="include.tmpl"/>
 </tmpl-block>
 
 ```

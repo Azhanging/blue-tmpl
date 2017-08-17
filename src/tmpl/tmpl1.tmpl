@@ -1,6 +1,6 @@
-<tmpl-extends file="__BASE__/base.tmpl"></tmpl-extends>
+<tmpl-extend file="__BASE__/base.tmpl"/>
 
-<tmpl-block name="append:body">
+<tmpl-block name="body">
 	<% for(var i = 0;i<data.length;i++){ %>
 		<div class="g-media mg-t-10 pd-10  g-bg-primary">
 			<div class="g-media-head">
@@ -20,21 +20,23 @@
 	<div>__TMPL__</div>
 	<% for(var j = 0;j<2;j++){ %>
 		<%= i %>
-		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl"></tmpl-include>
-		<tmpl-include file="__TMPL__/tmpl3.tmpl">
-			<div>并没有tmpl3.tmpl</div>
-		</tmpl-include>
+		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl"/>
+		<tmpl-include file="__TMPL__/tmpl3.tmpl"/>
 		<textarea>
 			<%= _this_ %>
 		</textarea>
 	<% } %>
 </tmpl-block>
 
-<tmpl-block name="append:header">
+<tmpl-block name="header">
 	<header>
-		<tmpl-include name="__TMPL__/tmpl10.tmpl"></tmpl-include>
+		<tmpl-include name="__TMPL__/tmpl10.tmpl"/>
 		<h1>title123</h1>
 	</header>
+</tmpl-block>
+
+<tmpl-block name="insert:title">
+	我是title1
 </tmpl-block>
 
 

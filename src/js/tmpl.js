@@ -32,11 +32,11 @@
 		//转义双引号
 		QUEST = /"/g,
 		//引入模板
-		INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
+		INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?\/>/g,
 		//引入模板
-		INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
+		INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?\/>/g,
 		//空模板
-		INCLUDE_NULL = /<tmpl-include\s*?>[\s\S]*?<\/tmpl-include>/g,
+		INCLUDE_NULL = /<tmpl-include\s*?\/>/g,
 		//嵌入block块
 		BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
 		//append_block
@@ -44,7 +44,7 @@
 		//inser_block
 		BLOCK_INSETR = /^insert:/,
 		//base路径解析
-		EXTENDS = /<tmpl-extends .*?file=(\'|\")(\S*?)\1.*?>[\s\S]*?<\/tmpl-extends>/g;
+		EXTENDS = /<tmpl-extend .*?file=(\'|\")(\S*?)\1.*?\/>/g;
 
 	var inBrowser = typeof window !== 'undefined';
 
@@ -297,12 +297,7 @@
 		this.tmpl = options.tmpl;
 		this.data = options.data;
 		this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
-		this.fragment = this.setDom();
-	};
-
-	//创建节点
-	Render.prototype.setDom = function() {
-		return this.tmpl.create(this.dom);
+		this.fragment = this.tmpl.create(this.dom);
 	};
 
 	//在父节点中插入解析后的模板
@@ -1044,10 +1039,17 @@
 
 	/*替换include引入的模板*/
 	function replaceInclude() {
-		var include = (function() {
-			if(inBrowser) return INCLUDE_ID;
-			return INCLUDE_FILE;
-		})();
+		var include = (function(_this) {
+			if(inBrowser) {
+			    //在浏览器环境清空include[file]
+			    _this.template = _this.template.replace(INCLUDE_FILE,'');
+			    return INCLUDE_ID;   
+			}else{
+			    //在node环境清空include[name]
+			    _this.template = _this.template.replace(INCLUDE_ID,'');
+			    return INCLUDE_FILE;   
+			}
+		})(this);
 
 		var _this = this;
 
@@ -1075,10 +1077,9 @@
 			/*浏览器环境下执行*/
 			if(inBrowser) {
 				var el = fn.getEl(id);
-				if(el) _this.template = _this.template
-					.replace(replaceInclude, _this.html(el));
-				else _this.template = _this.template
-					.replace(replaceInclude, includeTmpl[index].replace(include, '$3'));
+				if(el) _this.template = _this.template.replace(replaceInclude, _this.html(el));
+				//找不到就清空原来的内容
+				else _this.template = _this.template.replace(replaceInclude, '');
 			} else {
 				/*node环境下执行*/
 				try {
@@ -1087,8 +1088,8 @@
 					});
 					_this.template = _this.template.replace(replaceInclude, tmpl);
 				} catch(e) {
-					_this.template = _this.template
-						.replace(replaceInclude, includeTmpl[index].replace(include, '$3'));
+				    //找不到就清空原来的内容
+					_this.template = _this.template.replace(replaceInclude, '');
 				}
 			}
 		});

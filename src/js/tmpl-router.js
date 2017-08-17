@@ -25,7 +25,7 @@
 		routerLinkActive: 'tmpl-router-active', //.tmpl-router-active
 		routerView: 'tmpl-router-view', //#tmpl-router-view
 		routerAnchor: 'tmpl-router-anchor', //锚点用的class
-		anchorTime:1000,  //默认锚点路由 1000/17
+		anchorTime: 1000, //默认锚点路由 1000/17
 		data: {},
 		methods: {}
 	};
@@ -83,7 +83,7 @@
 
 		setRouterLinkStatus.call(this); //设置路由链接的状态
 
-		setRouterAnchor.call(this,this.config.anchorTime); //设置路由的锚点形式
+		setRouterAnchor.call(this, this.config.anchorTime); //设置路由的锚点形式
 
 		keepLive.call(this); //设置保持状态
 
@@ -178,33 +178,33 @@
 
 		/*动态模板*/
 		if(tmplUrl) {
-		    try{		        
-		        tmpl.fn.ajax({
-		        	async: false,
-		        	url: tmplUrl,
-		        	success: function(data) {
-		        		_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
-		        		filterTextNode.call(this, _this.router[hash]['temp']);
-		        		_this.changeRoutereStatus(false);
-		        	},
-		        	error: function(data) {
-		        		_this.changeRoutereStatus(true);
-		        	}
-		        });
-		    }catch(e){
-		        $.ajax({
-		            async: false,
-                    url: tmplUrl,
-		            success: function(data) {
-                        _this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
-                        filterTextNode.call(this, _this.router[hash]['temp']);
-                        _this.changeRoutereStatus(false);
-                    },
-                    error: function(data) {
-                        _this.changeRoutereStatus(true);
-                    }
-		        });
-		    }
+			try {
+				$.ajax({
+					async: false,
+					url: tmplUrl,
+					success: function(data) {
+						_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
+						filterTextNode.call(this, _this.router[hash]['temp']);
+						_this.changeRoutereStatus(false);
+					},
+					error: function(data) {
+						_this.changeRoutereStatus(true);
+					}
+				});
+			} catch(e) {
+				tmpl.fn.ajax({
+					async: false,
+					url: tmplUrl,
+					success: function(data) {
+						_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
+						filterTextNode.call(this, _this.router[hash]['temp']);
+						_this.changeRoutereStatus(false);
+					},
+					error: function(data) {
+						_this.changeRoutereStatus(true);
+					}
+				});
+			}
 		} else if(tmplId) {
 			try {
 				_this.router[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板	
@@ -284,6 +284,11 @@
 	/*设置路由的锚点形式*/
 	function setRouterAnchor(time) {
 		var _this = this;
+
+		function stopScroll(event) {
+			event.preventDefault();
+		}
+
 		//获取路由绑定的节点
 		tmpl.on(document, this.config.routerAnchor, 'click', function(event, el) {
 
@@ -296,9 +301,14 @@
 			var anchorEl = fn.getEl(anchorId);
 
 			if(fn.isEl(anchorEl)) {
+				//定义滑动阻止默认动作
+				window.addEventListener('mousewheel', stopScroll);
+
 				tmpl.animate(document, {
 					'scrollTop': tmpl.offset(anchorEl).top + anchorOffsetTop
-				}, time);
+				}, time, function() {
+					window.removeEventListener('mousewheel', stopScroll);
+				});
 			}
 		});
 	}
@@ -474,14 +484,11 @@
 		var _this = this;
 		if(!window.hasTmplRouter) {
 			//修改hash时触发修改
-			window.onhashchange = function(event){
-			    var hash = window.location.hash;
-                _this.hashChange();
-                tmpl.preventDefault(event);
+			window.onhashchange = function(event) {
+				var hash = window.location.hash;
+				_this.hashChange();
+				tmpl.preventDefault(event);
 			}
-//			fn.on(window, 'hashchange', function(event) {
-//				
-//			});
 			window.hasTmplRouter = true;
 		}
 	}

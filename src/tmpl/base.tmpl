@@ -3,12 +3,18 @@
 		<meta charset="UTF-8"/>
 		<% var title = '老司机'; %>
 		<title><%= title%></title>
+		<meta name="viewport" content="width=device-width,initial-scale=1,minimum-scale=1,maximum-scale=1,user-scalable=no" />
 	</head>
 	<body>
 		<tmpl-block name="title">
+			<div>
+				这是第一个title
+			</div>
 		</tmpl-block>
 		<tmpl-block name="title">
-			<div>没有title</div>
+			<div>
+				没有title
+			</div>
 		</tmpl-block>
 		<tmpl-block name="header">
 			没有header部分
@@ -20,7 +26,7 @@
 			<div>没有footer</div>
 		</tmpl-block>
 		<script type="text/template">
-			<tmpl-include name="name"></tmpl-include>
+			<tmpl-include name="name"/>   
 		</script>
 	</body>
 </html>
