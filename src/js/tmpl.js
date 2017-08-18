@@ -1,6 +1,6 @@
 /*!
  * 
- * 			tmpl.js v1.0.3
+ * 			tmpl.js v1.0.4
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 		
@@ -17,34 +17,6 @@
 		(global ? (global.Tmpl = factory()) : {});
 	}
 })(typeof window !== 'undefined' ? window : this, function() {
-
-	var SCRIPT_REGEXP,
-	   /*输出script*/
-		ECHO_SCRIPT_REGEXP,
-		/*替换输出script*/
-		REPLACE_ECHO_SCRIPT_OPEN_TAG,
-		/*起始*/
-		OPEN_TAG_REGEXP,
-		/*闭合*/
-		CLOSE_TAG_REGEXP,
-		//过滤转义字符
-		FILTER_TRANFORM = /[\\\b\\\t\\\r\\\f\\\n]/g,
-		//转义双引号
-		QUEST = /"/g,
-		//引入模板
-		INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?\/>/g,
-		//引入模板
-		INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?\/>/g,
-		//空模板
-		INCLUDE_NULL = /<tmpl-include\s*?\/>/g,
-		//嵌入block块
-		BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
-		//append_block
-		BLOCK_APPEND = /^append:/,
-		//inser_block
-		BLOCK_INSETR = /^insert:/,
-		//base路径解析
-		EXTENDS = /<tmpl-extend .*?file=(\'|\")(\S*?)\1.*?\/>/g;
 
 	var inBrowser = typeof window !== 'undefined';
 
@@ -149,7 +121,7 @@
 	})();
 
 	//遍历
-	Fn.prototype.each = function(obj, cb) { 
+	Fn.prototype.each = function(obj, cb) {
 		var i = 0,
 			len = obj.length;
 		if(this.isArr(obj)) {
@@ -881,8 +853,11 @@
 	}
 
 	/*转义*/
-	Tmpl.prototype.htmlEncode = function(htmlString) {
-		return htmlString.replace(/</g, '&lt;').replace(/>/g, '&gt;');
+	Tmpl.prototype.escape = function(escapeVal) {
+		fn.each(escapeCode, function(item, key) {
+			escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
+		});
+		return escapeVal;
 	}
 
 	//绑定相关函数
@@ -968,16 +943,64 @@
 		return expr;
 	}
 
+	var SCRIPT_REGEXP,
+		/*原生script*/
+		NATIVE_SCRIPT,
+		/*输出script*/
+		ECHO_SCRIPT_REGEXP,
+		//转义输出
+		ECHO_ESCAPE_REGEXP,
+		/*替换输出script*/
+		REPLACE_ECHO_SCRIPT_OPEN_TAG,
+		/*起始*/
+		OPEN_TAG_REGEXP,
+		/*闭合*/
+		CLOSE_TAG_REGEXP,
+		//过滤转义字符
+		FILTER_TRANFORM = /[\b\t\r\f\n]/g,
+		//转义双引号
+		QUEST = /"/g,
+		//引入模板
+		INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?\/>/g,
+		//引入模板
+		INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?\/>/g,
+		//空模板
+		INCLUDE_NULL = /<tmpl-include\s*?\/>/g,
+		//嵌入block块
+		BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
+		//append_block
+		BLOCK_APPEND = /^append:/,
+		//inser_block
+		BLOCK_INSETR = /^insert:/,
+		//base路径解析
+		EXTENDS = /<tmpl-extend .*?file=(\'|\")(\S*?)\1.*?\/>/g;
+
+	// html转义
+	var escapeCode = {
+		"&": "&amp;",
+		"<": "&lt;",
+		">": "&gt;",
+		'"': "&quot;",
+		"'": "&#x27;",
+		"`": "&#x60;"
+	}
+
 	//设置正则
 	function setRegExp() {
 		var open_tag = initRegExp.call(this, this.config.open_tag);
 		var close_tag = initRegExp.call(this, this.config.close_tag);
-		//解析原生的表达式
-		SCRIPT_REGEXP = new RegExp(open_tag + '[^=][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + config.close_tag, 'g');
+		//解析所有的表达式
+		SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
+		//原生的script
+		NATIVE_SCRIPT = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag, 'g');
 		//解析输出的表达式
 		ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=[\\\s\\\S]*?' + close_tag, 'g');
+		//转义输出
+		ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-([\\\s\\\S]*?)' + close_tag, 'g');
 		//替换输出的开头表达式
 		REPLACE_ECHO_SCRIPT_OPEN_TAG = new RegExp(open_tag + '=', 'g');
+		//转义的开头表达式
+		ECHO_ESCAPE_REGEXP_OPEN_TAG = new RegExp(open_tag + '-', 'g');
 		//替换输出的开始表达式
 		OPEN_TAG_REGEXP = new RegExp(open_tag, 'g');
 		//替换输出的结束表达式
@@ -986,7 +1009,7 @@
 
 	//初始化dom生成
 	function setDom() {
-
+        var _this = this;
 		//node中使用block
 		if(!inBrowser) {
 			replaceBlock.call(this);
@@ -997,16 +1020,14 @@
 		clearBlock.call(this);
 		/*替换include中的内容*/
 		replaceInclude.call(this);
-
+		/*解析script*/
 		var script = this.template.match(SCRIPT_REGEXP);
-		var echoScript = this.template.match(ECHO_SCRIPT_REGEXP);
 		var replaceScript = setSeize.call(this);
 		var echoString = replaceScript
 			.split(/___SCRIPT___|___ECHO_SCRIPT___/);
 		var domString = [];
 
 		if(!script) script = [];
-		if(!echoScript) echoScript = [];
 
 		var longString = echoString.length > script.length ? echoString : script;
 
@@ -1017,20 +1038,23 @@
 		fn.each(script, function(_string, index) {
 			/*恢复正则的索引位置*/
 			ECHO_SCRIPT_REGEXP.lastIndex = 0;
+			NATIVE_SCRIPT.lastIndex = 0;
+			ECHO_ESCAPE_REGEXP.lastIndex = 0;
+            
+            /*处理对应表达式*/
 			if(ECHO_SCRIPT_REGEXP.test(_string)) {
-				script[index] = _string
-					.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(")
-					.replace(CLOSE_TAG_REGEXP, ");");
-			} else {
-				script[index] = _string
-					.replace(OPEN_TAG_REGEXP, '')
-					.replace(CLOSE_TAG_REGEXP, '');
+				script[index] = _string.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(").replace(CLOSE_TAG_REGEXP, ");");
+			} else if(NATIVE_SCRIPT.test(_string)) {
+				script[index] = _string.replace(OPEN_TAG_REGEXP, '').replace(CLOSE_TAG_REGEXP, '');
+			} else if(ECHO_ESCAPE_REGEXP.test(_string)) {
+			    script[index] = _string.replace(ECHO_ESCAPE_REGEXP_OPEN_TAG, "___.push(_this_.escape(").replace(CLOSE_TAG_REGEXP, "));");
+				
 			}
 		});
 
 		fn.each(longString, function(_longString, index) {
 			if(typeof echoString[index] === 'string') domString.push(echoString[index]);
-			if(typeof script[index] === 'string') domString.push(script[index].replace(FILTER_TRANFORM, ""));
+			if(typeof script[index] === 'string') domString.push(script[index].replace(FILTER_TRANFORM, "")); 
 		});
 
 		this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
@@ -1041,13 +1065,13 @@
 	function replaceInclude() {
 		var include = (function(_this) {
 			if(inBrowser) {
-			    //在浏览器环境清空include[file]
-			    _this.template = _this.template.replace(INCLUDE_FILE,'');
-			    return INCLUDE_ID;   
-			}else{
-			    //在node环境清空include[name]
-			    _this.template = _this.template.replace(INCLUDE_ID,'');
-			    return INCLUDE_FILE;   
+				//在浏览器环境清空include[file]
+				_this.template = _this.template.replace(INCLUDE_FILE, '');
+				return INCLUDE_ID;
+			} else {
+				//在node环境清空include[name]
+				_this.template = _this.template.replace(INCLUDE_ID, '');
+				return INCLUDE_FILE;
 			}
 		})(this);
 
@@ -1088,7 +1112,7 @@
 					});
 					_this.template = _this.template.replace(replaceInclude, tmpl);
 				} catch(e) {
-				    //找不到就清空原来的内容
+					//找不到就清空原来的内容
 					_this.template = _this.template.replace(replaceInclude, '');
 				}
 			}
@@ -1140,11 +1164,11 @@
 				if(name === _name) {
 					tmpl = tmpl.replace(replaceBlock, blockContent);
 					hasBlock = true;
-				}else if(BLOCK_APPEND.test(_name) && name === _name.replace(BLOCK_APPEND,'')){
-					tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(BLOCK,"$3") + blockContent);
+				} else if(BLOCK_APPEND.test(_name) && name === _name.replace(BLOCK_APPEND, '')) {
+					tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(BLOCK, "$3") + blockContent);
 					hasBlock = true;
-				}else if(BLOCK_INSETR.test(_name) && name === _name.replace(BLOCK_INSETR,'')){
-					tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(BLOCK,"$3"));
+				} else if(BLOCK_INSETR.test(_name) && name === _name.replace(BLOCK_INSETR, '')) {
+					tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(BLOCK, "$3"));
 					hasBlock = true;
 				}
 				BLOCK.lastIndex = 0;
@@ -1188,7 +1212,7 @@
 			.replace(QUEST, '\\\"');
 	}
 
-	Tmpl.version = "v1.0.3";
+	Tmpl.version = "v1.0.4";
 
 	return Tmpl;
 });

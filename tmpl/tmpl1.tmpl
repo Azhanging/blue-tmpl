@@ -24,7 +24,19 @@
 		</div>
 	</div>
 	
-	<%= _this_.htmlEncode('<div name="123" haha="456" >123</div>') %>
+	<%-
+		
+		
+		"<div name=\"123\" haha=\"456\" >123</div>" + isNaN('3.1212aaaaa')
+		
+	%>
+	
+	<%-
+		
+		
+		'<div name="123" haha="456" >123</div>'
+		
+	%>
 
 	<% for(var j = 0;j<2;j++){ %>
 		<tmpl-include name="temp-1" id="laosiji"/>
