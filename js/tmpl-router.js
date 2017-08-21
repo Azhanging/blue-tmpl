@@ -60,7 +60,7 @@
 	};
 
 	//查看是否在全部中存在插件
-	if(window.Tmpl) {
+	if(window.Tmpl && typeof Tmpl === 'function') {
 		TmplRouter.install(Tmpl);
 	}
 

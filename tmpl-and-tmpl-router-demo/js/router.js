@@ -14,12 +14,12 @@ _require.define(['@base-js/routerHandler.js','tmpl'],function(routerHandler,Tmpl
 		},
 		router: {
 			'/detail': {
-				tmplUrl: "./php/get_tmpl.php?tmpl=detail",
+				tmplUrl: "/php/get_tmpl.php?tmpl=detail",
 				routerStatus: true,
 				viewWrap:'tmp1'
 			},
 			'/tm1': {
-				tmplUrl: "./php/get_tmpl.php?tmpl=tmpl1",
+				tmplUrl: "/php/get_tmpl.php?tmpl=tmpl1",
 				alias: '/tm2/tm2-2/tm2-2-1',
 				keepLive: true,
 				modules: {
@@ -32,16 +32,16 @@ _require.define(['@base-js/routerHandler.js','tmpl'],function(routerHandler,Tmpl
 				}
 			},
 			'/tm2': {
-				tmplUrl: "./php/get_tmpl.php?tmpl=tmpl2",
+				tmplUrl: "/php/get_tmpl.php?tmpl=tmpl2",
 				alias: '/',
 				keepLive: false
 			},
 			'/tm3': {
-				tmplUrl: "./php/get_tmpl4.php?tmpl=tmpl3"
+				tmplUrl: "/php/get_tmpl4.php?tmpl=tmpl3"
 			},
 			'/tm6': {},
 			'/tm8': {
-				tmplUrl: "./php/get_tmpl.php?tmpl=tmpl5",
+				tmplUrl: "/php/get_tmpl.php?tmpl=tmpl5",
 				routerStatus: true,
 				alias: '/tm9'
 			},
@@ -49,7 +49,7 @@ _require.define(['@base-js/routerHandler.js','tmpl'],function(routerHandler,Tmpl
 				routerStatus: true
 			},
 			'/tm10': {
-				tmplUrl: "./php/get_tmpl.php?tmpl=tmpl2"
+				tmplUrl: "/php/get_tmpl.php?tmpl=tmpl2"
 			}
 		},
 		error: function() {
