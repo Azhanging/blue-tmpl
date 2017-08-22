@@ -3,8 +3,6 @@ var webpack = require('webpack');
 var path = require('path');
 //压缩模块插件
 var uglifyjs = require('uglifyjs-webpack-plugin');
-//分块打包css插件
-var ExtractTextPlugin = require('extract-text-webpack-plugin');
 
 module.exports = {
 	//文件起始路径
@@ -41,9 +39,10 @@ module.exports = {
 	//	devtool: 'source-map',
 	plugins: [
 		new webpack.BannerPlugin(`
-			Tmpl.js v1.2.0
+			Tmpl.js v1.0.5
 			(c) 2016-2017 Blue
 			Released under the MIT License.
+			https://github.com/azhanging/tmpl
 		`),
 		new uglifyjs({
 			mangle: true,

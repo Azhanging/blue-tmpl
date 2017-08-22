@@ -49,9 +49,9 @@ export default class Tmpl extends Dom{
 	
 	//解析模板和数据
 	render(data) {
-        var _this = this;
+        var tmpl = this;
         return new Render({
-            tmpl: _this,
+            tmpl: tmpl,
             data: data
         });
     }

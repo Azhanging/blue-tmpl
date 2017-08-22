@@ -20,7 +20,7 @@ import inBrowser from './in_browser';
 		document.getElementsByClassName = (className, el) => {
 			const children = (el || document).getElementsByTagName('*'),
 				elements = new Array();
-			for(var i = 0; i < children.length; i++) {
+			for(let i = 0; i < children.length; i++) {
 			    
 				const child = children[i],
 					classNames = child.className.split(' ');

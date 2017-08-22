@@ -1,8 +1,9 @@
 /*!
  * 
- * 			Tmpl.js v1.2.0
+ * 			Tmpl.js v1.0.5
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
+ * 			https://github.com/azhanging/tmpl
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -466,11 +467,11 @@ var Tmpl = function (_Dom) {
     function Tmpl(opts) {
         _classCallCheck(this, Tmpl);
 
-        var _this2 = _possibleConstructorReturn(this, (Tmpl.__proto__ || Object.getPrototypeOf(Tmpl)).call(this));
+        var _this = _possibleConstructorReturn(this, (Tmpl.__proto__ || Object.getPrototypeOf(Tmpl)).call(this));
 
-        _this2.config = fn.extend(fn.copy(config), opts);
-        _this2.init();
-        return _this2;
+        _this.config = fn.extend(fn.copy(config), opts);
+        _this.init();
+        return _this;
     }
 
     //安装插件
@@ -490,9 +491,9 @@ var Tmpl = function (_Dom) {
     }, {
         key: 'render',
         value: function render(data) {
-            var _this = this;
+            var tmpl = this;
             return new _render2.default({
-                tmpl: _this,
+                tmpl: tmpl,
                 data: data
             });
         }
@@ -1374,6 +1375,7 @@ var fn = new _fn2.default();
 //解析方法
 function init() {
 	var _this = this;
+
 	//构建开始的钩子
 	fn.run(this.config.created, this);
 	//初始配置信息

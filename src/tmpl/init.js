@@ -17,15 +17,14 @@ import {
 const fn = new Fn();
 
 export default function init() {
-	const _this = this;
 	//构建开始的钩子
 	fn.run(this.config.created, this);
 	//初始配置信息
 	this.el = (() => {
 		if(inBrowser) {
-			return fn.getEl(_this.config.el)
+			return fn.getEl(this.config.el)
 		} else {
-			return _this.config.el;
+			return this.config.el;
 		}
 	})();
 
@@ -39,11 +38,11 @@ export default function init() {
 	if(this.el) {
 		this.template = (() => {
 			if(inBrowser) {
-				_this.config.template = _this.el.innerHTML;
-				return _this.el.innerHTML;
+				this.config.template = this.el.innerHTML;
+				return this.el.innerHTML;
 			} else {
-				_this.config.template = _this.el;
-				return _this.el;
+				this.config.template = this.el;
+				return this.el;
 			}
 		})();
 		

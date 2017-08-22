@@ -1,5 +1,5 @@
 //Tmpl 文件入口
-import Tmpl from './tmpl';
+import Tmpl from './tmpl/tmpl';
 //兼容性处理
 import compatibility from './tmpl/compatibility';
 
