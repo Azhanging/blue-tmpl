@@ -1,13 +1,15 @@
+//运行环境是否在浏览器
+import inBrowser from './in_browser';
 /*常用的方法*/
-
 export default class Fn {
-
 	isArr(array) {
 		return array instanceof Array || !!(array && array.length);
 	}
+	
 	isObj(obj) {
 		return obj instanceof Object && !(obj instanceof Array) && obj !== null;
 	}
+	
 	isFn(fn) {
 		return typeof fn === 'function';
 	}
@@ -21,14 +23,6 @@ export default class Fn {
 
 	isEl(el) {
 		return !!(el && el.nodeType);
-	}
-
-	on(el, type, cb) { //设置事件
-		el.addEventListener(type, cb, false);
-	}
-
-	off() { //移除事件
-		el.addEventListener(type, cb, false);
 	}
 
 	each(obj, cb) { //遍历
@@ -177,3 +171,31 @@ export default class Fn {
 		return result.substring(0, result.length - 1);
 	}
 }
+
+//设置事件
+Fn.prototype.on = (function() {
+    if(!inBrowser) return;
+    if(typeof document.addEventListener === 'function') {
+        return function on(el, type, cb) {
+            el.addEventListener(type, cb, false);
+        }
+    } else {
+        return function on(el, type, cb) {
+            el.attachEvent('on' + type, cb);
+        };
+    }
+})();
+
+//移除事件
+Fn.prototype.off = (function() {
+    if(!inBrowser) return;
+    if(typeof document.removeEventListener === 'function') {
+        return function off(el, type, cb) {
+            el.addEventListener(type, cb, false);
+        }
+    } else {
+        return function off(el, type, cb) {
+            el.detachEvent('on' + type, cb);
+        };
+    }
+})();

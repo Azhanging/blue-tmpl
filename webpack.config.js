@@ -39,7 +39,7 @@ module.exports = {
 	//	devtool: 'source-map',
 	plugins: [
 		new webpack.BannerPlugin(`
-			Tmpl.js v1.0.5
+			tmpl.js v1.0.5
 			(c) 2016-2017 Blue
 			Released under the MIT License.
 			https://github.com/azhanging/tmpl

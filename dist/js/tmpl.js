@@ -1,6 +1,6 @@
 /*!
  * 
- * 			Tmpl.js v1.0.5
+ * 			tmpl.js v1.0.5
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
@@ -81,7 +81,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "./dist";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 4);
+/******/ 	return __webpack_require__(__webpack_require__.s = 5);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -92,15 +92,39 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/*
+ *  检测是否在浏览器的环境中 
+ * */
+
+var inBrowser = typeof window !== 'undefined';
+
+exports.default = inBrowser;
+
+/***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); //运行环境是否在浏览器
+
+
+var _in_browser = __webpack_require__(0);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 /*常用的方法*/
-
 var Fn = function () {
 	function Fn() {
 		_classCallCheck(this, Fn);
@@ -135,18 +159,6 @@ var Fn = function () {
 		key: 'isEl',
 		value: function isEl(el) {
 			return !!(el && el.nodeType);
-		}
-	}, {
-		key: 'on',
-		value: function on(el, type, cb) {
-			//设置事件
-			el.addEventListener(type, cb, false);
-		}
-	}, {
-		key: 'off',
-		value: function off() {
-			//移除事件
-			el.addEventListener(type, cb, false);
 		}
 	}, {
 		key: 'each',
@@ -195,21 +207,11 @@ var Fn = function () {
 		}
 	}, {
 		key: 'cb',
-		value: function (_cb) {
-			function cb(_x, _x2, _x3) {
-				return _cb.apply(this, arguments);
-			}
-
-			cb.toString = function () {
-				return _cb.toString();
-			};
-
-			return cb;
-		}(function (cb, context, args) {
+		value: function cb(_cb, context, args) {
 			//回调
 			args = args ? args : [];
-			this.isFn(cb) ? cb.apply(context, args) : null;
-		})
+			this.isFn(_cb) ? _cb.apply(context, args) : null;
+		}
 	}, {
 		key: 'run',
 		value: function run(cb, context, args) {
@@ -319,25 +321,36 @@ var Fn = function () {
 	return Fn;
 }();
 
+//设置事件
+
+
 exports.default = Fn;
+Fn.prototype.on = function () {
+	if (!_in_browser2.default) return;
+	if (typeof document.addEventListener === 'function') {
+		return function on(el, type, cb) {
+			el.addEventListener(type, cb, false);
+		};
+	} else {
+		return function on(el, type, cb) {
+			el.attachEvent('on' + type, cb);
+		};
+	}
+}();
 
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/*
- *  检测是否在浏览器的环境中 
- * */
-
-var inBrowser = typeof window !== 'undefined';
-
-exports.default = inBrowser;
+//移除事件
+Fn.prototype.off = function () {
+	if (!_in_browser2.default) return;
+	if (typeof document.removeEventListener === 'function') {
+		return function off(el, type, cb) {
+			el.addEventListener(type, cb, false);
+		};
+	} else {
+		return function off(el, type, cb) {
+			el.detachEvent('on' + type, cb);
+		};
+	}
+}();
 
 /***/ }),
 /* 2 */
@@ -347,10 +360,32 @@ exports.default = inBrowser;
 
 
 Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+// html转义
+var escapeCode = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "`": "&#x60;"
+};
+
+exports.default = escapeCode;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _in_browser = __webpack_require__(1);
+var _in_browser = __webpack_require__(0);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
@@ -395,7 +430,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = true;
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -407,21 +442,29 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _init2 = __webpack_require__(6);
+var _init2 = __webpack_require__(8);
 
 var _init3 = _interopRequireDefault(_init2);
 
-var _render = __webpack_require__(7);
+var _render = __webpack_require__(9);
 
 var _render2 = _interopRequireDefault(_render);
 
-var _fn = __webpack_require__(0);
+var _fn = __webpack_require__(1);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _dom = __webpack_require__(5);
+var _dom = __webpack_require__(7);
 
 var _dom2 = _interopRequireDefault(_dom);
+
+var _config = __webpack_require__(6);
+
+var _config2 = _interopRequireDefault(_config);
+
+var _escapeCode = __webpack_require__(2);
+
+var _escapeCode2 = _interopRequireDefault(_escapeCode);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -437,28 +480,13 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 
 //Dom的操作
 
+//config配置
+
+//转义html
+
 
 //实例化常用的方法
 var fn = new _fn2.default();
-
-/*配置信息*/
-var config = {
-    open_tag: "<%", //OPEN_TAG
-    close_tag: "%>", //CLOSE_TAG,
-    template: "",
-    data: {},
-    methods: {}
-};
-
-// html转义
-var escapeCode = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#x27;",
-    "`": "&#x60;"
-};
 
 var Tmpl = function (_Dom) {
     _inherits(Tmpl, _Dom);
@@ -469,7 +497,7 @@ var Tmpl = function (_Dom) {
 
         var _this = _possibleConstructorReturn(this, (Tmpl.__proto__ || Object.getPrototypeOf(Tmpl)).call(this));
 
-        _this.config = fn.extend(fn.copy(config), opts);
+        _this.config = fn.extend(fn.copy(_config2.default), opts);
         _this.init();
         return _this;
     }
@@ -521,7 +549,7 @@ var Tmpl = function (_Dom) {
     }, {
         key: 'escape',
         value: function escape(escapeVal) {
-            fn.each(escapeCode, function (item, key) {
+            fn.each(_escapeCode2.default, function (item, key) {
                 escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
             });
             return escapeVal;
@@ -546,7 +574,7 @@ Tmpl.prototype.fn = fn;
 Tmpl.alias = {};
 
 /***/ }),
-/* 4 */
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -557,11 +585,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //兼容性处理
 
 
-var _tmpl = __webpack_require__(3);
+var _tmpl = __webpack_require__(4);
 
 var _tmpl2 = _interopRequireDefault(_tmpl);
 
-var _compatibility = __webpack_require__(2);
+var _compatibility = __webpack_require__(3);
 
 var _compatibility2 = _interopRequireDefault(_compatibility);
 
@@ -583,7 +611,28 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 });
 
 /***/ }),
-/* 5 */
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+/*配置信息*/
+var config = {
+    open_tag: "<%", //OPEN_TAG
+    close_tag: "%>", //CLOSE_TAG,
+    template: "",
+    data: {},
+    methods: {}
+};
+
+exports.default = config;
+
+/***/ }),
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -598,11 +647,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 //常用的方法
 
 
-var _in_browser = __webpack_require__(1);
+var _in_browser = __webpack_require__(0);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
-var _fn = __webpack_require__(0);
+var _fn = __webpack_require__(1);
 
 var _fn2 = _interopRequireDefault(_fn);
 
@@ -1340,7 +1389,7 @@ var Dom = function () {
 exports.default = Dom;
 
 /***/ }),
-/* 6 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1351,15 +1400,15 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = init;
 
-var _fn = __webpack_require__(0);
+var _fn = __webpack_require__(1);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRender = __webpack_require__(8);
+var _tmplRender = __webpack_require__(11);
 
 var _tmplRender2 = _interopRequireDefault(_tmplRender);
 
-var _in_browser = __webpack_require__(1);
+var _in_browser = __webpack_require__(0);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
@@ -1418,7 +1467,7 @@ function init() {
 }
 
 /***/ }),
-/* 7 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1437,11 +1486,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 //常用的方法
 
 
-var _in_browser = __webpack_require__(1);
+var _in_browser = __webpack_require__(0);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
-var _fn = __webpack_require__(0);
+var _fn = __webpack_require__(1);
 
 var _fn2 = _interopRequireDefault(_fn);
 
@@ -1509,77 +1558,15 @@ var Render = function () {
 exports.default = Render;
 
 /***/ }),
-/* 8 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
-exports.setRouter = setRouter;
-exports.setEvent = setEvent;
-exports.setInstance = setInstance;
-exports.initRegExp = initRegExp;
-exports.setRegExp = setRegExp;
-exports.setDom = setDom;
-exports.replaceInclude = replaceInclude;
-exports.replaceBlock = replaceBlock;
-exports.replaceAlias = replaceAlias;
-exports.clearBlock = clearBlock;
-exports.setSeize = setSeize;
-exports.filterTransferredMeaning = filterTransferredMeaning;
-
-var _in_browser = __webpack_require__(1);
-
-var _in_browser2 = _interopRequireDefault(_in_browser);
-
-var _fn = __webpack_require__(0);
-
-var _fn2 = _interopRequireDefault(_fn);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//实例化常用的方法
-/*
- * 一堆解析模板的方法,tmpl的核心算法
- * */
-//运行环境是否在浏览器
-var fn = new _fn2.default();
-//常用的方法
-
-
-var fs = void 0;
-
-if (!_in_browser2.default) {
-	/*兼容webpack的写法来获取nodejs中的核心模块*/
-	fs = require('fs');
-}
-
-var SCRIPT_REGEXP = void 0,
-
-/*原生script*/
-NATIVE_SCRIPT = void 0,
-
-/*输出script*/
-ECHO_SCRIPT_REGEXP = void 0,
-
-//转义输出
-ECHO_ESCAPE_REGEXP = void 0,
-
-/*替换输出script*/
-REPLACE_ECHO_SCRIPT_OPEN_TAG = void 0,
-
-//转义的开头表达式
-ECHO_ESCAPE_REGEXP_OPEN_TAG = void 0,
-
-/*起始*/
-OPEN_TAG_REGEXP = void 0,
-
-/*闭合*/
-CLOSE_TAG_REGEXP = void 0;
-
 var FILTER_TRANFORM = /[\b\t\r\f\n]/g,
     //过滤转义字符
 //转义双引号
@@ -1605,6 +1592,101 @@ BLOCK_INSETR = /^insert:/,
 
 //base路径解析
 EXTENDS = /<tmpl-extend .*?file=(\'|\")(\S*?)\1.*?\/>/g;
+
+exports.FILTER_TRANFORM = FILTER_TRANFORM;
+exports.QUEST = QUEST;
+exports.INCLUDE_ID = INCLUDE_ID;
+exports.INCLUDE_FILE = INCLUDE_FILE;
+exports.INCLUDE_NULL = INCLUDE_NULL;
+exports.BLOCK = BLOCK;
+exports.BLOCK_APPEND = BLOCK_APPEND;
+exports.BLOCK_INSETR = BLOCK_INSETR;
+exports.EXTENDS = EXTENDS;
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.setRouter = setRouter;
+exports.setEvent = setEvent;
+exports.setInstance = setInstance;
+exports.initRegExp = initRegExp;
+exports.setRegExp = setRegExp;
+exports.setDom = setDom;
+exports.replaceInclude = replaceInclude;
+exports.replaceBlock = replaceBlock;
+exports.replaceAlias = replaceAlias;
+exports.clearBlock = clearBlock;
+exports.setSeize = setSeize;
+exports.filterTransferredMeaning = filterTransferredMeaning;
+
+var _in_browser = __webpack_require__(0);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
+var _fn = __webpack_require__(1);
+
+var _fn2 = _interopRequireDefault(_fn);
+
+var _tmplRegexp = __webpack_require__(10);
+
+var _escapeCode = __webpack_require__(2);
+
+var _escapeCode2 = _interopRequireDefault(_escapeCode);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//实例化常用的方法
+
+//模板正则配置
+/*
+ * 一堆解析模板的方法,tmpl的核心算法
+ * */
+//运行环境是否在浏览器
+var fn = new _fn2.default();
+
+//在node环境中使用需要用到fs获取文件
+
+
+//html中的转义
+
+//常用的方法
+var fs = void 0;
+
+if (!_in_browser2.default) {
+	/*兼容webpack的写法来获取nodejs中的核心模块*/
+	fs = require('fs');
+}
+
+//由于模块接口中都是只读的，不能放在配置中；
+var SCRIPT_REGEXP = void 0,
+
+/*原生script*/
+NATIVE_SCRIPT = void 0,
+
+/*输出script*/
+ECHO_SCRIPT_REGEXP = void 0,
+
+//转义输出
+ECHO_ESCAPE_REGEXP = void 0,
+
+/*替换输出script*/
+REPLACE_ECHO_SCRIPT_OPEN_TAG = void 0,
+
+//转义的开头表达式
+ECHO_ESCAPE_REGEXP_OPEN_TAG = void 0,
+
+/*起始*/
+OPEN_TAG_REGEXP = void 0,
+
+/*闭合*/
+CLOSE_TAG_REGEXP = void 0;
 
 //把路由实例挂靠到模板中
 function setRouter() {
@@ -1720,7 +1802,7 @@ function setDom() {
 
 	fn.each(longString, function (_longString, index) {
 		if (typeof echoString[index] === 'string') domString.push(echoString[index]);
-		if (typeof script[index] === 'string') domString.push(script[index].replace(FILTER_TRANFORM, ""));
+		if (typeof script[index] === 'string') domString.push(script[index].replace(_tmplRegexp.FILTER_TRANFORM, ""));
 	});
 
 	this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
@@ -1733,12 +1815,12 @@ function replaceInclude() {
 	var include = function () {
 		if (_in_browser2.default) {
 			//在浏览器环境清空include[file]
-			_this2.template = _this2.template.replace(INCLUDE_FILE, '');
-			return INCLUDE_ID;
+			_this2.template = _this2.template.replace(_tmplRegexp.INCLUDE_FILE, '');
+			return _tmplRegexp.INCLUDE_ID;
 		} else {
 			//在node环境清空include[name]
-			_this2.template = _this2.template.replace(INCLUDE_ID, '');
-			return INCLUDE_FILE;
+			_this2.template = _this2.template.replace(_tmplRegexp.INCLUDE_ID, '');
+			return _tmplRegexp.INCLUDE_FILE;
 		}
 	}();
 
@@ -1746,7 +1828,7 @@ function replaceInclude() {
 	    includeId = void 0;
 
 	//清空空的引入模块
-	this.template = this.template.replace(INCLUDE_NULL, '');
+	this.template = this.template.replace(_tmplRegexp.INCLUDE_NULL, '');
 
 	//去重
 	includeTmpl = fn.unique(this.template.match(include));
@@ -1790,23 +1872,23 @@ function replaceBlock() {
 	//先设置获取include的引入模板
 	replaceAlias.call(this);
 
-	var baseFile = fn.unique(this.template.match(EXTENDS));
+	var baseFile = fn.unique(this.template.match(_tmplRegexp.EXTENDS));
 
 	/*只获取第一个base的名字*/
-	var baseFileName = baseFile.toString().replace(EXTENDS, "$2").split(',')[0];
+	var baseFileName = baseFile.toString().replace(_tmplRegexp.EXTENDS, "$2").split(',')[0];
 
 	/*如果不存在block的内容，直接跳出*/
 	if (baseFileName === '') return;
 
-	var blockTmpl = fn.unique(this.template.match(BLOCK));
+	var blockTmpl = fn.unique(this.template.match(_tmplRegexp.BLOCK));
 
 	var tmpl = fs.readFileSync(baseFileName, {
 		encoding: 'UTF8'
 	});
 
-	var baseTmpl = tmpl.match(BLOCK);
+	var baseTmpl = tmpl.match(_tmplRegexp.BLOCK);
 
-	var baseBlockName = baseTmpl.toString().replace(BLOCK, "$2").split(',');
+	var baseBlockName = baseTmpl.toString().replace(_tmplRegexp.BLOCK, "$2").split(',');
 
 	fn.each(baseBlockName, function (name, index) {
 
@@ -1816,7 +1898,7 @@ function replaceBlock() {
 
 		fn.each(blockTmpl, function (blocktmpl, _index) {
 
-			BLOCK.test(blocktmpl);
+			_tmplRegexp.BLOCK.test(blocktmpl);
 
 			var _name = RegExp.$2,
 			    blockContent = RegExp.$3;
@@ -1826,21 +1908,21 @@ function replaceBlock() {
 
 				tmpl = tmpl.replace(replaceBlock, blockContent);
 				hasBlock = true;
-			} else if (BLOCK_APPEND.test(_name) && name === _name.replace(BLOCK_APPEND, '')) {
+			} else if (_tmplRegexp.BLOCK_APPEND.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_APPEND, '')) {
 
-				tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(BLOCK, "$3") + blockContent);
+				tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(_tmplRegexp.BLOCK, "$3") + blockContent);
 				hasBlock = true;
-			} else if (BLOCK_INSETR.test(_name) && name === _name.replace(BLOCK_INSETR, '')) {
+			} else if (_tmplRegexp.BLOCK_INSETR.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_INSETR, '')) {
 
-				tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(BLOCK, "$3"));
+				tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(_tmplRegexp.BLOCK, "$3"));
 				hasBlock = true;
 			}
-			BLOCK.lastIndex = 0;
+			_tmplRegexp.BLOCK.lastIndex = 0;
 		});
 
 		/*如果当前的block是在extends的模板中不存在，则显示默认里面的*/
 		if (!hasBlock) {
-			tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(BLOCK, '$3'));
+			tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(_tmplRegexp.BLOCK, '$3'));
 		}
 	});
 
@@ -1859,7 +1941,7 @@ function replaceAlias() {
 
 /*清除多余的block块*/
 function clearBlock() {
-	this.template = this.template.replace(EXTENDS, '').replace(BLOCK, '');
+	this.template = this.template.replace(_tmplRegexp.EXTENDS, '').replace(_tmplRegexp.BLOCK, '');
 }
 
 //设置占位
@@ -1870,7 +1952,7 @@ function setSeize() {
 
 //过滤string中的引号
 function filterTransferredMeaning(string) {
-	return string.replace(FILTER_TRANFORM, "").replace(QUEST, '\\\"');
+	return string.replace(_tmplRegexp.FILTER_TRANFORM, "").replace(_tmplRegexp.QUEST, '\\\"');
 }
 
 /***/ })

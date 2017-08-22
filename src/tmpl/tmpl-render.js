@@ -5,9 +5,26 @@
 import inBrowser from './in_browser';
 //常用的方法
 import Fn from './fn';
+//模板正则配置
+import {
+    FILTER_TRANFORM,
+    QUEST,
+    INCLUDE_ID,
+    INCLUDE_FILE,
+    INCLUDE_NULL,
+    BLOCK,
+    BLOCK_APPEND,
+    BLOCK_INSETR,
+    EXTENDS
+} from './tmpl-regexp';
+
+//html中的转义
+import escapeCode from './escapeCode';
+
 //实例化常用的方法
 const fn = new Fn();
 
+//在node环境中使用需要用到fs获取文件
 let fs;
 
 if(!inBrowser) {
@@ -15,6 +32,7 @@ if(!inBrowser) {
 	fs = __non_webpack_require__('fs');
 }
 
+//由于模块接口中都是只读的，不能放在配置中；
 let SCRIPT_REGEXP,
 	/*原生script*/
 	NATIVE_SCRIPT,
@@ -30,24 +48,6 @@ let SCRIPT_REGEXP,
 	OPEN_TAG_REGEXP,
 	/*闭合*/
 	CLOSE_TAG_REGEXP;
-
-const FILTER_TRANFORM = /[\b\t\r\f\n]/g, //过滤转义字符
-	//转义双引号
-	QUEST = /"/g,
-	//引入模板
-	INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?\/>/g,
-	//引入模板
-	INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?\/>/g,
-	//空模板
-	INCLUDE_NULL = /<tmpl-include\s*?\/>/g,
-	//嵌入block块
-	BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
-	//append_block
-	BLOCK_APPEND = /^append:/,
-	//inser_block
-	BLOCK_INSETR = /^insert:/,
-	//base路径解析
-	EXTENDS = /<tmpl-extend .*?file=(\'|\")(\S*?)\1.*?\/>/g;
 
 //把路由实例挂靠到模板中
 export function setRouter() {

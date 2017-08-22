@@ -6,28 +6,12 @@ import Render from './render';
 import Fn from './fn';
 //Dom的操作
 import Dom from './dom';
-
+//config配置
+import config from './config';
+//转义html
+import escapeCode from './escapeCode';
 //实例化常用的方法
 const fn = new Fn();
-
-/*配置信息*/
-const config = {
-    open_tag: "<%", //OPEN_TAG
-    close_tag: "%>", //CLOSE_TAG,
-    template: "",
-    data: {},
-    methods: {}
-};
-
-// html转义
-const escapeCode = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#x27;",
-    "`": "&#x60;"
-}
 
 export default class Tmpl extends Dom{
     //Tmpl构造
@@ -69,7 +53,7 @@ export default class Tmpl extends Dom{
     }
     
     /*转义*/
-    escape(escapeVal) {
+    escape(escapeVal) { 
         fn.each(escapeCode, (item, key) => {
             escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
         });
