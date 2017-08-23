@@ -2,7 +2,13 @@
 
 <tmpl-block name="body">
 	<% for(var i = 0;i<data.length;i++){ %>
-		<div class="g-media mg-t-10 pd-10  g-bg-primary">
+		<div class="g-media mg-t-10 pd-10  g-bg-primary" style="background-color:
+			<%if(i%2 == 0){%>
+				blue
+			<%}else{%>
+				red
+			<%}%>
+		;">
 			<div class="g-media-head">
 				<img src="" class="wh-64 radius-50perc" />
 			</div>
@@ -19,9 +25,14 @@
 	<% } %>
 	<div>__TMPL__</div>
 	<% for(var j = 0;j<2;j++){ %>
-		<%= i %>
-		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl"/>
-		<tmpl-include file="__TMPL__/tmpl3.tmpl"/>
+		<div style="
+			background-color:<%= j == 0?'red':'blue' %>
+		">
+			<%= i %>
+		</div>
+		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl"></tmpl-include>
+		<tmpl-include file="__TMPL__/tmpl3.tmpl"></tmpl-include>
+		<tmpl-include error error-msg="test"></tmpl-include>
 		<textarea>
 			<%= _this_ %>
 		</textarea>
@@ -30,7 +41,7 @@
 
 <tmpl-block name="header">
 	<header>
-		<tmpl-include name="__TMPL__/tmpl10.tmpl"/>
+		<tmpl-include name="__TMPL__/tmpl10.tmpl"></tmpl-include>
 		<h1>title123</h1>
 	</header>
 </tmpl-block>

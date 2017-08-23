@@ -10,7 +10,7 @@
    	
    	$data['content'] = '这是返回的content'.$page;
    	
-   	sleep(2);
+// 	sleep(2);
    	
 	echo json_encode($data,0);
 ?>

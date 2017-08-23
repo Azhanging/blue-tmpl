@@ -12,6 +12,7 @@ import {
     INCLUDE_ID,
     INCLUDE_FILE,
     INCLUDE_NULL,
+    INCLUDE_ERROR,
     BLOCK,
     BLOCK_APPEND,
     BLOCK_INSETR,
@@ -93,13 +94,13 @@ export function setRegExp() {
 
 	const close_tag = initRegExp.call(this, this.config.close_tag);
 	//解析所有的表达式
-	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
+	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-].*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
 	//原生的script
-	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag, 'g');
+	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-].*?' + close_tag, 'g');
 	//解析输出的表达式
-	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=[\\\s\\\S]*?' + close_tag, 'g');
+	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=(.*?)' + close_tag, 'g');
 	//转义输出
-	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-([\\\s\\\S]*?)' + close_tag, 'g');
+	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-(.*?)' + close_tag, 'g');
 	//替换输出的开头表达式
 	REPLACE_ECHO_SCRIPT_OPEN_TAG = new RegExp(open_tag + '=', 'g');
 	//转义的开头表达式
@@ -166,9 +167,8 @@ export function setDom() {
 		if(typeof echoString[index] === 'string') domString.push(echoString[index]);
 		if(typeof script[index] === 'string') domString.push(script[index].replace(FILTER_TRANFORM, ""));
 	});
-
+	
 	this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
-
 };
 
 /*替换include引入的模板*/
@@ -229,9 +229,14 @@ export function replaceInclude() {
 		}
 	});
 
+    /*去掉重复的include*/
 	includeTmpl = fn.unique(this.template.match(include));
-
+    
+    /*查找是否还有include的引入*/
 	if(includeTmpl.length > 0) replaceInclude.call(this);
+	
+	/*清空错误的include*/
+	this.template = this.template.replace(INCLUDE_ERROR, '');
 }
 
 /*替换Block块内容*/

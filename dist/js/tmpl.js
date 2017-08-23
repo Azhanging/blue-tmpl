@@ -1573,13 +1573,16 @@ var FILTER_TRANFORM = /[\b\t\r\f\n]/g,
 QUEST = /"/g,
 
 //引入模板
-INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?\/>/g,
+INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?>(.*?)<\/tmpl-include>/g,
 
 //引入模板
-INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?\/>/g,
+INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?>(.*?)<\/tmpl-include>/g,
 
 //空模板
-INCLUDE_NULL = /<tmpl-include\s*?\/>/g,
+INCLUDE_NULL = /<tmpl-include\s*?>(.*?)<\/tmpl-include>/g,
+
+//错误的模板
+INCLUDE_ERROR = /<tmpl-include(.*?)>(.*?)<\/tmpl-include>/g,
 
 //嵌入block块
 BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
@@ -1598,6 +1601,7 @@ exports.QUEST = QUEST;
 exports.INCLUDE_ID = INCLUDE_ID;
 exports.INCLUDE_FILE = INCLUDE_FILE;
 exports.INCLUDE_NULL = INCLUDE_NULL;
+exports.INCLUDE_ERROR = INCLUDE_ERROR;
 exports.BLOCK = BLOCK;
 exports.BLOCK_APPEND = BLOCK_APPEND;
 exports.BLOCK_INSETR = BLOCK_INSETR;
@@ -1732,13 +1736,13 @@ function setRegExp() {
 
 	var close_tag = initRegExp.call(this, this.config.close_tag);
 	//解析所有的表达式
-	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
+	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-].*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
 	//原生的script
-	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag, 'g');
+	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-].*?' + close_tag, 'g');
 	//解析输出的表达式
-	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=[\\\s\\\S]*?' + close_tag, 'g');
+	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=(.*?)' + close_tag, 'g');
 	//转义输出
-	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-([\\\s\\\S]*?)' + close_tag, 'g');
+	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-(.*?)' + close_tag, 'g');
 	//替换输出的开头表达式
 	REPLACE_ECHO_SCRIPT_OPEN_TAG = new RegExp(open_tag + '=', 'g');
 	//转义的开头表达式
@@ -1860,9 +1864,14 @@ function replaceInclude() {
 		}
 	});
 
+	/*去掉重复的include*/
 	includeTmpl = fn.unique(this.template.match(include));
 
+	/*查找是否还有include的引入*/
 	if (includeTmpl.length > 0) replaceInclude.call(this);
+
+	/*清空错误的include*/
+	this.template = this.template.replace(_tmplRegexp.INCLUDE_ERROR, '');
 }
 
 /*替换Block块内容*/
