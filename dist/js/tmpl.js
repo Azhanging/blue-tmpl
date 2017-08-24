@@ -1565,7 +1565,7 @@ exports.default = Render;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+	value: true
 });
 var FILTER_TRANFORM = /[\b\t\r\f\n]/g,
     //过滤转义字符
@@ -1573,19 +1573,19 @@ var FILTER_TRANFORM = /[\b\t\r\f\n]/g,
 QUEST = /"/g,
 
 //引入模板
-INCLUDE_ID = /<tmpl-include .*?name=(\'|\")(\S*?)\1.*?>(.*?)<\/tmpl-include>/g,
+INCLUDE_ID = /<tmpl-include .*?name=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
 
 //引入模板
-INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")(\S*?)\1.*?>(.*?)<\/tmpl-include>/g,
+INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
 
 //空模板
-INCLUDE_NULL = /<tmpl-include\s*?>(.*?)<\/tmpl-include>/g,
+INCLUDE_NULL = /<tmpl-include\s*?>([\s\S]*?)<\/tmpl-include>/g,
 
 //错误的模板
-INCLUDE_ERROR = /<tmpl-include(.*?)>(.*?)<\/tmpl-include>/g,
+INCLUDE_ERROR = /<tmpl-include.*?>([\s\S]*?)<\/tmpl-include>/g,
 
 //嵌入block块
-BLOCK = /<tmpl-block .*?name=(\'|\")(\S*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
+BLOCK = /<tmpl-block .*?name=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
 
 //append_block
 BLOCK_APPEND = /^append:/,
@@ -1594,7 +1594,7 @@ BLOCK_APPEND = /^append:/,
 BLOCK_INSETR = /^insert:/,
 
 //base路径解析
-EXTENDS = /<tmpl-extend .*?file=(\'|\")(\S*?)\1.*?\/>/g;
+EXTENDS = /<tmpl-extend .*?file=(\'|\")([\s\S]*?)\1.*?\/>/g;
 
 exports.FILTER_TRANFORM = FILTER_TRANFORM;
 exports.QUEST = QUEST;
@@ -1736,13 +1736,13 @@ function setRegExp() {
 
 	var close_tag = initRegExp.call(this, this.config.close_tag);
 	//解析所有的表达式
-	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-].*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
+	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
 	//原生的script
-	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-].*?' + close_tag, 'g');
+	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag, 'g');
 	//解析输出的表达式
-	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=(.*?)' + close_tag, 'g');
+	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=([\\\s\\\S]*?)' + close_tag, 'g');
 	//转义输出
-	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-(.*?)' + close_tag, 'g');
+	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-([\\\s\\\S]*?)' + close_tag, 'g');
 	//替换输出的开头表达式
 	REPLACE_ECHO_SCRIPT_OPEN_TAG = new RegExp(open_tag + '=', 'g');
 	//转义的开头表达式
@@ -1819,11 +1819,9 @@ function replaceInclude() {
 	var include = function () {
 		if (_in_browser2.default) {
 			//在浏览器环境清空include[file]
-			_this2.template = _this2.template.replace(_tmplRegexp.INCLUDE_FILE, '');
 			return _tmplRegexp.INCLUDE_ID;
 		} else {
 			//在node环境清空include[name]
-			_this2.template = _this2.template.replace(_tmplRegexp.INCLUDE_ID, '');
 			return _tmplRegexp.INCLUDE_FILE;
 		}
 	}();

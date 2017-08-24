@@ -94,13 +94,13 @@ export function setRegExp() {
 
 	const close_tag = initRegExp.call(this, this.config.close_tag);
 	//解析所有的表达式
-	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-].*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
+	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
 	//原生的script
-	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-].*?' + close_tag, 'g');
+	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag, 'g');
 	//解析输出的表达式
-	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=(.*?)' + close_tag, 'g');
+	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=([\\\s\\\S]*?)' + close_tag, 'g');
 	//转义输出
-	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-(.*?)' + close_tag, 'g');
+	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-([\\\s\\\S]*?)' + close_tag, 'g');
 	//替换输出的开头表达式
 	REPLACE_ECHO_SCRIPT_OPEN_TAG = new RegExp(open_tag + '=', 'g');
 	//转义的开头表达式
@@ -177,11 +177,9 @@ export function replaceInclude() {
 	const include = (() => {
 		if(inBrowser) {
 			//在浏览器环境清空include[file]
-			this.template = this.template.replace(INCLUDE_FILE, '');
 			return INCLUDE_ID;
 		} else {
 			//在node环境清空include[name]
-			this.template = this.template.replace(INCLUDE_ID, '');
 			return INCLUDE_FILE;
 		}
 	})();

@@ -25,6 +25,9 @@
 	<% } %>
 	<div>__TMPL__</div>
 	<% for(var j = 0;j<2;j++){ %>
+		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl">			
+			<span>text-value</span>
+		</tmpl-include>
 		<div style="
 			background-color:<%= j == 0?'red':'blue' %>
 		">
@@ -37,6 +40,10 @@
 			<%= _this_ %>
 		</textarea>
 	<% } %>
+	
+	<!-- <%- 123456 + 456 + '<div>这是测试</div>' %> -->
+	
+	
 </tmpl-block>
 
 <tmpl-block name="header">
