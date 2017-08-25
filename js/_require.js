@@ -83,6 +83,7 @@
 				return installModules[path]._export_;
 				
 			} catch(e) {
+				console.log(e);
 				error(1, path);
 			}
 		} else if(getModules) {
@@ -91,6 +92,7 @@
 			    isRequire(getModules);
 				return getModules._export_;
 			} catch(e) {
+				console.log(e);
 				error(1, path);
 			}
 		} else {

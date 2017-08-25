@@ -16,7 +16,7 @@ _require.define(function() {
 		switch(_path) {
 			case '/detail':
 				(function() {
-					var el = this.tmpl.fn.getEl(this.router['/detail']['viewWrap']);
+					var el = this.constructor.fn.getEl(this.router['/detail']['viewWrap']);
 					if(el &&　this.router['/detail'].tmpl) {
 						this.router['/detail'].tmpl.getData(el);
 					}
