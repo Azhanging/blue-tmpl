@@ -30,16 +30,15 @@ for(var i = 0; i < 10; i++) {
 
 http.createServer(function(req, res) {
 	
-	
-	if(/.*\.js/.test(req.url)) {
+	if(/.*\.js(.*?)/.test(req.url)) {
 
 		res.writeHead(200, {
 			'Content-Type': 'application/javascript'
 		});
 		
-		console.log(path.join(path.resolve(__dirname,'../') , req.url));
+		console.log(path.join(path.resolve(__dirname,'../') , req.url.replace(/(.*?\.js)(.*)?/,"$1")));
 		
-		const js = fs.readFileSync(path.join(path.resolve(__dirname,'../') , req.url));
+		const js = fs.readFileSync(path.join(path.resolve(__dirname,'../') , req.url.replace(/(.*?\.js)(.*)?/,"$1")));
 		
 		res.write(js);
 

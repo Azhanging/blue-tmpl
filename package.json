@@ -1,31 +1,32 @@
 {
-	"name": "tmpljs",
-	"version": "1.0.1",
-	"description": "tmpl，js模板",
-	"main": "./dist/js/view.js",
-	"scripts": {
-		"start": "webpack-dev-server"
-	},
-	"contributors": [
-		"Blue"
-	],
-	"author": "Blue",
-	"license": "ISC",
-	"devDependencies": {
-		"babel-core": "^6.22.1",
-		"babel-loader": "^6.2.10",
-		"babel-plugin-transform-runtime": "^6.22.0",
-		"babel-preset-es2015": "^6.22.0",
-		"extract-text-webpack-plugin": "^2.0.0-beta.4",
-		"uglifyjs-webpack-plugin": "^0.1.4",
-		"webpack": "^2.2.1",
-		"webpack-dev-server": "^2.3.0"
-	},
-	"repositories": [
-		"https://github.com/Azhanging/tmpl"
-	],
-	"bugs": {
-		"mail": "azhanging@qq.com",
-		"web": "https://github.com/Azhanging/tmpl"
-	}
+  "name": "tmpljs",
+  "version": "1.0.1",
+  "description": "tmpl，js模板",
+  "main": "./dist/js/view.js",
+  "scripts": {
+    "server": "webpack-dev-server --hot",
+    "start": "webpack -w"
+  },
+  "contributors": [
+    "Blue"
+  ],
+  "author": "Blue",
+  "license": "ISC",
+  "devDependencies": {
+    "babel-core": "^6.22.1",
+    "babel-loader": "^6.2.10",
+    "babel-plugin-transform-runtime": "^6.22.0",
+    "babel-preset-es2015": "^6.22.0",
+    "extract-text-webpack-plugin": "^2.0.0-beta.4",
+    "html-webpack-plugin": "^2.30.1",
+    "uglifyjs-webpack-plugin": "^0.1.4",
+    "webpack": "^2.2.1"
+  },
+  "repositories": [
+    "https://github.com/Azhanging/tmpl"
+  ],
+  "bugs": {
+    "mail": "azhanging@qq.com",
+    "web": "https://github.com/Azhanging/tmpl"
+  }
 }
