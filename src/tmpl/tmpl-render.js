@@ -29,8 +29,13 @@ const fn = new Fn();
 let fs;
 
 if(!inBrowser) {
-	/*兼容webpack的写法来获取nodejs中的核心模块*/
-	fs = __non_webpack_require__('fs');
+	try{	    
+	    /*兼容webpack的写法来获取nodejs中的核心模块*/
+	    fs = __non_webpack_require__('fs');
+	}catch(e){
+	    /*在webpack中打包出现报错问题*/
+	    fs = node.fs;
+	}
 }
 
 //由于模块接口中都是只读的，不能放在配置中；

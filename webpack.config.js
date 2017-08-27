@@ -45,7 +45,7 @@ module.exports = {
 		moduleExtensions: ["-loader"]
 	},
 	//map文件生成
-	//	devtool: 'source-map',
+	devtool: 'source-map',
 	plugins: [
 		new webpack.BannerPlugin(`
 			tmpl.js v1.0.5
@@ -54,12 +54,9 @@ module.exports = {
 			https://github.com/azhanging/tmpl
 		`),
 		new Uglifyjs({
+			sourceMap:true,
 			mangle: true,
 			include: /\.min\.js$/
-		}),
-		new CommonsChunkPlugin({
-			names:'vender',
-			chunks:['tmpl']
 		}),
 		new HtmlWebpackPlugin({
 			filename:path.join(__dirname,'./nodejsDemo/tmpl-views/base.html'),
