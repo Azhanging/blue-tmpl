@@ -1,7 +1,5 @@
 _require.define(function() {
 	var Tmpl = _require('tmpl');
-	
-	console.log(Tmpl.router);
 
 	function tmpl1() {
 		
@@ -13,9 +11,9 @@ _require.define(function() {
 			el: "tmpl1",
 			data: {
 				isReady: false,
-				i: 0,
-				view:mBtn.fn.getEl('tmp1')
+				i: 0
 			},
+			routerStatus:true,		//设置路由状态
 			methods: {
 				add: function() {
 				    var _this = this;
@@ -39,12 +37,21 @@ _require.define(function() {
 					this.toggle(wrap);
 				}
 			},
+			created:function(){
+				
+				const view = this.fn.getEl('tmp1');
+				
+				this.view = view;
+				
+				console.log(this.view);
+				
+			},
 			mounted: function() {
+				
 				this.add();
 			},
 			events: function() {
-				this.on(this.fn.getEl('tmp1'), 'on-add-tmpl', 'click', this.add);
-				Tmpl.router.changeRoutereStatus(true);
+				this.on(this.view, 'on-add-tmpl', 'click', this.add);
 			}
 		});
 	}

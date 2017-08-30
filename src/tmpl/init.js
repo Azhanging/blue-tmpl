@@ -6,12 +6,17 @@ import tmplRender from './tmpl-render';
 import inBrowser from './in_browser';
 //tmpl的render解析
 import { 
-    setInstance, 
-    setRouter, 
+    setInstance,
     setRegExp, 
     setDom, 
     setEvent 
 } from './tmpl-render';
+
+//router相关
+import {
+	setRouter,
+	checkRouterStatus
+} from './router';
 
 //实例化常用的方法
 const fn = new Fn();
@@ -27,7 +32,6 @@ export default function init() {
 			return this.config.el;
 		}
 	})();
-
 	//初始化方法
 	setInstance.call(this, 'methods');
 	//初始化数据
@@ -52,8 +56,10 @@ export default function init() {
 	}
 	//初始化事件
 	setEvent.call(this);
-	//所有完毕后的钩子
-	fn.run(this.config.mounted, this);
 	//设置事件
 	fn.run(this.config.events, this);
+	//所有完毕后的钩子
+	fn.run(this.config.mounted, this);
+	//检查是否存在路由的状态
+	checkRouterStatus.call(this);
 }

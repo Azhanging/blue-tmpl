@@ -92,31 +92,13 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 Object.defineProperty(exports, "__esModule", {
-  value: true
-});
-/*
- *  检测是否在浏览器的环境中 
- * */
-
-var inBrowser = typeof window !== 'undefined';
-
-exports.default = inBrowser;
-
-/***/ }),
-/* 1 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); //运行环境是否在浏览器
 
 
-var _in_browser = __webpack_require__(0);
+var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
@@ -353,6 +335,24 @@ Fn.prototype.off = function () {
 }();
 
 /***/ }),
+/* 1 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+  value: true
+});
+/*
+ *  检测是否在浏览器的环境中 
+ * */
+
+var inBrowser = typeof window !== 'undefined';
+
+exports.default = inBrowser;
+
+/***/ }),
 /* 2 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -385,7 +385,7 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 
-var _in_browser = __webpack_require__(0);
+var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
@@ -450,7 +450,7 @@ var _render = __webpack_require__(9);
 
 var _render2 = _interopRequireDefault(_render);
 
-var _fn = __webpack_require__(1);
+var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
@@ -647,11 +647,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 //常用的方法
 
 
-var _in_browser = __webpack_require__(0);
+var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
-var _fn = __webpack_require__(1);
+var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
@@ -1400,28 +1400,33 @@ Object.defineProperty(exports, "__esModule", {
 });
 exports.default = init;
 
-var _fn = __webpack_require__(1);
+var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRender = __webpack_require__(11);
+var _tmplRender = __webpack_require__(12);
 
 var _tmplRender2 = _interopRequireDefault(_tmplRender);
 
-var _in_browser = __webpack_require__(0);
+var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
+
+var _router = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //实例化常用的方法
 
-//运行环境是否在浏览器
-//常用的方法
-var fn = new _fn2.default();
 //tmpl的render解析
 
 //解析方法
+var fn = new _fn2.default();
+
+//router相关
+
+//运行环境是否在浏览器
+//常用的方法
 function init() {
 	var _this = this;
 
@@ -1435,13 +1440,12 @@ function init() {
 			return _this.config.el;
 		}
 	}();
-
 	//初始化方法
 	_tmplRender.setInstance.call(this, 'methods');
 	//初始化数据
 	_tmplRender.setInstance.call(this, 'data');
 	//初始化路由
-	_tmplRender.setRouter.call(this);
+	_router.setRouter.call(this);
 	//查找模板
 	if (this.el) {
 		this.template = function () {
@@ -1460,10 +1464,12 @@ function init() {
 	}
 	//初始化事件
 	_tmplRender.setEvent.call(this);
-	//所有完毕后的钩子
-	fn.run(this.config.mounted, this);
 	//设置事件
 	fn.run(this.config.events, this);
+	//所有完毕后的钩子
+	fn.run(this.config.mounted, this);
+	//检查是否存在路由的状态
+	_router.checkRouterStatus.call(this);
 }
 
 /***/ }),
@@ -1486,11 +1492,11 @@ var _createClass = function () { function defineProperties(target, props) { for 
 //常用的方法
 
 
-var _in_browser = __webpack_require__(0);
+var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
-var _fn = __webpack_require__(1);
+var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
@@ -1567,6 +1573,48 @@ exports.default = Render;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
+exports.setRouter = setRouter;
+exports.checkRouterStatus = checkRouterStatus;
+
+var _fn = __webpack_require__(0);
+
+var _fn2 = _interopRequireDefault(_fn);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//实例化常用的方法
+var fn = new _fn2.default();
+
+//把路由实例挂靠到模板中
+/*路由相关*/
+
+//常用的方法
+function setRouter() {
+	if (fn.isObj(this.config.router)) {
+		this.constructor.router = this.config.router;
+	}
+}
+
+//检查路由状态
+function checkRouterStatus() {
+	//获取路由
+	var router = this.constructor.router,
+	    status = this.config.routerStatus;
+	if (status === true && router) {
+		router.changeRoutereStatus(status);
+	}
+}
+
+/***/ }),
+/* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
 var FILTER_TRANFORM = /[\b\t\r\f\n]/g,
     //过滤转义字符
 //转义双引号
@@ -1608,7 +1656,7 @@ exports.BLOCK_INSETR = BLOCK_INSETR;
 exports.EXTENDS = EXTENDS;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1630,15 +1678,15 @@ exports.clearBlock = clearBlock;
 exports.setSeize = setSeize;
 exports.filterTransferredMeaning = filterTransferredMeaning;
 
-var _in_browser = __webpack_require__(0);
+var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
-var _fn = __webpack_require__(1);
+var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRegexp = __webpack_require__(10);
+var _tmplRegexp = __webpack_require__(11);
 
 var _escapeCode = __webpack_require__(2);
 

@@ -1,4 +1,4 @@
-_require.define(['@base-js/routerHandler.js','tmpl'],function(routerHandler,Tmpl) {
+_require.define(['@base-js/routerHandler.js', 'tmpl'], function(routerHandler, Tmpl) {
 
 	var TmplRouter = _require('tmpl-router');
 
@@ -15,8 +15,7 @@ _require.define(['@base-js/routerHandler.js','tmpl'],function(routerHandler,Tmpl
 		router: {
 			'/detail': {
 				tmplUrl: "/php/get_tmpl.php?tmpl=detail",
-				routerStatus: true,
-				viewWrap:'tmp1'
+				viewWrap: 'tmp1'
 			},
 			'/tm1': {
 				tmplUrl: "/php/get_tmpl.php?tmpl=tmpl1",
@@ -53,11 +52,9 @@ _require.define(['@base-js/routerHandler.js','tmpl'],function(routerHandler,Tmpl
 			}
 		},
 		error: function() {
-			//			var _this = this;
-			//			console.log('error');
-			//			setTimeout(function() {
-			//				_this.redirect('/');
-			//			}, 1000);
+			var _this = this;
+			console.log('error');
+			this.redirect('/');
 		},
 		routerEnter: function(path, viewEl) {
 			console.log('跳转中。。。');
@@ -65,13 +62,13 @@ _require.define(['@base-js/routerHandler.js','tmpl'],function(routerHandler,Tmpl
 		/*hash更新后的钩子*/
 		routerEntered: function(path, viewEl, el) {
 			var _this = this;
-			routerHandler.routerEnter.call(this,path);
-			routerHandler.routerEntered.apply(this,[path,el]);
+			routerHandler.routerEnter.call(this, path);
+			routerHandler.routerEntered.apply(this, [path, el]);
 		},
 		methods: {
-            changeStatus:function(){
-                this.routerStatus = true;
-            }
+			changeStatus: function() {
+				this.routerStatus = true;
+			}
 		},
 		mounted: function() {}
 	});

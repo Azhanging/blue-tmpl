@@ -8,6 +8,7 @@ _require.define(function() {
 		data:{
 		   page:''
 		},
+		routerStatus:true,
 		methods: {
 			getData: function(el) {
 			    
@@ -27,10 +28,14 @@ _require.define(function() {
 					},
 					success: function(data) {
 					    _this.page = page;
-						_this.render(data).appendTo('tmp1');
+						_this.render(data).appendTo(_this.view);
 					}
 				});
 			}
+		},
+		created:function(){
+			var view = this.fn.getEl('tmp1');
+			this.view = view;
 		},
 		mounted: function() {
 			this.getData();
