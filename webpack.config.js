@@ -52,6 +52,7 @@ module.exports = {
 			(c) 2016-2017 Blue
 			Released under the MIT License.
 			https://github.com/azhanging/tmpl
+			time:${new Date()}
 		`),
 		new Uglifyjs({
 			sourceMap:true,

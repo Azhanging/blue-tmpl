@@ -8,7 +8,6 @@ _require.define(function() {
 		data:{
 		   page:''
 		},
-		routerStatus:true,
 		methods: {
 			getData: function(el) {
 			    

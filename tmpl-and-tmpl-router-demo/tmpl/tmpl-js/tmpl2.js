@@ -7,7 +7,6 @@ _require.define(function() {
 			data: {
 				i: 0
 			},
-			routerStatus:true,
 			methods: {
 				add: function() {
 					this.render([this.i++, this.i++, this.i++, this.i++])

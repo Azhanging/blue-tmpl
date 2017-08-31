@@ -4,6 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
+ * 			time:Thu Aug 31 2017 23:46:37 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -580,11 +581,6 @@ Tmpl.alias = {};
 "use strict";
 
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; //Tmpl 文件入口
-
-//兼容性处理
-
-
 var _tmpl = __webpack_require__(4);
 
 var _tmpl2 = _interopRequireDefault(_tmpl);
@@ -595,20 +591,20 @@ var _compatibility2 = _interopRequireDefault(_compatibility);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
+//Tmpl 文件入口
 (function (global, factory) {
 	if (typeof _require === 'function') {
 		_require.defineId('tmpl', factory);
-	} else if (( false ? 'undefined' : _typeof(exports)) === 'object' && typeof module !== 'undefined') {
-		module.exports = factory();
 	} else {
 		global ? global.Tmpl = factory() : {};
 	}
 })(typeof window !== 'undefined' ? window : undefined, function () {
 
-	_tmpl2.default.version = "v1.0.4";
+	_tmpl2.default.version = "v1.0.5";
 
 	return _tmpl2.default;
 });
+//兼容性处理
 
 /***/ }),
 /* 6 */
@@ -1599,9 +1595,9 @@ function setRouter() {
 function checkRouterStatus() {
 	//获取路由
 	var router = this.constructor.router,
-	    status = this.config.routerStatus;
-	if (status === true && router) {
-		router.changeRoutereStatus(status);
+	    status = this.config.async;
+	if (!(status === false) && router) {
+		router.changeRoutereStatus(true);
 	}
 }
 

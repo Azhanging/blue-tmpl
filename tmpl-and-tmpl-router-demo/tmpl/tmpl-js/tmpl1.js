@@ -13,7 +13,6 @@ _require.define(function() {
 				isReady: false,
 				i: 0
 			},
-			routerStatus:true,		//设置路由状态
 			methods: {
 				add: function() {
 				    var _this = this;

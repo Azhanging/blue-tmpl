@@ -16,8 +16,8 @@ export function setRouter() {
 export function checkRouterStatus() {
 	//获取路由
 	const router = this.constructor.router,
-		status = this.config.routerStatus;
-	if(status === true && router) {
-		router.changeRoutereStatus(status);
+		status = this.config.async;
+	if(!(status === false) && router) {
+		router.changeRoutereStatus(true);
 	}
 }

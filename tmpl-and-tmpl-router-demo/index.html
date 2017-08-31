@@ -86,7 +86,7 @@
 		<div id="tmpl-router-view" class="row"></div>
 
 		<script src="/js/_require.js" type="text/javascript" charset="utf-8"></script>
-		<script src="/dist/js/tmpl.min.js" type="text/javascript" charset="utf-8"></script>
+		<script src="/dist/js/tmpl.js" type="text/javascript" charset="utf-8"></script>
 		<script src="/js/tmpl-router.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			_require.config({
@@ -114,6 +114,7 @@
 	
 				/* 实例模板  */
 				new Tmpl({
+					async:false,
 					methods: {
 						showDetailed: function(event, el) {
 							var content = this.html(el);
