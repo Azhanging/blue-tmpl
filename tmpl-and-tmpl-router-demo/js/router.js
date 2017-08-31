@@ -41,8 +41,8 @@ _require.define(['@base-js/routerHandler.js', 'tmpl'], function(routerHandler, T
 			'/tm6': {},
 			'/tm8': {
 				tmplUrl: "/php/get_tmpl.php?tmpl=tmpl5",
-				routerStatus: true,
-				alias: '/tm9'
+				alias: '/tm9',
+				routerStatus:true
 			},
 			'/tm9': {
 				routerStatus: true
@@ -56,20 +56,20 @@ _require.define(['@base-js/routerHandler.js', 'tmpl'], function(routerHandler, T
 			console.log('error');
 			this.redirect('/');
 		},
-		routerEnter: function(path, viewEl) {
+		triggerRouter:function(btn,hash){
+			console.log(btn,hash);
+		},
+		routerEnter: function(path) {
 			console.log('跳转中。。。');
+			console.log(this);
 		},
 		/*hash更新后的钩子*/
-		routerEntered: function(path, viewEl, el) {
+		routerEntered: function(path, el) {
 			var _this = this;
 			routerHandler.routerEnter.call(this, path);
 			routerHandler.routerEntered.apply(this, [path, el]);
 		},
-		methods: {
-			changeStatus: function() {
-				this.routerStatus = true;
-			}
-		},
+		methods: {},
 		mounted: function() {}
 	});
 
