@@ -1,9 +1,7 @@
 /*路由相关*/
 
 //常用的方法
-import Fn from './fn';
-//实例化常用的方法
-const fn = new Fn();
+import fn from './fn';
 
 //把路由实例挂靠到模板中
 export function setRouter() {

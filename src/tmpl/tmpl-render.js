@@ -4,37 +4,34 @@
 //运行环境是否在浏览器
 import inBrowser from './in_browser';
 //常用的方法
-import Fn from './fn';
+import fn from './fn';
 //模板正则配置
 import {
-    FILTER_TRANFORM,
-    QUEST,
-    INCLUDE_ID,
-    INCLUDE_FILE,
-    INCLUDE_NULL,
-    INCLUDE_ERROR,
-    BLOCK,
-    BLOCK_APPEND,
-    BLOCK_INSETR,
-    EXTENDS
+	FILTER_TRANFORM,
+	QUEST,
+	INCLUDE_ID,
+	INCLUDE_FILE,
+	INCLUDE_NULL,
+	INCLUDE_ERROR,
+	BLOCK,
+	BLOCK_APPEND,
+	BLOCK_INSETR,
+	EXTENDS
 } from './tmpl-regexp';
 
 //html中的转义
 import escapeCode from './escapeCode';
 
-//实例化常用的方法
-const fn = new Fn();
-
 //在node环境中使用需要用到fs获取文件
 let fs;
 
 if(!inBrowser) {
-	try{	    
-	    /*兼容webpack的写法来获取nodejs中的核心模块*/
-	    fs = __non_webpack_require__('fs');
-	}catch(e){
-	    /*在webpack中打包出现报错问题*/
-	    fs = node.fs;
+	try {
+		/*兼容webpack的写法来获取nodejs中的核心模块*/
+		fs = __non_webpack_require__('fs');
+	} catch(e) {
+		/*在webpack中打包出现报错问题*/
+		fs = node.fs;
 	}
 }
 
@@ -55,33 +52,6 @@ let SCRIPT_REGEXP,
 	/*闭合*/
 	CLOSE_TAG_REGEXP;
 
-//把路由实例挂靠到模板中
-export function setRouter() {
-	if(fn.isObj(this.config.router))
-		this.constructor.router = this.config.router;
-}
-
-//初始化时间中的参数
-export function setEvent() {
-	//初始化事件
-	this.events = {};
-	//设置事件类型
-	this.eventType = [];
-}
-
-//设置实例
-export function setInstance(type) {
-
-	const get = this.config[type];
-
-	if(!fn.isObj(get)) {
-		return;
-	}
-
-	fn.each(get, (_get, key) => {
-		this[key] = _get;
-	});
-}
 
 //处理正则数据
 export function initRegExp(expr) {
@@ -95,9 +65,8 @@ export function initRegExp(expr) {
 //设置正则
 export function setRegExp() {
 
-	const open_tag = initRegExp.call(this, this.config.open_tag);
-
-	const close_tag = initRegExp.call(this, this.config.close_tag);
+	const open_tag = initRegExp.call(this, this.config.open_tag),
+		close_tag = initRegExp.call(this, this.config.close_tag);
 	//解析所有的表达式
 	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
 	//原生的script
@@ -136,11 +105,9 @@ export function setDom() {
 	/*解析script*/
 	let script = this.template.match(SCRIPT_REGEXP);
 
-	const replaceScript = setSeize.call(this);
-
-	const echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/);
-
-	const domString = [];
+	const replaceScript = setSeize.call(this),
+		echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/),
+		domString = [];
 
 	if(!script) script = [];
 
@@ -172,7 +139,7 @@ export function setDom() {
 		if(typeof echoString[index] === 'string') domString.push(echoString[index]);
 		if(typeof script[index] === 'string') domString.push(script[index].replace(FILTER_TRANFORM, ""));
 	});
-	
+
 	this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
 };
 
@@ -232,12 +199,12 @@ export function replaceInclude() {
 		}
 	});
 
-    /*去掉重复的include*/
+	/*去掉重复的include*/
 	includeTmpl = fn.unique(this.template.match(include));
-    
-    /*查找是否还有include的引入*/
+
+	/*查找是否还有include的引入*/
 	if(includeTmpl.length > 0) replaceInclude.call(this);
-	
+
 	/*清空错误的include*/
 	this.template = this.template.replace(INCLUDE_ERROR, '');
 }
@@ -248,12 +215,9 @@ export function replaceBlock() {
 	//先设置获取include的引入模板
 	replaceAlias.call(this);
 
-	const baseFile = fn.unique(this.template.match(EXTENDS));
-
-	/*只获取第一个base的名字*/
-	const baseFileName = baseFile.toString()
-		.replace(EXTENDS, "$2")
-		.split(',')[0];
+	const baseFile = fn.unique(this.template.match(EXTENDS)),
+		/*只获取第一个base的名字*/
+		baseFileName = baseFile.toString().replace(EXTENDS, "$2").split(',')[0];
 
 	/*如果不存在block的内容，直接跳出*/
 	if(baseFileName === '') return;
@@ -264,11 +228,8 @@ export function replaceBlock() {
 		encoding: 'UTF8'
 	});
 
-	const baseTmpl = tmpl.match(BLOCK);
-
-	const baseBlockName = baseTmpl.toString()
-		.replace(BLOCK, "$2")
-		.split(',');
+	const baseTmpl = tmpl.match(BLOCK),
+		baseBlockName = baseTmpl.toString().replace(BLOCK, "$2").split(',');
 
 	fn.each(baseBlockName, (name, index) => {
 
@@ -277,28 +238,28 @@ export function replaceBlock() {
 		let hasBlock = false;
 
 		fn.each(blockTmpl, (blocktmpl, _index) => {
-		    
+
 			BLOCK.test(blocktmpl);
-			
+
 			const _name = RegExp.$2,
 				blockContent = RegExp.$3;
-					
+
 			//匹配到name的
 			if(name === _name) {
-			    
+
 				tmpl = tmpl.replace(replaceBlock, blockContent);
 				hasBlock = true;
-				
+
 			} else if(BLOCK_APPEND.test(_name) && name === _name.replace(BLOCK_APPEND, '')) {
-			    
+
 				tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(BLOCK, "$3") + blockContent);
 				hasBlock = true;
-				
+
 			} else if(BLOCK_INSETR.test(_name) && name === _name.replace(BLOCK_INSETR, '')) {
-			    
+
 				tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(BLOCK, "$3"));
 				hasBlock = true;
-				
+
 			}
 			BLOCK.lastIndex = 0;
 		});

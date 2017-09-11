@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Thu Aug 31 2017 23:46:37 GMT+0800 (中国标准时间)
+ * 			time:Mon Sep 11 2017 16:20:12 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -307,7 +307,6 @@ var Fn = function () {
 //设置事件
 
 
-exports.default = Fn;
 Fn.prototype.on = function () {
 	if (!_in_browser2.default) return;
 	if (typeof document.addEventListener === 'function') {
@@ -334,6 +333,8 @@ Fn.prototype.off = function () {
 		};
 	}
 }();
+
+exports.default = new Fn();
 
 /***/ }),
 /* 1 */
@@ -486,9 +487,6 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 //转义html
 
 
-//实例化常用的方法
-var fn = new _fn2.default();
-
 var Tmpl = function (_Dom) {
     _inherits(Tmpl, _Dom);
 
@@ -498,7 +496,7 @@ var Tmpl = function (_Dom) {
 
         var _this = _possibleConstructorReturn(this, (Tmpl.__proto__ || Object.getPrototypeOf(Tmpl)).call(this));
 
-        _this.config = fn.extend(fn.copy(_config2.default), opts);
+        _this.config = _fn2.default.extend(_fn2.default.copy(_config2.default), opts);
         _this.init();
         return _this;
     }
@@ -541,7 +539,7 @@ var Tmpl = function (_Dom) {
     }, {
         key: 'cb',
         value: function cb(_cb) {
-            fn.cb(_cb, this);
+            _fn2.default.cb(_cb, this);
             return this;
         }
 
@@ -550,7 +548,7 @@ var Tmpl = function (_Dom) {
     }, {
         key: 'escape',
         value: function escape(escapeVal) {
-            fn.each(_escapeCode2.default, function (item, key) {
+            _fn2.default.each(_escapeCode2.default, function (item, key) {
                 escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
             });
             return escapeVal;
@@ -569,7 +567,7 @@ var Tmpl = function (_Dom) {
 
 
 exports.default = Tmpl;
-Tmpl.prototype.fn = fn;
+Tmpl.prototype.fn = _fn2.default;
 
 //设置路径别名常量
 Tmpl.alias = {};
@@ -593,8 +591,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //Tmpl 文件入口
 (function (global, factory) {
-	if (typeof _require === 'function') {
-		_require.defineId('tmpl', factory);
+	if (typeof demand === 'function') {
+		demand.define('tmpl', factory);
 	} else {
 		global ? global.Tmpl = factory() : {};
 	}
@@ -655,17 +653,14 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-//实例化常用的方法
-var fn = new _fn2.default();
-
 //绑定相关函数
 function bindFn(el, className, type) {
 
 	var _className = el.className.split(' ');
 
 	//替换
-	if (fn.isObj(className) && (type == 'replaceBind' || type == 'replaceClass')) {
-		fn.each(className, function (__className, key) {
+	if (_fn2.default.isObj(className) && (type == 'replaceBind' || type == 'replaceClass')) {
+		_fn2.default.each(className, function (__className, key) {
 			var findIndex = _className.indexOf(key);
 			if (findIndex != -1) _className[findIndex] = __className;
 		});
@@ -696,16 +691,16 @@ function bindFn(el, className, type) {
 function setEntrust(ctx, type, cb) {
 	var _this = this;
 
-	fn.on(ctx, type, function (event) {
+	_fn2.default.on(ctx, type, function (event) {
 		var ev = event || window.event,
 		    el = ev.target || ev.srcElement,
 		    eventType = _this.events[type];
 
-		fn.each(eventType, function (_eventType, bind) {
+		_fn2.default.each(eventType, function (_eventType, bind) {
 
 			if (!_this.hasClass(el, bind)) return;
 
-			fn.each(_eventType, function (cb, index) {
+			_fn2.default.each(_eventType, function (cb, index) {
 
 				cb.apply(_this, [ev, el]);
 			});
@@ -739,7 +734,7 @@ var Dom = function () {
 			} else if (arguments.length === 3) {
 				cb = type;
 				type = exp;
-				fn.on(ctx, type, function (event) {
+				_fn2.default.on(ctx, type, function (event) {
 					cb.call(_this2, event);
 				});
 			}
@@ -757,7 +752,7 @@ var Dom = function () {
 				if (eventIndex != -1) this.events[type][exp].splice(eventIndex, 1);
 			} else if (arguments.length === 3) {
 				/*删除事件*/
-				fn.off(ctx, type, cb);
+				_fn2.default.off(ctx, type, cb);
 			}
 			return this;
 		}
@@ -850,9 +845,9 @@ var Dom = function () {
 		value: function attr(el, _attr2) {
 			var _this3 = this;
 
-			if (fn.isObj(_attr2)) {
+			if (_fn2.default.isObj(_attr2)) {
 
-				fn.each(_attr2, function (_attr, key) {
+				_fn2.default.each(_attr2, function (_attr, key) {
 
 					if (typeof _attr === 'boolean') {
 
@@ -875,7 +870,7 @@ var Dom = function () {
 
 					var attrs = [];
 
-					fn.each(_attr2, function (_attr, index) {
+					_fn2.default.each(_attr2, function (_attr, index) {
 
 						attrs.push(_this3.attr(el, _attr));
 					});
@@ -897,14 +892,14 @@ var Dom = function () {
 		key: 'prop',
 		value: function prop(el, _prop2) {
 			//设置节点属性
-			if (fn.isObj(_prop2)) {
-				fn.each(_prop2, function (_prop, key) {
+			if (_fn2.default.isObj(_prop2)) {
+				_fn2.default.each(_prop2, function (_prop, key) {
 
 					el[key] = _prop;
 				});
 
 				return this;
-			} else if (fn.isStr(_prop2)) {
+			} else if (_fn2.default.isStr(_prop2)) {
 				//获得节点属性
 
 				if (/^bind-\S*/.test(_prop2)) return new Function('return ' + el[_prop2] + ';').apply(this);
@@ -985,7 +980,7 @@ var Dom = function () {
 		key: 'children',
 		value: function children(el) {
 			var els = [];
-			fn.each(el.childNodes, function (child) {
+			_fn2.default.each(el.childNodes, function (child) {
 				if (child.nodeType === 1) {
 					els.push(child);
 				}
@@ -1082,7 +1077,7 @@ var Dom = function () {
 
 			el.opacity = opacity ? opacity : 1;
 
-			fn.isNum(time) ? this.animate(el, {
+			_fn2.default.isNum(time) ? this.animate(el, {
 				opacity: 0
 			}, time, function () {
 				el.style.display = 'none';
@@ -1099,7 +1094,7 @@ var Dom = function () {
 
 			var opactiy = el.opactiy ? el.opactiy : 100;
 
-			if (fn.isNum(time)) {
+			if (_fn2.default.isNum(time)) {
 
 				this.css(el, {
 					opacity: 0
@@ -1137,7 +1132,7 @@ var Dom = function () {
 
 				var animateStatus = true;
 
-				fn.each(_animate, function (val, type) {
+				_fn2.default.each(_animate, function (val, type) {
 
 					var speed = 0,
 					    cssVal = 0;
@@ -1182,7 +1177,7 @@ var Dom = function () {
 
 				if (animateStatus) {
 					clearInterval(el.timer);
-					fn.cb(cb, _this4);
+					_fn2.default.cb(cb, _this4);
 				}
 			}, time / 60);
 		}
@@ -1193,9 +1188,9 @@ var Dom = function () {
 		key: 'css',
 		value: function css(el, _css2) {
 			//获取css
-			if (fn.isStr(_css2)) {
+			if (_fn2.default.isStr(_css2)) {
 				return this.curCss(el, _css2);
-			} else if (fn.isObj(_css2)) {
+			} else if (_fn2.default.isObj(_css2)) {
 				//设置style
 				this.setStyle(el, _css2);
 				return this;
@@ -1212,13 +1207,13 @@ var Dom = function () {
 			var AZ = /[A-Z]/g,
 			    _AZ = /-[a-z]/g;
 
-			if (!fn.isStr(text)) return text;
+			if (!_fn2.default.isStr(text)) return text;
 
 			camelCases = isCameCase ? text.match(_AZ) : text.match(AZ);
 
 			camelCases = camelCases ? camelCases : [];
 
-			fn.each(camelCases, function (str, index) {
+			_fn2.default.each(camelCases, function (str, index) {
 				if (isCameCase) text = text.replace(str, str.replace(/-/g, '').toUpperCase());else text = text.replace(str, '-' + str.toLowerCase());
 			});
 
@@ -1252,7 +1247,7 @@ var Dom = function () {
 		key: 'setStyle',
 		value: function setStyle(el, css) {
 
-			fn.each(css, function (style, cssName) {
+			_fn2.default.each(css, function (style, cssName) {
 
 				el.style[cssName] = style;
 			});
@@ -1303,7 +1298,7 @@ var Dom = function () {
 
 						newScript.innerHTML = childHtml;
 
-						fn.each(child.attributes, function (attr) {
+						_fn2.default.each(child.attributes, function (attr) {
 
 							if (!attr) true;
 
@@ -1328,7 +1323,7 @@ var Dom = function () {
 		key: 'append',
 		value: function append(el, child) {
 
-			if (el.nodeType === 1) el.appendChild(child);else fn.getEl(el).appendChild(child);
+			if (el.nodeType === 1) el.appendChild(child);else _fn2.default.getEl(el).appendChild(child);
 
 			return this;
 		}
@@ -1400,7 +1395,7 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRender = __webpack_require__(12);
+var _tmplRender = __webpack_require__(13);
 
 var _tmplRender2 = _interopRequireDefault(_tmplRender);
 
@@ -1408,65 +1403,50 @@ var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
+var _set = __webpack_require__(11);
+
 var _router = __webpack_require__(10);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//实例化常用的方法
-
-//tmpl的render解析
-
-//解析方法
-var fn = new _fn2.default();
-
-//router相关
+//初始化设置
 
 //运行环境是否在浏览器
 //常用的方法
 function init() {
-	var _this = this;
-
 	//构建开始的钩子
-	fn.run(this.config.created, this);
+	_fn2.default.run(this.config.created, this);
 	//初始配置信息
-	this.el = function () {
-		if (_in_browser2.default) {
-			return fn.getEl(_this.config.el);
-		} else {
-			return _this.config.el;
-		}
-	}();
+	this.el = _set.setEl.call(this);
 	//初始化方法
-	_tmplRender.setInstance.call(this, 'methods');
+	_set.setInstance.call(this, 'methods');
 	//初始化数据
-	_tmplRender.setInstance.call(this, 'data');
+	_set.setInstance.call(this, 'data');
 	//初始化路由
 	_router.setRouter.call(this);
 	//查找模板
 	if (this.el) {
-		this.template = function () {
-			if (_in_browser2.default) {
-				_this.config.template = _this.el.innerHTML;
-				return _this.el.innerHTML;
-			} else {
-				_this.config.template = _this.el;
-				return _this.el;
-			}
-		}();
+		this.template = _set.setTemplate.call(this);
 
 		_tmplRender.setRegExp.call(this);
 		//转化为js执行
 		_tmplRender.setDom.call(this);
 	}
 	//初始化事件
-	_tmplRender.setEvent.call(this);
+	_set.setEvent.call(this);
 	//设置事件
-	fn.run(this.config.events, this);
+	_fn2.default.run(this.config.events, this);
 	//所有完毕后的钩子
-	fn.run(this.config.mounted, this);
+	_fn2.default.run(this.config.mounted, this);
 	//检查是否存在路由的状态
 	_router.checkRouterStatus.call(this);
 }
+
+//router相关
+
+//tmpl的render解析
+
+//解析方法
 
 /***/ }),
 /* 9 */
@@ -1476,7 +1456,7 @@ function init() {
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+		value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
@@ -1500,61 +1480,58 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
-//实例化常用的方法
-var fn = new _fn2.default();
-
 var Render = function () {
-	function Render(opts) {
-		_classCallCheck(this, Render);
+		function Render(opts) {
+				_classCallCheck(this, Render);
 
-		this.init(opts);
-	}
-	//初始render类
-
-
-	_createClass(Render, [{
-		key: 'init',
-		value: function init(opts) {
-
-			this.tmpl = opts.tmpl;
-
-			this.data = opts.data;
-
-			this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
-
-			_in_browser2.default ? this.fragment = this.tmpl.create(this.dom) : null;
+				this.init(opts);
 		}
-		//在父节点中插入解析后的模板
+		//初始render类
 
-	}, {
-		key: 'appendTo',
-		value: function appendTo(el, cb) {
 
-			var fn = this.tmpl.fn;
+		_createClass(Render, [{
+				key: 'init',
+				value: function init(opts) {
 
-			if (el.nodeType === 1) el.appendChild(this.fragment);else fn.getEl(el).appendChild(this.fragment);
+						this.tmpl = opts.tmpl;
 
-			fn.cb(cb, this.tmpl);
+						this.data = opts.data;
 
-			return this.tmpl;
-		}
-		//在el子节点ex中插入解析后的模板	
+						this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
 
-	}, {
-		key: 'insertBefore',
-		value: function insertBefore() {
+						_in_browser2.default ? this.fragment = this.tmpl.create(this.dom) : null;
+				}
+				//在父节点中插入解析后的模板
 
-			var fn = this.tmpl.fn;
+		}, {
+				key: 'appendTo',
+				value: function appendTo(el, cb) {
 
-			fn.getEl(el).insertBefore(this.fragment, ex);
+						var fn = this.tmpl.fn;
 
-			fn.cb(cb, this.tmpl);
+						if (el.nodeType === 1) el.appendChild(this.fragment);else fn.getEl(el).appendChild(this.fragment);
 
-			return this.tmpl;
-		}
-	}]);
+						fn.cb(cb, this.tmpl);
 
-	return Render;
+						return this.tmpl;
+				}
+				//在el子节点ex中插入解析后的模板	
+
+		}, {
+				key: 'insertBefore',
+				value: function insertBefore(el, ex, cb) {
+
+						var fn = this.tmpl.fn;
+
+						fn.getEl(el).insertBefore(this.fragment, ex);
+
+						fn.cb(cb, this.tmpl);
+
+						return this.tmpl;
+				}
+		}]);
+
+		return Render;
 }();
 
 exports.default = Render;
@@ -1578,20 +1555,17 @@ var _fn2 = _interopRequireDefault(_fn);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//实例化常用的方法
-var fn = new _fn2.default();
-
 //把路由实例挂靠到模板中
-/*路由相关*/
-
-//常用的方法
 function setRouter() {
-	if (fn.isObj(this.config.router)) {
+	if (_fn2.default.isObj(this.config.router)) {
 		this.constructor.router = this.config.router;
 	}
 }
 
 //检查路由状态
+/*路由相关*/
+
+//常用的方法
 function checkRouterStatus() {
 	//获取路由
 	var router = this.constructor.router,
@@ -1603,6 +1577,77 @@ function checkRouterStatus() {
 
 /***/ }),
 /* 11 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.setEvent = setEvent;
+exports.setInstance = setInstance;
+exports.setEl = setEl;
+exports.setTemplate = setTemplate;
+
+var _fn = __webpack_require__(0);
+
+var _fn2 = _interopRequireDefault(_fn);
+
+var _in_browser = __webpack_require__(1);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//初始化时间中的参数
+//常用的方法
+function setEvent() {
+	//初始化事件
+	this.events = {};
+	//设置事件类型
+	this.eventType = [];
+}
+
+//设置实例
+
+//运行环境是否在浏览器
+function setInstance(type) {
+	var _this = this;
+
+	var get = this.config[type];
+
+	if (!_fn2.default.isObj(get)) {
+		return;
+	}
+
+	_fn2.default.each(get, function (_get, key) {
+		_this[key] = _get;
+	});
+}
+
+//设置this.el
+function setEl() {
+	if (_in_browser2.default) {
+		return _fn2.default.getEl(this.config.el);
+	} else {
+		return this.config.el;
+	}
+}
+
+//设置当前的template
+function setTemplate() {
+	if (_in_browser2.default) {
+		this.config.template = this.el.innerHTML;
+		return this.el.innerHTML;
+	} else {
+		this.config.template = this.el;
+		return this.el;
+	}
+}
+
+/***/ }),
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1652,7 +1697,7 @@ exports.BLOCK_INSETR = BLOCK_INSETR;
 exports.EXTENDS = EXTENDS;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1661,9 +1706,6 @@ exports.EXTENDS = EXTENDS;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.setRouter = setRouter;
-exports.setEvent = setEvent;
-exports.setInstance = setInstance;
 exports.initRegExp = initRegExp;
 exports.setRegExp = setRegExp;
 exports.setDom = setDom;
@@ -1682,7 +1724,7 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRegexp = __webpack_require__(11);
+var _tmplRegexp = __webpack_require__(12);
 
 var _escapeCode = __webpack_require__(2);
 
@@ -1690,22 +1732,19 @@ var _escapeCode2 = _interopRequireDefault(_escapeCode);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//实例化常用的方法
+//在node环境中使用需要用到fs获取文件
 
 //模板正则配置
 /*
  * 一堆解析模板的方法,tmpl的核心算法
  * */
 //运行环境是否在浏览器
-var fn = new _fn2.default();
-
-//在node环境中使用需要用到fs获取文件
-
+var fs = void 0;
 
 //html中的转义
 
 //常用的方法
-var fs = void 0;
+
 
 if (!_in_browser2.default) {
 	try {
@@ -1741,38 +1780,10 @@ OPEN_TAG_REGEXP = void 0,
 /*闭合*/
 CLOSE_TAG_REGEXP = void 0;
 
-//把路由实例挂靠到模板中
-function setRouter() {
-	if (fn.isObj(this.config.router)) this.constructor.router = this.config.router;
-}
-
-//初始化时间中的参数
-function setEvent() {
-	//初始化事件
-	this.events = {};
-	//设置事件类型
-	this.eventType = [];
-}
-
-//设置实例
-function setInstance(type) {
-	var _this = this;
-
-	var get = this.config[type];
-
-	if (!fn.isObj(get)) {
-		return;
-	}
-
-	fn.each(get, function (_get, key) {
-		_this[key] = _get;
-	});
-}
-
 //处理正则数据
 function initRegExp(expr) {
 	var tm = '\\/*.?+$^[](){}|\'\"';
-	fn.each(tm, function (tmItem, index) {
+	_fn2.default.each(tm, function (tmItem, index) {
 		expr = expr.replace(new RegExp('\\' + tmItem, 'g'), '\\' + tmItem);
 	});
 	return expr;
@@ -1781,9 +1792,8 @@ function initRegExp(expr) {
 //设置正则
 function setRegExp() {
 
-	var open_tag = initRegExp.call(this, this.config.open_tag);
-
-	var close_tag = initRegExp.call(this, this.config.close_tag);
+	var open_tag = initRegExp.call(this, this.config.open_tag),
+	    close_tag = initRegExp.call(this, this.config.close_tag);
 	//解析所有的表达式
 	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
 	//原生的script
@@ -1822,21 +1832,19 @@ function setDom() {
 	/*解析script*/
 	var script = this.template.match(SCRIPT_REGEXP);
 
-	var replaceScript = setSeize.call(this);
-
-	var echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/);
-
-	var domString = [];
+	var replaceScript = setSeize.call(this),
+	    echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/),
+	    domString = [];
 
 	if (!script) script = [];
 
 	var longString = echoString.length > script.length ? echoString : script;
 
-	fn.each(echoString, function (_echoString, index) {
+	_fn2.default.each(echoString, function (_echoString, index) {
 		echoString[index] = "___.push(\"" + filterTransferredMeaning(_echoString) + "\");";
 	});
 
-	fn.each(script, function (_string, index) {
+	_fn2.default.each(script, function (_string, index) {
 
 		//恢复正则的索引位置
 		ECHO_SCRIPT_REGEXP.lastIndex = 0;
@@ -1853,7 +1861,7 @@ function setDom() {
 		}
 	});
 
-	fn.each(longString, function (_longString, index) {
+	_fn2.default.each(longString, function (_longString, index) {
 		if (typeof echoString[index] === 'string') domString.push(echoString[index]);
 		if (typeof script[index] === 'string') domString.push(script[index].replace(_tmplRegexp.FILTER_TRANFORM, ""));
 	});
@@ -1863,7 +1871,7 @@ function setDom() {
 
 /*替换include引入的模板*/
 function replaceInclude() {
-	var _this2 = this;
+	var _this = this;
 
 	var include = function () {
 		if (_in_browser2.default) {
@@ -1882,20 +1890,20 @@ function replaceInclude() {
 	this.template = this.template.replace(_tmplRegexp.INCLUDE_NULL, '');
 
 	//去重
-	includeTmpl = fn.unique(this.template.match(include));
+	includeTmpl = _fn2.default.unique(this.template.match(include));
 	includeId = includeTmpl.toString().replace(include, "$2").split(',');
 
 	//找不到include//查找的id和include匹配的数量必须相同
-	if (includeTmpl.length === 0 || fn.trimArr(includeId).length === 0 || !(includeTmpl.length > 0 && includeId.length > 0 && includeId.length === includeTmpl.length)) return;
+	if (includeTmpl.length === 0 || _fn2.default.trimArr(includeId).length === 0 || !(includeTmpl.length > 0 && includeId.length > 0 && includeId.length === includeTmpl.length)) return;
 
-	fn.each(includeId, function (id, index) {
-		var replaceIncludeRegExp = new RegExp(initRegExp.call(_this2, includeTmpl[index]), 'g');
+	_fn2.default.each(includeId, function (id, index) {
+		var replaceIncludeRegExp = new RegExp(initRegExp.call(_this, includeTmpl[index]), 'g');
 		/*浏览器环境下执行*/
 		if (_in_browser2.default) {
-			var el = fn.getEl(id);
-			if (el) _this2.template = _this2.template.replace(replaceIncludeRegExp, _this2.html(el));
+			var el = _fn2.default.getEl(id);
+			if (el) _this.template = _this.template.replace(replaceIncludeRegExp, _this.html(el));
 			//找不到就清空原来的内容
-			else _this2.template = _this2.template.replace(replaceIncludeRegExp, '');
+			else _this.template = _this.template.replace(replaceIncludeRegExp, '');
 		} else {
 			/*node环境下执行*/
 			try {
@@ -1903,16 +1911,16 @@ function replaceInclude() {
 					encoding: 'UTF8'
 				});
 
-				_this2.template = _this2.template.replace(replaceIncludeRegExp, tmpl);
+				_this.template = _this.template.replace(replaceIncludeRegExp, tmpl);
 			} catch (e) {
 				//找不到就清空原来的内容
-				_this2.template = _this2.template.replace(replaceIncludeRegExp, '');
+				_this.template = _this.template.replace(replaceIncludeRegExp, '');
 			}
 		}
 	});
 
 	/*去掉重复的include*/
-	includeTmpl = fn.unique(this.template.match(include));
+	includeTmpl = _fn2.default.unique(this.template.match(include));
 
 	/*查找是否还有include的引入*/
 	if (includeTmpl.length > 0) replaceInclude.call(this);
@@ -1923,36 +1931,35 @@ function replaceInclude() {
 
 /*替换Block块内容*/
 function replaceBlock() {
-	var _this3 = this;
+	var _this2 = this;
 
 	//先设置获取include的引入模板
 	replaceAlias.call(this);
 
-	var baseFile = fn.unique(this.template.match(_tmplRegexp.EXTENDS));
+	var baseFile = _fn2.default.unique(this.template.match(_tmplRegexp.EXTENDS)),
 
 	/*只获取第一个base的名字*/
-	var baseFileName = baseFile.toString().replace(_tmplRegexp.EXTENDS, "$2").split(',')[0];
+	baseFileName = baseFile.toString().replace(_tmplRegexp.EXTENDS, "$2").split(',')[0];
 
 	/*如果不存在block的内容，直接跳出*/
 	if (baseFileName === '') return;
 
-	var blockTmpl = fn.unique(this.template.match(_tmplRegexp.BLOCK));
+	var blockTmpl = _fn2.default.unique(this.template.match(_tmplRegexp.BLOCK));
 
 	var tmpl = fs.readFileSync(baseFileName, {
 		encoding: 'UTF8'
 	});
 
-	var baseTmpl = tmpl.match(_tmplRegexp.BLOCK);
+	var baseTmpl = tmpl.match(_tmplRegexp.BLOCK),
+	    baseBlockName = baseTmpl.toString().replace(_tmplRegexp.BLOCK, "$2").split(',');
 
-	var baseBlockName = baseTmpl.toString().replace(_tmplRegexp.BLOCK, "$2").split(',');
+	_fn2.default.each(baseBlockName, function (name, index) {
 
-	fn.each(baseBlockName, function (name, index) {
-
-		var replaceBlock = new RegExp(initRegExp.call(_this3, baseTmpl[index]), 'g');
+		var replaceBlock = new RegExp(initRegExp.call(_this2, baseTmpl[index]), 'g');
 
 		var hasBlock = false;
 
-		fn.each(blockTmpl, function (blocktmpl, _index) {
+		_fn2.default.each(blockTmpl, function (blocktmpl, _index) {
 
 			_tmplRegexp.BLOCK.test(blocktmpl);
 
@@ -1987,11 +1994,11 @@ function replaceBlock() {
 
 /*替换别名的常量*/
 function replaceAlias() {
-	var _this4 = this;
+	var _this3 = this;
 
 	var constructor = this.constructor;
-	fn.each(constructor.alias, function (replaceAlias, alias) {
-		_this4.template = _this4.template.replace(new RegExp(initRegExp.call(_this4, alias), 'g'), replaceAlias);
+	_fn2.default.each(constructor.alias, function (replaceAlias, alias) {
+		_this3.template = _this3.template.replace(new RegExp(initRegExp.call(_this3, alias), 'g'), replaceAlias);
 	});
 }
 

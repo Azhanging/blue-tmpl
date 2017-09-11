@@ -1,6 +1,6 @@
-_require.define(['@base-js/routerHandler.js', 'tmpl'], function(routerHandler, Tmpl) {
+demand.define(['@base-js/routerHandler.js', 'tmpl'], function(routerHandler, Tmpl) {
 
-	var TmplRouter = _require('tmpl-router');
+	var TmplRouter = demand('tmpl-router');
 
 	Tmpl.install(TmplRouter);
 
@@ -15,7 +15,8 @@ _require.define(['@base-js/routerHandler.js', 'tmpl'], function(routerHandler, T
 		router: {
 			'/detail': {
 				tmplUrl: "/php/get_tmpl.php?tmpl=detail",
-				viewWrap: 'tmp1'
+				viewWrap: 'tmp1',
+				alias:'/tm8'
 			},
 			'/tm1': {
 				tmplUrl: "/php/get_tmpl.php?tmpl=tmpl1",
@@ -41,12 +42,9 @@ _require.define(['@base-js/routerHandler.js', 'tmpl'], function(routerHandler, T
 			'/tm6': {},
 			'/tm8': {
 				tmplUrl: "/php/get_tmpl.php?tmpl=tmpl5",
-				alias: '/tm9',
-				routerStatus:true
+				alias: '/tm9'
 			},
-			'/tm9': {
-				routerStatus: true
-			},
+			'/tm9': {},
 			'/tm10': {
 				tmplUrl: "/php/get_tmpl.php?tmpl=tmpl2"
 			}
@@ -61,7 +59,6 @@ _require.define(['@base-js/routerHandler.js', 'tmpl'], function(routerHandler, T
 		},
 		routerEnter: function(path) {
 			console.log('跳转中。。。');
-			console.log(this);
 		},
 		/*hash更新后的钩子*/
 		routerEntered: function(path, el) {

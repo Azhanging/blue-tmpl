@@ -9,7 +9,9 @@
 </div>
 
 <script type="text/template" id="tmpl1">
-	<%if(data){%><%= data%><%}%>
+	<%if(data){%>
+	<%= data%>
+	<%}%>
 	<div class="g-media mg-t-10 pd-10  g-bg-primary" id="id<%= data.i %>">
 		<div class="g-media-head">
 			<img src="" class="wh-64 radius-50perc" />
@@ -24,37 +26,38 @@
 			</div>
 		</div>
 	</div>
-	
+
 	<%-
 		
 		
 		"<div name=\"123\" haha=\"456\" >123</div>" + isNaN('3.1212aaaaa')
 		
 	%>
-	
+
 	<%- 
 		'<div name="123" haha="456" >123</div>'
 	%>
 
-	<% for(var j = 0;j<2;j++){ %>
-		test-value
-		<tmpl-include file="temp-3">tmpl-3</tmpl-include>	
-		<tmpl-include error-msg error="">test</tmpl-include>
-		<tmpl-include name="temp-1" id="laosiji"></tmpl-include>
-		<tmpl-include name="temp-2"></tmpl-include>	
-		<tmpl-include file="temp-2"></tmpl-include>
-		<tmpl-include>123</tmpl-include>	
-		<tmpl-include error-msg-1 error="error">test1</tmpl-include>	
+	<% for(var j = 0;j<2;j++){ %> test-value
+	<tmpl-include file="temp-3">tmpl-3</tmpl-include>
+	<tmpl-include error-msg error="">test</tmpl-include>
+	<tmpl-include name="temp-1" id="laosiji"></tmpl-include>
+	<tmpl-include name="temp-2"></tmpl-include>
+	<tmpl-include file="temp-2"></tmpl-include>
+	<tmpl-include>123</tmpl-include>
+	<tmpl-include error-msg-1 error="error">test1</tmpl-include>
 	<% } %>
-	
+
 	<%-
 		'123' + '123123213' + '<div name="123" haha="456" >123</div>' + data.i	
 	%>
-	
+
 </script>
 
 <script type="text/template" id="m-btn">
-	<a href="javascript:;" class='tmpl-router-anchor g-btn g-btn-primary' tmpl-anchor="id<%= data%>" tmpl-anchor-top="-38"><%= data %></a>
+	<a href="javascript:;" class='tmpl-router-anchor g-btn g-btn-primary' tmpl-anchor="id<%= data%>" tmpl-anchor-top="-38">
+		<%= data %>
+	</a>
 </script>
 
 <script type="text/template" id="temp-1">
@@ -68,12 +71,12 @@
 
 <script type="text/template" id="temp-3">
 	<div>template3</div>
-	<tmpl-include asdasjdlkajsdlasdjla 阿萨德撒多as 大叔阿萨德a说得  asdasd="">123</tmpl-include>
+	<tmpl-include asdasjdlkajsdlasdjla 阿萨德撒多as 大叔阿萨德a说得 asdasd="">123</tmpl-include>
 </script>
 
 <script type="text/javascript">
-	_require.loadModules('@tjs/tmpl1.js');
-	_require.use(function() {
-		_require('@tjs/tmpl1.js')();
+	demand.loadModule('@tjs/tmpl1.js');
+	demand(function() {
+		demand('@tjs/tmpl1.js')();
 	});
 </script>

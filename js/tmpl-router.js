@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl-router
- * 			time:Thu Aug 31 2017 17:23:43 GMT+0800 (中国标准时间)
+ * 			time:Mon Sep 11 2017 09:43:21 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -307,14 +307,14 @@ var _tmplRouter2 = _interopRequireDefault(_tmplRouter);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function (global, factory) {
-    if (typeof _require === 'function') {
-        _require.defineId('tmpl-router', factory);
-    }
+	if (typeof demand === 'function') {
+		demand.define('tmpl-router', factory);
+	}
 })(typeof window !== 'undefined' ? window : undefined, function () {
 
-    _tmplRouter2.default.version = "v1.0.3";
+	_tmplRouter2.default.version = "v1.0.3";
 
-    return _tmplRouter2.default;
+	return _tmplRouter2.default;
 }); //Tmpl 文件入口
 
 /***/ }),
@@ -633,6 +633,9 @@ function init(opts) {
 
 	//把第一次的实例对象挂在到构造上
 	this.constructor.tmplRouter = this;
+
+	//只有一次路由实例，挂载到tmpl上
+	this.constructor.tmpl.constructor.router = this;
 
 	this.config = fn.extend(fn.copy(_config2.default), opts);
 

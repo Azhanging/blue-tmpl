@@ -1,5 +1,5 @@
-_require.define(function() {
-	var Tmpl = _require('tmpl');
+demand.define(function() {
+	var Tmpl = demand('tmpl');
 
 	return function tmpl1() {
 		new Tmpl({
@@ -14,7 +14,7 @@ _require.define(function() {
 						.appendTo(this.childrens(this.view, 'content')[0]);
 				}
 			},
-			created:function(){
+			created: function() {
 				const view = this.fn.getEl('tmp3');
 				this.view = view;
 			},

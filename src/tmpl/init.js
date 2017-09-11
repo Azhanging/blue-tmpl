@@ -1,16 +1,21 @@
 //常用的方法
-import Fn from './fn';
+import fn from './fn';
 //解析方法
 import tmplRender from './tmpl-render';
 //运行环境是否在浏览器
 import inBrowser from './in_browser';
 //tmpl的render解析
-import { 
-    setInstance,
-    setRegExp, 
-    setDom, 
-    setEvent 
+import {
+	setRegExp,
+	setDom
 } from './tmpl-render';
+//初始化设置
+import {
+	setInstance,
+	setEvent,
+	setEl,
+	setTemplate
+} from './set';
 
 //router相关
 import {
@@ -18,20 +23,11 @@ import {
 	checkRouterStatus
 } from './router';
 
-//实例化常用的方法
-const fn = new Fn();
-
 export default function init() {
 	//构建开始的钩子
 	fn.run(this.config.created, this);
 	//初始配置信息
-	this.el = (() => {
-		if(inBrowser) {
-			return fn.getEl(this.config.el)
-		} else {
-			return this.config.el;
-		}
-	})();
+	this.el = setEl.call(this);
 	//初始化方法
 	setInstance.call(this, 'methods');
 	//初始化数据
@@ -40,16 +36,8 @@ export default function init() {
 	setRouter.call(this);
 	//查找模板
 	if(this.el) {
-		this.template = (() => {
-			if(inBrowser) {
-				this.config.template = this.el.innerHTML;
-				return this.el.innerHTML;
-			} else {
-				this.config.template = this.el;
-				return this.el;
-			}
-		})();
-		
+		this.template = setTemplate.call(this);
+
 		setRegExp.call(this);
 		//转化为js执行
 		setDom.call(this);

@@ -1,4 +1,4 @@
-_require.define(function() {
+demand.define(function() {
 
 	function routerEntered(path, el) {
 		var _path = this.getHash(path);

@@ -28,8 +28,9 @@
 </script>
 
 <script type="text/javascript">
-	_require.loadModules('@tjs/tmpl2.js');
-	_require.use(function(){
-		_require('@tjs/tmpl2.js')();
+	var module = '@tjs/tmpl2.js?time=' + new Date().getTime();
+	demand.loadModule(module);
+	demand(function() {
+		demand(module)();
 	});
 </script>

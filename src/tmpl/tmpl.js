@@ -3,15 +3,13 @@ import init from './init';
 //处理模板数据的Render类
 import Render from './render';
 //常用的类方法
-import Fn from './fn';
+import fn from './fn';
 //Dom的操作
 import Dom from './dom';
 //config配置
 import config from './config';
 //转义html
 import escapeCode from './escapeCode';
-//实例化常用的方法
-const fn = new Fn();
 
 export default class Tmpl extends Dom{
     //Tmpl构造

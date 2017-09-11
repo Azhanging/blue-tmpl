@@ -1,7 +1,7 @@
 //运行环境是否在浏览器
 import inBrowser from './in_browser';
 /*常用的方法*/
-export default class Fn {
+class Fn {
 	isArr(array) {
 		return array instanceof Array || !!(array && array.length);
 	}
@@ -199,3 +199,5 @@ Fn.prototype.off = (function() {
         };
     }
 })();
+
+export default new Fn();

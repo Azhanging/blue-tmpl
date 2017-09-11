@@ -1,9 +1,7 @@
 //运行环境是否在浏览器
 import inBrowser from './in_browser';
 //常用的方法
-import Fn from './fn';
-//实例化常用的方法
-const fn = new Fn();
+import fn from './fn';
 
 //绑定相关函数
 function bindFn(el, className, type) {

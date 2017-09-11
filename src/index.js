@@ -4,8 +4,8 @@ import Tmpl from './tmpl/tmpl';
 import compatibility from './tmpl/compatibility';
 
 (function(global, factory) {
-	if(typeof _require === 'function') {
-		_require.defineId('tmpl', factory);
+	if(typeof demand === 'function') {
+		demand.define('tmpl', factory);
 	} else {
 		(global ? (global.Tmpl = factory()) : {});
 	}
