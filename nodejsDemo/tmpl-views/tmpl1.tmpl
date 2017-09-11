@@ -1,14 +1,14 @@
-<tmpl-extend file="__BASE__/base.html"/>
+<tmpl-extend file="__BASE__/base.html" />
 
 <tmpl-block name="body">
 	<% for(var i = 0;i<data.length;i++){ %>
 		<div class="g-media mg-t-10 pd-10  g-bg-primary" style="background-color:
-			<%if(i%2 == 0){%>
-				blue
-			<%}else{%>
-				red
-			<%}%>
-		;">
+				<%if(i%2 == 0){%>
+					blue
+				<%}else{%>
+					red
+				<%}%>
+			;">
 			<div class="g-media-head">
 				<img src="" class="wh-64 radius-50perc" />
 			</div>
@@ -25,12 +25,12 @@
 	<% } %>
 	<div>__TMPL__</div>
 	<% for(var j = 0;j<2;j++){ %>
-		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl">			
+		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl">
 			<span>text-value</span>
 		</tmpl-include>
 		<div style="
-			background-color:<%= j == 0?'red':'blue' %>
-		">
+				background-color:<%= j == 0?'red':'blue' %>
+			">
 			<%= i %>
 		</div>
 		<tmpl-include id="123" file="__TMPL__/tmpl2.tmpl"></tmpl-include>
@@ -40,10 +40,9 @@
 			<%= _this_ %>
 		</textarea>
 	<% } %>
-	
+
 	<!-- <%- 123456 + 456 + '<div>这是测试</div>' %> -->
-	
-	
+
 </tmpl-block>
 
 <tmpl-block name="header">
@@ -56,5 +55,3 @@
 <tmpl-block name="insert:title">
 	我是title1
 </tmpl-block>
-
-

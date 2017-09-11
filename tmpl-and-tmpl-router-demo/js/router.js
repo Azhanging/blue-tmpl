@@ -1,5 +1,5 @@
-demand.define(['@base-js/routerHandler.js', 'tmpl'], function(routerHandler, Tmpl) {
-
+demand.define(['@base-js/routerHandler.js','tmpl'], function(routerHandler,Tmpl) {
+    
 	var TmplRouter = demand('tmpl-router');
 
 	Tmpl.install(TmplRouter);

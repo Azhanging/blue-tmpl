@@ -1,7 +1,13 @@
 <!--tmpl2-->
 <% for(var i = 0;i<data.length;i++){ %>
-	<%= i %><%if(i){%><%= i %><%}%><tmpl-include asdasd><%- '<div>test</div>' %></tmpl-include>
-	<div class="g-media mg-t-10 pd-10  g-bg-danger">
+	<%= i %>
+	<%if(i){%>
+		<%= i %>
+	<%}%>
+	<tmpl-include asdasd>
+		<%- '<div>test</div>' %>
+	</tmpl-include>
+	<div class="g-media mg-t-10 pd-10 g-bg-danger">
 		<div class="g-media-body">
 			<h4 class="g-media-title">模板2-<%= data[i] %></h4>
 			<p class="g-media-content on-show-detailed">

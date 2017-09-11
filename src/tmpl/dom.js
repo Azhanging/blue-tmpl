@@ -536,21 +536,13 @@ class Dom {
 
 	/*删除节点*/
 	remove(el) {
-
 		try {
-
 			el.remove();
-
 		} catch(e) {
-
 			const parent = this.parent(el);
-
 			parent !== null ? parent.removeChild(el) : (console.warn('element remove error!'));
-
 		}
-
 		return this;
-
 	}
 
 	/*创建元素*/

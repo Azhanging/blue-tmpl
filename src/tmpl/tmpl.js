@@ -11,47 +11,47 @@ import config from './config';
 //转义html
 import escapeCode from './escapeCode';
 
-export default class Tmpl extends Dom{
+export default class Tmpl extends Dom {
     //Tmpl构造
-	constructor(opts) {
-	    super();
-		this.config = fn.extend(fn.copy(config), opts);
-		this.init();
-	}
-	
-	//安装插件
-	static install(constructor) {
+    constructor(opts) {
+        super();
+        this.config = fn.extend(fn.copy(config), opts);
+        this.init();
+    }
+
+    //安装插件
+    static install(constructor) {
         constructor.install(this);
     }
-	
-	//初始化对象
-	init(){
-	    init.call(this);
-	}
-	
-	//解析模板和数据
-	render(data) {
+
+    //初始化对象
+    init() {
+        init.call(this);
+    }
+
+    //解析模板和数据
+    render(data) {
         var tmpl = this;
         return new Render({
             tmpl: tmpl,
             data: data
         });
     }
-	
-	//添加数据更新模板
-	update() {
+
+    //添加数据更新模板
+    update() {
         this.template = this.config.template;
         setDom.call(this);
     }
-	
+
     /*回调*/
     cb(cb) {
         fn.cb(cb, this);
         return this;
     }
-    
+
     /*转义*/
-    escape(escapeVal) { 
+    escape(escapeVal) {
         fn.each(escapeCode, (item, key) => {
             escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
         });
@@ -61,7 +61,6 @@ export default class Tmpl extends Dom{
 
 //常用的方法给tmpl的fn属性中
 Tmpl.prototype.fn = fn;
-
 
 //设置路径别名常量
 Tmpl.alias = {};

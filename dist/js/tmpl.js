@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Mon Sep 11 2017 16:20:12 GMT+0800 (中国标准时间)
+ * 			time:Tue Sep 12 2017 00:03:49 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/dist";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 5);
+/******/ 	return __webpack_require__(__webpack_require__.s = 8);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -93,7 +93,7 @@ return /******/ (function(modules) { // webpackBootstrap
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); //运行环境是否在浏览器
@@ -109,229 +109,238 @@ function _classCallCheck(instance, Constructor) { if (!(instance instanceof Cons
 
 /*常用的方法*/
 var Fn = function () {
-	function Fn() {
-		_classCallCheck(this, Fn);
-	}
+    function Fn() {
+        _classCallCheck(this, Fn);
+    }
 
-	_createClass(Fn, [{
-		key: 'isArr',
-		value: function isArr(array) {
-			return array instanceof Array || !!(array && array.length);
-		}
-	}, {
-		key: 'isObj',
-		value: function isObj(obj) {
-			return obj instanceof Object && !(obj instanceof Array) && obj !== null;
-		}
-	}, {
-		key: 'isFn',
-		value: function isFn(fn) {
-			return typeof fn === 'function';
-		}
-	}, {
-		key: 'isStr',
-		value: function isStr(string) {
-			return typeof string === 'string';
-		}
-	}, {
-		key: 'isNum',
-		value: function isNum(num) {
-			return typeof num === 'number' || !isNaN(num);
-		}
-	}, {
-		key: 'isEl',
-		value: function isEl(el) {
-			return !!(el && el.nodeType);
-		}
-	}, {
-		key: 'each',
-		value: function each(obj, cb) {
-			//遍历
-			var i = 0,
-			    len = obj.length;
-			if (this.isArr(obj)) {
-				for (; i < len; i++) {
-					cb(obj[i], i);
-				}
-			} else {
-				for (i in obj) {
-					if (obj.hasOwnProperty(i)) cb(obj[i], i);
-				}
-			}
-		}
-	}, {
-		key: 'getEl',
-		value: function getEl(exp) {
-			//获取节点
-			if (!exp) return null;
-			if (!this.isFn(document.querySelector)) return document.getElementById(exp);
-			var getEl = document.querySelector(exp),
-			    el = document.getElementById(exp);
-			return getEl !== null ? getEl : el ? el : null;
-		}
-	}, {
-		key: 'getEls',
-		value: function getEls(exp) {
-			//获取多个节点
-			if (!exp) return null;
-			if (!this.isFn(document.querySelectorAll)) return document.getElementsByClassName(exp);
-			var getEls = document.querySelectorAll(exp),
-			    el = document.getElementsByClassName(exp);
-			return getEls.length > 0 ? getEls : el ? el : [];
-		}
-	}, {
-		key: 'extend',
-		value: function extend(obj, options) {
-			//合并
-			this.each(options, function (option, key) {
-				obj[key] = option;
-			});
-			return obj;
-		}
-	}, {
-		key: 'cb',
-		value: function cb(_cb, context, args) {
-			//回调
-			args = args ? args : [];
-			this.isFn(_cb) ? _cb.apply(context, args) : null;
-		}
-	}, {
-		key: 'run',
-		value: function run(cb, context, args) {
-			//执行函数
-			this.cb(cb, context, args);
-		}
-	}, {
-		key: 'unique',
-		value: function unique(arr) {
-			/*去重*/
-			if (!this.isArr(arr)) return [];
-			var newArray = [];
-			this.each(arr, function (item, index) {
-				if (newArray.indexOf(item) === -1) {
-					newArray.push(item);
-				}
-			});
-			return newArray;
-		}
-	}, {
-		key: 'trimArr',
-		value: function trimArr(arr) {
-			/*清空数组中空的值*/
-			var newArr = [];
-			this.each(arr, function (item, index) {
-				if (item !== '') {
-					newArr.push(item);
-				}
-			});
-			return newArr;
-		}
-	}, {
-		key: 'copy',
-		value: function copy(obj) {
-			/*深拷贝*/
-			if (this.isObj(obj) || this.isArr(obj)) return JSON.parse(JSON.stringify(obj));
-			return null;
-		}
-	}, {
-		key: 'ajax',
-		value: function ajax(options) {
-			var _this = this;
+    _createClass(Fn, [{
+        key: 'isArr',
+        value: function isArr(array) {
+            return array instanceof Array || !!(array && array.length);
+        }
+    }, {
+        key: 'isObj',
+        value: function isObj(obj) {
+            return obj instanceof Object && !(obj instanceof Array) && obj !== null;
+        }
+    }, {
+        key: 'isFn',
+        value: function isFn(fn) {
+            return typeof fn === 'function';
+        }
+    }, {
+        key: 'isStr',
+        value: function isStr(string) {
+            return typeof string === 'string';
+        }
+    }, {
+        key: 'isNum',
+        value: function isNum(num) {
+            return typeof num === 'number' || !isNaN(num);
+        }
+    }, {
+        key: 'isEl',
+        value: function isEl(el) {
+            return !!(el && el.nodeType);
+        }
+    }, {
+        key: 'each',
+        value: function each(obj, cb) {
+            //遍历
+            var i = 0,
+                len = obj.length;
+            if (this.isArr(obj)) {
+                for (; i < len; i++) {
+                    cb(obj[i], i);
+                }
+            } else {
+                for (i in obj) {
+                    if (obj.hasOwnProperty(i)) cb(obj[i], i);
+                }
+            }
+        }
+    }, {
+        key: 'getEl',
+        value: function getEl(exp) {
+            //获取节点
+            if (!exp) return null;
+            if (!this.isFn(document.querySelector)) return document.getElementById(exp);
+            var getEl = document.querySelector(exp),
+                el = document.getElementById(exp);
+            return getEl !== null ? getEl : el ? el : null;
+        }
+    }, {
+        key: 'getEls',
+        value: function getEls(exp) {
+            //获取多个节点
+            if (!exp) return null;
+            if (!this.isFn(document.querySelectorAll)) return document.getElementsByClassName(exp);
+            var getEls = document.querySelectorAll(exp),
+                el = document.getElementsByClassName(exp);
+            return getEls.length > 0 ? getEls : el ? el : [];
+        }
+    }, {
+        key: 'extend',
+        value: function extend(obj, options) {
+            //合并
+            this.each(options, function (option, key) {
+                obj[key] = option;
+            });
+            return obj;
+        }
+    }, {
+        key: 'cb',
+        value: function cb(_cb, context, args) {
+            //回调
+            args = args ? args : [];
+            this.isFn(_cb) ? _cb.apply(context, args) : null;
+        }
+    }, {
+        key: 'run',
+        value: function run(cb, context, args) {
+            //执行函数
+            this.cb(cb, context, args);
+        }
+    }, {
+        key: 'unique',
+        value: function unique(arr) {
+            /*去重*/
+            if (!this.isArr(arr)) return [];
+            var newArray = [];
+            this.each(arr, function (item, index) {
+                if (newArray.indexOf(item) === -1) {
+                    newArray.push(item);
+                }
+            });
+            return newArray;
+        }
+    }, {
+        key: 'trimArr',
+        value: function trimArr(arr) {
+            /*清空数组中空的值*/
+            var newArr = [];
+            this.each(arr, function (item, index) {
+                if (item !== '') {
+                    newArr.push(item);
+                }
+            });
+            return newArr;
+        }
+    }, {
+        key: 'copy',
+        value: function copy(obj) {
+            /*深拷贝*/
+            if (this.isObj(obj) || this.isArr(obj)) return JSON.parse(JSON.stringify(obj));
+            return null;
+        }
+    }, {
+        key: 'ajax',
+        value: function ajax(options) {
+            var _this = this;
 
-			//创建xhr
-			var xhr = new XMLHttpRequest();
-			//连接类型
-			options.type = options.type ? options.type.toUpperCase() : 'GET';
-			//超时
-			xhr.timeout = options.timeout && options.async !== false ? options.timeout : 0;
+            //创建xhr
+            var xhr = new XMLHttpRequest();
+            //连接类型
+            options.type = options.type ? options.type.toUpperCase() : 'GET';
+            //超时
+            xhr.timeout = options.timeout && options.async !== false ? options.timeout : 0;
 
-			if (options.type === "GET") {
+            if (options.type === "GET") {
 
-				xhr.open(options.type, function () {
+                xhr.open(options.type, function () {
 
-					return options.url.indexOf('?') ? options.url + _this.serialize(options.data) : options.url + '?' + _this.serialize(options.data);
-				}(), options.async);
-			} else if (options.type === "POST") {
+                    return options.url.indexOf('?') ? options.url + _this.serialize(options.data) : options.url + '?' + _this.serialize(options.data);
+                }(), options.async);
+            } else if (options.type === "POST") {
 
-				xhr.open(options.type, options.url, options.async);
-			}
-			xhr.setRequestHeader('Content-Type', options.contentType ? options.contentType : 'application/x-www-form-urlencoded; charset=UTF-8');
-			//响应事件
-			xhr.addEventListener('readystatechange', function () {
-				var data = void 0;
+                xhr.open(options.type, options.url, options.async);
+            }
+            xhr.setRequestHeader('Content-Type', options.contentType ? options.contentType : 'application/x-www-form-urlencoded; charset=UTF-8');
+            //响应事件
+            xhr.addEventListener('readystatechange', function () {
+                var data = void 0;
 
-				try {
-					data = JSON.parse(xhr.responseText);
-				} catch (e) {
-					data = xhr.responseText;
-				}
+                try {
+                    data = JSON.parse(xhr.responseText);
+                } catch (e) {
+                    data = xhr.responseText;
+                }
 
-				if (xhr.readyState == 4) {
-					if (xhr.status == 200) {
-						_this.cb(options.success, _this, [data]);
-					} else if (xhr.status >= 400) {
-						_this.cb(options.error, _this, [data]);
-					}
-				}
-			}, false);
+                if (xhr.readyState == 4) {
+                    if (xhr.status == 200) {
+                        _this.cb(options.success, _this, [data]);
+                    } else if (xhr.status >= 400) {
+                        _this.cb(options.error, _this, [data]);
+                    }
+                }
+            }, false);
 
-			//send指令
-			if (options.type === "GET") {
+            //send指令
+            if (options.type === "GET") {
 
-				xhr.send();
-			} else if (options.type === "POST") {
+                xhr.send();
+            } else if (options.type === "POST") {
 
-				xhr.send(this.serialize(options.data));
-			}
-		}
-	}, {
-		key: 'serialize',
-		value: function serialize(data) {
-			//初始化form数据
-			var result = '';
+                xhr.send(this.serialize(options.data));
+            }
+        }
+    }, {
+        key: 'serialize',
+        value: function serialize(data) {
+            //初始化form数据
+            var result = '';
 
-			if (!this.isObj(data) || !this.isArr(data)) return '';
+            if (!this.isObj(data) || !this.isArr(data)) return '';
 
-			this.each(data, function (val, key) {
+            this.each(data, function (val, key) {
 
-				result = result + key + '=' + encodeURIComponent(val) + '&';
-			});
+                result = result + key + '=' + encodeURIComponent(val) + '&';
+            });
 
-			return result.substring(0, result.length - 1);
-		}
-	}]);
+            return result.substring(0, result.length - 1);
+        }
+    }, {
+        key: 'initRegExp',
+        value: function initRegExp(expr) {
+            var tm = '\\/*.?+$^[](){}|\'\"';
+            this.each(tm, function (tmItem, index) {
+                expr = expr.replace(new RegExp('\\' + tmItem, 'g'), '\\' + tmItem);
+            });
+            return expr;
+        }
+    }]);
 
-	return Fn;
+    return Fn;
 }();
 
 //设置事件
 
 
 Fn.prototype.on = function () {
-	if (!_in_browser2.default) return;
-	if (typeof document.addEventListener === 'function') {
-		return function on(el, type, cb) {
-			el.addEventListener(type, cb, false);
-		};
-	} else {
-		return function on(el, type, cb) {
-			el.attachEvent('on' + type, cb);
-		};
-	}
+    if (!_in_browser2.default) return;
+    if (typeof document.addEventListener === 'function') {
+        return function on(el, type, cb) {
+            el.addEventListener(type, cb, false);
+        };
+    } else {
+        return function on(el, type, cb) {
+            el.attachEvent('on' + type, cb);
+        };
+    }
 }();
 
 //移除事件
 Fn.prototype.off = function () {
-	if (!_in_browser2.default) return;
-	if (typeof document.removeEventListener === 'function') {
-		return function off(el, type, cb) {
-			el.addEventListener(type, cb, false);
-		};
-	} else {
-		return function off(el, type, cb) {
-			el.detachEvent('on' + type, cb);
-		};
-	}
+    if (!_in_browser2.default) return;
+    if (typeof document.removeEventListener === 'function') {
+        return function off(el, type, cb) {
+            el.addEventListener(type, cb, false);
+        };
+    } else {
+        return function off(el, type, cb) {
+            el.detachEvent('on' + type, cb);
+        };
+    }
 }();
 
 exports.default = new Fn();
@@ -362,6 +371,56 @@ exports.default = inBrowser;
 
 
 Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+var FILTER_TRANFORM = /[\b\t\r\f\n]/g,
+    //过滤转义字符
+//转义双引号
+QUEST = /"/g,
+
+//引入模板
+INCLUDE_ID = /<tmpl-include .*?name=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
+
+//引入模板
+INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
+
+//空模板
+INCLUDE_NULL = /<tmpl-include\s*?>([\s\S]*?)<\/tmpl-include>/g,
+
+//错误的模板
+INCLUDE_ERROR = /<tmpl-include.*?>([\s\S]*?)<\/tmpl-include>/g,
+
+//嵌入block块
+BLOCK = /<tmpl-block .*?name=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
+
+//append_block
+BLOCK_APPEND = /^append:/,
+
+//inser_block
+BLOCK_INSETR = /^insert:/,
+
+//base路径解析
+EXTENDS = /<tmpl-extend .*?file=(\'|\")([\s\S]*?)\1.*?\/>/g;
+
+exports.FILTER_TRANFORM = FILTER_TRANFORM;
+exports.QUEST = QUEST;
+exports.INCLUDE_ID = INCLUDE_ID;
+exports.INCLUDE_FILE = INCLUDE_FILE;
+exports.INCLUDE_NULL = INCLUDE_NULL;
+exports.INCLUDE_ERROR = INCLUDE_ERROR;
+exports.BLOCK = BLOCK;
+exports.BLOCK_APPEND = BLOCK_APPEND;
+exports.BLOCK_INSETR = BLOCK_INSETR;
+exports.EXTENDS = EXTENDS;
+
+/***/ }),
+/* 3 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 // html转义
@@ -377,7 +436,217 @@ var escapeCode = {
 exports.default = escapeCode;
 
 /***/ }),
-/* 3 */
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _in_browser = __webpack_require__(1);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//在node环境中使用需要用到fs获取文件
+var fs = void 0; //运行环境是否在浏览器
+
+
+if (!_in_browser2.default) {
+    fs = require('fs');
+}
+
+exports.default = fs;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.setRegExp = setRegExp;
+exports.setDom = setDom;
+exports.replaceAlias = replaceAlias;
+
+var _in_browser = __webpack_require__(1);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
+var _fn = __webpack_require__(0);
+
+var _fn2 = _interopRequireDefault(_fn);
+
+var _include = __webpack_require__(12);
+
+var _include2 = _interopRequireDefault(_include);
+
+var _block = __webpack_require__(9);
+
+var _block2 = _interopRequireDefault(_block);
+
+var _tmplRegexp = __webpack_require__(2);
+
+var _escapeCode = __webpack_require__(3);
+
+var _escapeCode2 = _interopRequireDefault(_escapeCode);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//由于模块接口中都是只读的，不能放在配置中；
+
+//模板正则配置
+
+//include
+/*
+ * 一堆解析模板的方法,tmpl的核心算法
+ * */
+//运行环境是否在浏览器
+var SCRIPT_REGEXP = void 0,
+
+/*原生script*/
+NATIVE_SCRIPT = void 0,
+
+/*输出script*/
+ECHO_SCRIPT_REGEXP = void 0,
+
+//转义输出
+ECHO_ESCAPE_REGEXP = void 0,
+
+/*替换输出script*/
+REPLACE_ECHO_SCRIPT_OPEN_TAG = void 0,
+
+//转义的开头表达式
+ECHO_ESCAPE_REGEXP_OPEN_TAG = void 0,
+
+/*起始*/
+OPEN_TAG_REGEXP = void 0,
+
+/*闭合*/
+CLOSE_TAG_REGEXP = void 0;
+
+//设置正则
+
+
+//html中的转义
+
+//extend
+
+//常用的方法
+function setRegExp() {
+
+    var open_tag = _fn2.default.initRegExp(this.config.open_tag),
+        close_tag = _fn2.default.initRegExp(this.config.close_tag);
+    //解析所有的表达式
+    SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
+    //原生的script
+    NATIVE_SCRIPT = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag, 'g');
+    //解析输出的表达式
+    ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=([\\\s\\\S]*?)' + close_tag, 'g');
+    //转义输出
+    ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-([\\\s\\\S]*?)' + close_tag, 'g');
+    //替换输出的开头表达式
+    REPLACE_ECHO_SCRIPT_OPEN_TAG = new RegExp(open_tag + '=', 'g');
+    //转义的开头表达式
+    ECHO_ESCAPE_REGEXP_OPEN_TAG = new RegExp(open_tag + '-', 'g');
+    //替换输出的开始表达式
+    OPEN_TAG_REGEXP = new RegExp(open_tag, 'g');
+    //替换输出的结束表达式
+    CLOSE_TAG_REGEXP = new RegExp(close_tag, 'g');
+}
+
+//初始化dom生成
+function setDom() {
+
+    //node中使用block
+    if (!_in_browser2.default) {
+        _block2.default.call(this);
+    }
+
+    /*重新检查依赖里面有没有引入的数据*/
+    replaceAlias.call(this);
+
+    /*清除遗留的block块*/
+    clearBlock.call(this);
+
+    /*替换include中的内容*/
+    _include2.default.call(this);
+
+    /*解析script*/
+    var script = this.template.match(SCRIPT_REGEXP);
+
+    var replaceScript = setSeize.call(this),
+        echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/),
+        domString = [];
+
+    if (!script) script = [];
+
+    var longString = echoString.length > script.length ? echoString : script;
+
+    _fn2.default.each(echoString, function (_echoString, index) {
+        echoString[index] = "___.push(\"" + filterTransferredMeaning(_echoString) + "\");";
+    });
+
+    _fn2.default.each(script, function (_string, index) {
+
+        //恢复正则的索引位置
+        ECHO_SCRIPT_REGEXP.lastIndex = 0;
+        NATIVE_SCRIPT.lastIndex = 0;
+        ECHO_ESCAPE_REGEXP.lastIndex = 0;
+
+        //处理对应表达式
+        if (ECHO_SCRIPT_REGEXP.test(_string)) {
+            script[index] = _string.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(").replace(CLOSE_TAG_REGEXP, ");");
+        } else if (NATIVE_SCRIPT.test(_string)) {
+            script[index] = _string.replace(OPEN_TAG_REGEXP, '').replace(CLOSE_TAG_REGEXP, '');
+        } else if (ECHO_ESCAPE_REGEXP.test(_string)) {
+            script[index] = _string.replace(ECHO_ESCAPE_REGEXP_OPEN_TAG, "___.push(_this_.escape(").replace(CLOSE_TAG_REGEXP, "));");
+        }
+    });
+
+    _fn2.default.each(longString, function (_longString, index) {
+        if (typeof echoString[index] === 'string') domString.push(echoString[index]);
+        if (typeof script[index] === 'string') domString.push(script[index].replace(_tmplRegexp.FILTER_TRANFORM, ""));
+    });
+
+    this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
+};
+
+/*替换别名的常量*/
+function replaceAlias() {
+    var _this = this;
+
+    var constructor = this.constructor;
+    _fn2.default.each(constructor.alias, function (replaceAlias, alias) {
+        _this.template = _this.template.replace(new RegExp(_fn2.default.initRegExp(alias), 'g'), replaceAlias);
+    });
+}
+
+/*清除多余的block块*/
+function clearBlock() {
+    this.template = this.template.replace(_tmplRegexp.EXTENDS, '').replace(_tmplRegexp.BLOCK, '');
+}
+
+//设置占位
+function setSeize() {
+    var replaceScript = this.template.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___').replace(SCRIPT_REGEXP, '___SCRIPT___');
+    return replaceScript;
+}
+
+//过滤string中的引号
+function filterTransferredMeaning(string) {
+    return string.replace(_tmplRegexp.FILTER_TRANFORM, "").replace(_tmplRegexp.QUEST, '\\\"');
+}
+
+/***/ }),
+/* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -432,7 +701,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = true;
 
 /***/ }),
-/* 4 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -444,11 +713,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _init2 = __webpack_require__(8);
+var _init2 = __webpack_require__(13);
 
 var _init3 = _interopRequireDefault(_init2);
 
-var _render = __webpack_require__(9);
+var _render = __webpack_require__(14);
 
 var _render2 = _interopRequireDefault(_render);
 
@@ -456,15 +725,15 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _dom = __webpack_require__(7);
+var _dom = __webpack_require__(11);
 
 var _dom2 = _interopRequireDefault(_dom);
 
-var _config = __webpack_require__(6);
+var _config = __webpack_require__(10);
 
 var _config2 = _interopRequireDefault(_config);
 
-var _escapeCode = __webpack_require__(2);
+var _escapeCode = __webpack_require__(3);
 
 var _escapeCode2 = _interopRequireDefault(_escapeCode);
 
@@ -573,39 +842,132 @@ Tmpl.prototype.fn = _fn2.default;
 Tmpl.alias = {};
 
 /***/ }),
-/* 5 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
+/* WEBPACK VAR INJECTION */(function(module) {
+
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; //Tmpl 文件入口
+
+//兼容性处理
 
 
-var _tmpl = __webpack_require__(4);
+var _tmpl = __webpack_require__(7);
 
 var _tmpl2 = _interopRequireDefault(_tmpl);
 
-var _compatibility = __webpack_require__(3);
+var _compatibility = __webpack_require__(6);
 
 var _compatibility2 = _interopRequireDefault(_compatibility);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//Tmpl 文件入口
 (function (global, factory) {
-	if (typeof demand === 'function') {
-		demand.define('tmpl', factory);
-	} else {
-		global ? global.Tmpl = factory() : {};
-	}
+    if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();else if (typeof demand === 'function') demand.define('tmpl', factory);else global ? global.Tmpl = factory() : {};
 })(typeof window !== 'undefined' ? window : undefined, function () {
 
-	_tmpl2.default.version = "v1.0.5";
+    _tmpl2.default.version = "v1.0.5";
 
-	return _tmpl2.default;
+    return _tmpl2.default;
 });
-//兼容性处理
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)(module)))
 
 /***/ }),
-/* 6 */
+/* 9 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = replaceBlock;
+
+var _fn = __webpack_require__(0);
+
+var _fn2 = _interopRequireDefault(_fn);
+
+var _tmplRender = __webpack_require__(5);
+
+var _fs = __webpack_require__(4);
+
+var _fs2 = _interopRequireDefault(_fs);
+
+var _tmplRegexp = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*替换Block块内容*/
+
+
+//在node环境中使用需要用到fs获取文件
+//常用的方法
+function replaceBlock() {
+    //先设置获取include的引入模板
+    _tmplRender.replaceAlias.call(this);
+
+    var baseFile = _fn2.default.unique(this.template.match(_tmplRegexp.EXTENDS)),
+
+    /*只获取第一个base的名字*/
+    baseFileName = baseFile.toString().replace(_tmplRegexp.EXTENDS, "$2").split(',')[0];
+
+    /*如果不存在block的内容，直接跳出*/
+    if (baseFileName === '') return;
+
+    var blockTmpl = _fn2.default.unique(this.template.match(_tmplRegexp.BLOCK));
+
+    var tmpl = _fs2.default.readFileSync(baseFileName, {
+        encoding: 'UTF8'
+    });
+
+    var baseTmpl = tmpl.match(_tmplRegexp.BLOCK),
+        baseBlockName = baseTmpl.toString().replace(_tmplRegexp.BLOCK, "$2").split(',');
+
+    _fn2.default.each(baseBlockName, function (name, index) {
+
+        var replaceBlock = new RegExp(_fn2.default.initRegExp(baseTmpl[index]), 'g');
+
+        var hasBlock = false;
+
+        _fn2.default.each(blockTmpl, function (blocktmpl, _index) {
+
+            _tmplRegexp.BLOCK.test(blocktmpl);
+
+            var _name = RegExp.$2,
+                blockContent = RegExp.$3;
+
+            //匹配到name的
+            if (name === _name) {
+
+                tmpl = tmpl.replace(replaceBlock, blockContent);
+                hasBlock = true;
+            } else if (_tmplRegexp.BLOCK_APPEND.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_APPEND, '')) {
+
+                tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(_tmplRegexp.BLOCK, "$3") + blockContent);
+                hasBlock = true;
+            } else if (_tmplRegexp.BLOCK_INSETR.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_INSETR, '')) {
+
+                tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(_tmplRegexp.BLOCK, "$3"));
+                hasBlock = true;
+            }
+            _tmplRegexp.BLOCK.lastIndex = 0;
+        });
+
+        /*如果当前的block是在extends的模板中不存在，则显示默认里面的*/
+        if (!hasBlock) {
+            tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(_tmplRegexp.BLOCK, '$3'));
+        }
+    });
+
+    this.template = tmpl;
+}
+
+//模板正则配置
+
+/***/ }),
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -626,7 +988,7 @@ var config = {
 exports.default = config;
 
 /***/ }),
-/* 7 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1258,17 +1620,12 @@ var Dom = function () {
 	}, {
 		key: 'remove',
 		value: function remove(el) {
-
 			try {
-
 				el.remove();
 			} catch (e) {
-
 				var parent = this.parent(el);
-
 				parent !== null ? parent.removeChild(el) : console.warn('element remove error!');
 			}
-
 			return this;
 		}
 
@@ -1380,7 +1737,102 @@ var Dom = function () {
 exports.default = Dom;
 
 /***/ }),
-/* 8 */
+/* 12 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+exports.default = replaceInclude;
+
+var _in_browser = __webpack_require__(1);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
+var _fn = __webpack_require__(0);
+
+var _fn2 = _interopRequireDefault(_fn);
+
+var _fs = __webpack_require__(4);
+
+var _fs2 = _interopRequireDefault(_fs);
+
+var _tmplRegexp = __webpack_require__(2);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+/*替换include引入的模板*/
+
+//在node环境中使用需要用到fs获取文件
+//运行环境是否在浏览器
+function replaceInclude() {
+    var _this = this;
+
+    var include = function () {
+        if (_in_browser2.default) {
+            //在浏览器环境清空include[file]
+            return _tmplRegexp.INCLUDE_ID;
+        } else {
+            //在node环境清空include[name]
+            return _tmplRegexp.INCLUDE_FILE;
+        }
+    }();
+
+    var includeTmpl = void 0,
+        includeId = void 0;
+
+    //清空空的引入模块
+    this.template = this.template.replace(_tmplRegexp.INCLUDE_NULL, '');
+
+    //去重
+    includeTmpl = _fn2.default.unique(this.template.match(include));
+    includeId = includeTmpl.toString().replace(include, "$2").split(',');
+
+    //找不到include//查找的id和include匹配的数量必须相同
+    if (includeTmpl.length === 0 || _fn2.default.trimArr(includeId).length === 0 || !(includeTmpl.length > 0 && includeId.length > 0 && includeId.length === includeTmpl.length)) return;
+
+    _fn2.default.each(includeId, function (id, index) {
+        var replaceIncludeRegExp = new RegExp(_fn2.default.initRegExp(includeTmpl[index]), 'g');
+        /*浏览器环境下执行*/
+        if (_in_browser2.default) {
+            var el = _fn2.default.getEl(id);
+            if (el) _this.template = _this.template.replace(replaceIncludeRegExp, _this.html(el));
+            //找不到就清空原来的内容
+            else _this.template = _this.template.replace(replaceIncludeRegExp, '');
+        } else {
+            /*node环境下执行*/
+            try {
+                var tmpl = _fs2.default.readFileSync(id, {
+                    encoding: 'UTF8'
+                });
+
+                _this.template = _this.template.replace(replaceIncludeRegExp, tmpl);
+            } catch (e) {
+                //找不到就清空原来的内容
+                _this.template = _this.template.replace(replaceIncludeRegExp, '');
+            }
+        }
+    });
+
+    /*去掉重复的include*/
+    includeTmpl = _fn2.default.unique(this.template.match(include));
+
+    /*查找是否还有include的引入*/
+    if (includeTmpl.length > 0) replaceInclude.call(this);
+
+    /*清空错误的include*/
+    this.template = this.template.replace(_tmplRegexp.INCLUDE_ERROR, '');
+}
+
+//模板正则配置
+
+//常用的方法
+
+/***/ }),
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1395,7 +1847,7 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRender = __webpack_require__(13);
+var _tmplRender = __webpack_require__(5);
 
 var _tmplRender2 = _interopRequireDefault(_tmplRender);
 
@@ -1403,9 +1855,9 @@ var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
-var _set = __webpack_require__(11);
+var _set = __webpack_require__(16);
 
-var _router = __webpack_require__(10);
+var _router = __webpack_require__(15);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1449,7 +1901,7 @@ function init() {
 //解析方法
 
 /***/ }),
-/* 9 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1537,7 +1989,7 @@ var Render = function () {
 exports.default = Render;
 
 /***/ }),
-/* 10 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1576,7 +2028,7 @@ function checkRouterStatus() {
 }
 
 /***/ }),
-/* 11 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1647,376 +2099,34 @@ function setTemplate() {
 }
 
 /***/ }),
-/* 12 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
 
 
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-var FILTER_TRANFORM = /[\b\t\r\f\n]/g,
-    //过滤转义字符
-//转义双引号
-QUEST = /"/g,
-
-//引入模板
-INCLUDE_ID = /<tmpl-include .*?name=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
-
-//引入模板
-INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
-
-//空模板
-INCLUDE_NULL = /<tmpl-include\s*?>([\s\S]*?)<\/tmpl-include>/g,
-
-//错误的模板
-INCLUDE_ERROR = /<tmpl-include.*?>([\s\S]*?)<\/tmpl-include>/g,
-
-//嵌入block块
-BLOCK = /<tmpl-block .*?name=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-block>/g,
-
-//append_block
-BLOCK_APPEND = /^append:/,
-
-//inser_block
-BLOCK_INSETR = /^insert:/,
-
-//base路径解析
-EXTENDS = /<tmpl-extend .*?file=(\'|\")([\s\S]*?)\1.*?\/>/g;
-
-exports.FILTER_TRANFORM = FILTER_TRANFORM;
-exports.QUEST = QUEST;
-exports.INCLUDE_ID = INCLUDE_ID;
-exports.INCLUDE_FILE = INCLUDE_FILE;
-exports.INCLUDE_NULL = INCLUDE_NULL;
-exports.INCLUDE_ERROR = INCLUDE_ERROR;
-exports.BLOCK = BLOCK;
-exports.BLOCK_APPEND = BLOCK_APPEND;
-exports.BLOCK_INSETR = BLOCK_INSETR;
-exports.EXTENDS = EXTENDS;
-
-/***/ }),
-/* 13 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.initRegExp = initRegExp;
-exports.setRegExp = setRegExp;
-exports.setDom = setDom;
-exports.replaceInclude = replaceInclude;
-exports.replaceBlock = replaceBlock;
-exports.replaceAlias = replaceAlias;
-exports.clearBlock = clearBlock;
-exports.setSeize = setSeize;
-exports.filterTransferredMeaning = filterTransferredMeaning;
-
-var _in_browser = __webpack_require__(1);
-
-var _in_browser2 = _interopRequireDefault(_in_browser);
-
-var _fn = __webpack_require__(0);
-
-var _fn2 = _interopRequireDefault(_fn);
-
-var _tmplRegexp = __webpack_require__(12);
-
-var _escapeCode = __webpack_require__(2);
-
-var _escapeCode2 = _interopRequireDefault(_escapeCode);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//在node环境中使用需要用到fs获取文件
-
-//模板正则配置
-/*
- * 一堆解析模板的方法,tmpl的核心算法
- * */
-//运行环境是否在浏览器
-var fs = void 0;
-
-//html中的转义
-
-//常用的方法
-
-
-if (!_in_browser2.default) {
-	try {
-		/*兼容webpack的写法来获取nodejs中的核心模块*/
-		fs = require('fs');
-	} catch (e) {
-		/*在webpack中打包出现报错问题*/
-		fs = node.fs;
-	}
-}
-
-//由于模块接口中都是只读的，不能放在配置中；
-var SCRIPT_REGEXP = void 0,
-
-/*原生script*/
-NATIVE_SCRIPT = void 0,
-
-/*输出script*/
-ECHO_SCRIPT_REGEXP = void 0,
-
-//转义输出
-ECHO_ESCAPE_REGEXP = void 0,
-
-/*替换输出script*/
-REPLACE_ECHO_SCRIPT_OPEN_TAG = void 0,
-
-//转义的开头表达式
-ECHO_ESCAPE_REGEXP_OPEN_TAG = void 0,
-
-/*起始*/
-OPEN_TAG_REGEXP = void 0,
-
-/*闭合*/
-CLOSE_TAG_REGEXP = void 0;
-
-//处理正则数据
-function initRegExp(expr) {
-	var tm = '\\/*.?+$^[](){}|\'\"';
-	_fn2.default.each(tm, function (tmItem, index) {
-		expr = expr.replace(new RegExp('\\' + tmItem, 'g'), '\\' + tmItem);
-	});
-	return expr;
-}
-
-//设置正则
-function setRegExp() {
-
-	var open_tag = initRegExp.call(this, this.config.open_tag),
-	    close_tag = initRegExp.call(this, this.config.close_tag);
-	//解析所有的表达式
-	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
-	//原生的script
-	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag, 'g');
-	//解析输出的表达式
-	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=([\\\s\\\S]*?)' + close_tag, 'g');
-	//转义输出
-	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-([\\\s\\\S]*?)' + close_tag, 'g');
-	//替换输出的开头表达式
-	REPLACE_ECHO_SCRIPT_OPEN_TAG = new RegExp(open_tag + '=', 'g');
-	//转义的开头表达式
-	ECHO_ESCAPE_REGEXP_OPEN_TAG = new RegExp(open_tag + '-', 'g');
-	//替换输出的开始表达式
-	OPEN_TAG_REGEXP = new RegExp(open_tag, 'g');
-	//替换输出的结束表达式
-	CLOSE_TAG_REGEXP = new RegExp(close_tag, 'g');
-}
-
-//初始化dom生成
-function setDom() {
-
-	//node中使用block
-	if (!_in_browser2.default) {
-		replaceBlock.call(this);
-	}
-
-	/*重新检查依赖里面有没有引入的数据*/
-	replaceAlias.call(this);
-
-	/*清除遗留的block块*/
-	clearBlock.call(this);
-
-	/*替换include中的内容*/
-	replaceInclude.call(this);
-
-	/*解析script*/
-	var script = this.template.match(SCRIPT_REGEXP);
-
-	var replaceScript = setSeize.call(this),
-	    echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/),
-	    domString = [];
-
-	if (!script) script = [];
-
-	var longString = echoString.length > script.length ? echoString : script;
-
-	_fn2.default.each(echoString, function (_echoString, index) {
-		echoString[index] = "___.push(\"" + filterTransferredMeaning(_echoString) + "\");";
-	});
-
-	_fn2.default.each(script, function (_string, index) {
-
-		//恢复正则的索引位置
-		ECHO_SCRIPT_REGEXP.lastIndex = 0;
-		NATIVE_SCRIPT.lastIndex = 0;
-		ECHO_ESCAPE_REGEXP.lastIndex = 0;
-
-		//处理对应表达式
-		if (ECHO_SCRIPT_REGEXP.test(_string)) {
-			script[index] = _string.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(").replace(CLOSE_TAG_REGEXP, ");");
-		} else if (NATIVE_SCRIPT.test(_string)) {
-			script[index] = _string.replace(OPEN_TAG_REGEXP, '').replace(CLOSE_TAG_REGEXP, '');
-		} else if (ECHO_ESCAPE_REGEXP.test(_string)) {
-			script[index] = _string.replace(ECHO_ESCAPE_REGEXP_OPEN_TAG, "___.push(_this_.escape(").replace(CLOSE_TAG_REGEXP, "));");
-		}
-	});
-
-	_fn2.default.each(longString, function (_longString, index) {
-		if (typeof echoString[index] === 'string') domString.push(echoString[index]);
-		if (typeof script[index] === 'string') domString.push(script[index].replace(_tmplRegexp.FILTER_TRANFORM, ""));
-	});
-
-	this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
-};
-
-/*替换include引入的模板*/
-function replaceInclude() {
-	var _this = this;
-
-	var include = function () {
-		if (_in_browser2.default) {
-			//在浏览器环境清空include[file]
-			return _tmplRegexp.INCLUDE_ID;
-		} else {
-			//在node环境清空include[name]
-			return _tmplRegexp.INCLUDE_FILE;
-		}
-	}();
-
-	var includeTmpl = void 0,
-	    includeId = void 0;
-
-	//清空空的引入模块
-	this.template = this.template.replace(_tmplRegexp.INCLUDE_NULL, '');
-
-	//去重
-	includeTmpl = _fn2.default.unique(this.template.match(include));
-	includeId = includeTmpl.toString().replace(include, "$2").split(',');
-
-	//找不到include//查找的id和include匹配的数量必须相同
-	if (includeTmpl.length === 0 || _fn2.default.trimArr(includeId).length === 0 || !(includeTmpl.length > 0 && includeId.length > 0 && includeId.length === includeTmpl.length)) return;
-
-	_fn2.default.each(includeId, function (id, index) {
-		var replaceIncludeRegExp = new RegExp(initRegExp.call(_this, includeTmpl[index]), 'g');
-		/*浏览器环境下执行*/
-		if (_in_browser2.default) {
-			var el = _fn2.default.getEl(id);
-			if (el) _this.template = _this.template.replace(replaceIncludeRegExp, _this.html(el));
-			//找不到就清空原来的内容
-			else _this.template = _this.template.replace(replaceIncludeRegExp, '');
-		} else {
-			/*node环境下执行*/
-			try {
-				var tmpl = fs.readFileSync(id, {
-					encoding: 'UTF8'
-				});
-
-				_this.template = _this.template.replace(replaceIncludeRegExp, tmpl);
-			} catch (e) {
-				//找不到就清空原来的内容
-				_this.template = _this.template.replace(replaceIncludeRegExp, '');
+module.exports = function (module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function () {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function get() {
+				return module.l;
 			}
-		}
-	});
-
-	/*去掉重复的include*/
-	includeTmpl = _fn2.default.unique(this.template.match(include));
-
-	/*查找是否还有include的引入*/
-	if (includeTmpl.length > 0) replaceInclude.call(this);
-
-	/*清空错误的include*/
-	this.template = this.template.replace(_tmplRegexp.INCLUDE_ERROR, '');
-}
-
-/*替换Block块内容*/
-function replaceBlock() {
-	var _this2 = this;
-
-	//先设置获取include的引入模板
-	replaceAlias.call(this);
-
-	var baseFile = _fn2.default.unique(this.template.match(_tmplRegexp.EXTENDS)),
-
-	/*只获取第一个base的名字*/
-	baseFileName = baseFile.toString().replace(_tmplRegexp.EXTENDS, "$2").split(',')[0];
-
-	/*如果不存在block的内容，直接跳出*/
-	if (baseFileName === '') return;
-
-	var blockTmpl = _fn2.default.unique(this.template.match(_tmplRegexp.BLOCK));
-
-	var tmpl = fs.readFileSync(baseFileName, {
-		encoding: 'UTF8'
-	});
-
-	var baseTmpl = tmpl.match(_tmplRegexp.BLOCK),
-	    baseBlockName = baseTmpl.toString().replace(_tmplRegexp.BLOCK, "$2").split(',');
-
-	_fn2.default.each(baseBlockName, function (name, index) {
-
-		var replaceBlock = new RegExp(initRegExp.call(_this2, baseTmpl[index]), 'g');
-
-		var hasBlock = false;
-
-		_fn2.default.each(blockTmpl, function (blocktmpl, _index) {
-
-			_tmplRegexp.BLOCK.test(blocktmpl);
-
-			var _name = RegExp.$2,
-			    blockContent = RegExp.$3;
-
-			//匹配到name的
-			if (name === _name) {
-
-				tmpl = tmpl.replace(replaceBlock, blockContent);
-				hasBlock = true;
-			} else if (_tmplRegexp.BLOCK_APPEND.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_APPEND, '')) {
-
-				tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(_tmplRegexp.BLOCK, "$3") + blockContent);
-				hasBlock = true;
-			} else if (_tmplRegexp.BLOCK_INSETR.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_INSETR, '')) {
-
-				tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(_tmplRegexp.BLOCK, "$3"));
-				hasBlock = true;
-			}
-			_tmplRegexp.BLOCK.lastIndex = 0;
 		});
-
-		/*如果当前的block是在extends的模板中不存在，则显示默认里面的*/
-		if (!hasBlock) {
-			tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(_tmplRegexp.BLOCK, '$3'));
-		}
-	});
-
-	this.template = tmpl;
-}
-
-/*替换别名的常量*/
-function replaceAlias() {
-	var _this3 = this;
-
-	var constructor = this.constructor;
-	_fn2.default.each(constructor.alias, function (replaceAlias, alias) {
-		_this3.template = _this3.template.replace(new RegExp(initRegExp.call(_this3, alias), 'g'), replaceAlias);
-	});
-}
-
-/*清除多余的block块*/
-function clearBlock() {
-	this.template = this.template.replace(_tmplRegexp.EXTENDS, '').replace(_tmplRegexp.BLOCK, '');
-}
-
-//设置占位
-function setSeize() {
-	var replaceScript = this.template.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___').replace(SCRIPT_REGEXP, '___SCRIPT___');
-	return replaceScript;
-}
-
-//过滤string中的引号
-function filterTransferredMeaning(string) {
-	return string.replace(_tmplRegexp.FILTER_TRANFORM, "").replace(_tmplRegexp.QUEST, '\\\"');
-}
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function get() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
 
 /***/ })
 /******/ ]);
