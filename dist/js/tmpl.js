@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Tue Sep 12 2017 00:03:49 GMT+0800 (中国标准时间)
+ * 			time:Wed Sep 13 2017 20:40:02 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/dist";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 8);
+/******/ 	return __webpack_require__(__webpack_require__.s = 9);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -384,9 +384,6 @@ INCLUDE_ID = /<tmpl-include .*?name=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-inc
 //引入模板
 INCLUDE_FILE = /<tmpl-include .*?file=(\'|\")([\s\S]*?)\1.*?>([\s\S]*?)<\/tmpl-include>/g,
 
-//空模板
-INCLUDE_NULL = /<tmpl-include\s*?>([\s\S]*?)<\/tmpl-include>/g,
-
 //错误的模板
 INCLUDE_ERROR = /<tmpl-include.*?>([\s\S]*?)<\/tmpl-include>/g,
 
@@ -406,7 +403,6 @@ exports.FILTER_TRANFORM = FILTER_TRANFORM;
 exports.QUEST = QUEST;
 exports.INCLUDE_ID = INCLUDE_ID;
 exports.INCLUDE_FILE = INCLUDE_FILE;
-exports.INCLUDE_NULL = INCLUDE_NULL;
 exports.INCLUDE_ERROR = INCLUDE_ERROR;
 exports.BLOCK = BLOCK;
 exports.BLOCK_APPEND = BLOCK_APPEND;
@@ -484,11 +480,11 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _include = __webpack_require__(12);
+var _include = __webpack_require__(13);
 
 var _include2 = _interopRequireDefault(_include);
 
-var _block = __webpack_require__(9);
+var _block = __webpack_require__(10);
 
 var _block2 = _interopRequireDefault(_block);
 
@@ -652,6 +648,36 @@ function filterTransferredMeaning(string) {
 "use strict";
 
 
+module.exports = function (module) {
+	if (!module.webpackPolyfill) {
+		module.deprecate = function () {};
+		module.paths = [];
+		// module.parent = undefined by default
+		if (!module.children) module.children = [];
+		Object.defineProperty(module, "loaded", {
+			enumerable: true,
+			get: function get() {
+				return module.l;
+			}
+		});
+		Object.defineProperty(module, "id", {
+			enumerable: true,
+			get: function get() {
+				return module.i;
+			}
+		});
+		module.webpackPolyfill = 1;
+	}
+	return module;
+};
+
+/***/ }),
+/* 7 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
@@ -701,7 +727,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = true;
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -713,11 +739,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _init2 = __webpack_require__(13);
+var _init2 = __webpack_require__(14);
 
 var _init3 = _interopRequireDefault(_init2);
 
-var _render = __webpack_require__(14);
+var _render = __webpack_require__(15);
 
 var _render2 = _interopRequireDefault(_render);
 
@@ -725,11 +751,11 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _dom = __webpack_require__(11);
+var _dom = __webpack_require__(12);
 
 var _dom2 = _interopRequireDefault(_dom);
 
-var _config = __webpack_require__(10);
+var _config = __webpack_require__(11);
 
 var _config2 = _interopRequireDefault(_config);
 
@@ -842,7 +868,7 @@ Tmpl.prototype.fn = _fn2.default;
 Tmpl.alias = {};
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -853,11 +879,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //兼容性处理
 
 
-var _tmpl = __webpack_require__(7);
+var _tmpl = __webpack_require__(8);
 
 var _tmpl2 = _interopRequireDefault(_tmpl);
 
-var _compatibility = __webpack_require__(6);
+var _compatibility = __webpack_require__(7);
 
 var _compatibility2 = _interopRequireDefault(_compatibility);
 
@@ -871,10 +897,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
     return _tmpl2.default;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(17)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -967,7 +993,7 @@ function replaceBlock() {
 //模板正则配置
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -988,7 +1014,7 @@ var config = {
 exports.default = config;
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1737,7 +1763,7 @@ var Dom = function () {
 exports.default = Dom;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1784,9 +1810,6 @@ function replaceInclude() {
     var includeTmpl = void 0,
         includeId = void 0;
 
-    //清空空的引入模块
-    this.template = this.template.replace(_tmplRegexp.INCLUDE_NULL, '');
-
     //去重
     includeTmpl = _fn2.default.unique(this.template.match(include));
     includeId = includeTmpl.toString().replace(include, "$2").split(',');
@@ -1832,7 +1855,7 @@ function replaceInclude() {
 //常用的方法
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1855,9 +1878,9 @@ var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
-var _set = __webpack_require__(16);
+var _set = __webpack_require__(17);
 
-var _router = __webpack_require__(15);
+var _router = __webpack_require__(16);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1901,7 +1924,7 @@ function init() {
 //解析方法
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1989,7 +2012,7 @@ var Render = function () {
 exports.default = Render;
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2028,7 +2051,7 @@ function checkRouterStatus() {
 }
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2097,36 +2120,6 @@ function setTemplate() {
 		return this.el;
 	}
 }
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-module.exports = function (module) {
-	if (!module.webpackPolyfill) {
-		module.deprecate = function () {};
-		module.paths = [];
-		// module.parent = undefined by default
-		if (!module.children) module.children = [];
-		Object.defineProperty(module, "loaded", {
-			enumerable: true,
-			get: function get() {
-				return module.l;
-			}
-		});
-		Object.defineProperty(module, "id", {
-			enumerable: true,
-			get: function get() {
-				return module.i;
-			}
-		});
-		module.webpackPolyfill = 1;
-	}
-	return module;
-};
 
 /***/ })
 /******/ ]);

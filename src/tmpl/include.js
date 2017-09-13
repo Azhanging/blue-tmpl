@@ -9,7 +9,6 @@ import fs from './fs';
 import {
     INCLUDE_ID,
     INCLUDE_FILE,
-    INCLUDE_NULL,
     INCLUDE_ERROR,
 } from './tmpl-regexp';
 
@@ -26,9 +25,6 @@ export default function replaceInclude() {
     })();
 
     let includeTmpl, includeId;
-
-    //清空空的引入模块
-    this.template = this.template.replace(INCLUDE_NULL, '');
 
     //去重
     includeTmpl = fn.unique(this.template.match(include));
