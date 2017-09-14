@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Wed Sep 13 2017 20:40:02 GMT+0800 (中国标准时间)
+ * 			time:Thu Sep 14 2017 21:44:18 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -874,27 +874,25 @@ Tmpl.alias = {};
 "use strict";
 /* WEBPACK VAR INJECTION */(function(module) {
 
-var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; //Tmpl 文件入口
+var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol" ? function (obj) { return typeof obj; } : function (obj) { return obj && typeof Symbol === "function" && obj.constructor === Symbol && obj !== Symbol.prototype ? "symbol" : typeof obj; }; //兼容性处理
 
-//兼容性处理
+//Tmpl 文件入口
 
-
-var _tmpl = __webpack_require__(8);
-
-var _tmpl2 = _interopRequireDefault(_tmpl);
 
 var _compatibility = __webpack_require__(7);
 
 var _compatibility2 = _interopRequireDefault(_compatibility);
 
+var _tmpl = __webpack_require__(8);
+
+var _tmpl2 = _interopRequireDefault(_tmpl);
+
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function (global, factory) {
-    if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();else if (typeof demand === 'function') demand.define('tmpl', factory);else global ? global.Tmpl = factory() : {};
+    if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('tmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();else global ? global.Tmpl = factory() : {};
 })(typeof window !== 'undefined' ? window : undefined, function () {
-
     _tmpl2.default.version = "v1.0.5";
-
     return _tmpl2.default;
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))

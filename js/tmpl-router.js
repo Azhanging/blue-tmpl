@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl-router
- * 			time:Mon Sep 11 2017 09:43:21 GMT+0800 (中国标准时间)
+ * 			time:Thu Sep 14 2017 21:23:18 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -153,7 +153,7 @@ var TmplRouter = function () {
 			var fn = this.constructor.fn;
 			if (fn.isObj(routerOpts)) {
 				fn.each(routerOpts, function (opt, key) {
-					_this.router[key] = opt;
+					_this.routes[key] = opt;
 				});
 			}
 			//设置路由配置
@@ -366,11 +366,11 @@ function getTmpl(hash) {
 	var _this = this;
 
 	//查看当前的路由 模板是否加载回来了
-	if (!this.router[hash] || this.router[hash]['view'].length > 0 || this.router[hash]['temp'].childNodes.length > 0) return;
+	if (!this.routes[hash] || this.routes[hash]['view'].length > 0 || this.routes[hash]['temp'].childNodes.length > 0) return;
 
-	var tmplUrl = this.router[hash]['tmplUrl']; //获取请求的url
+	var tmplUrl = this.routes[hash]['tmplUrl']; //获取请求的url
 
-	var tmplId = this.router[hash]['tmplId']; //获取静态模板的id
+	var tmplId = this.routes[hash]['tmplId']; //获取静态模板的id
 
 	/*动态模板*/
 	if (tmplUrl) {
@@ -379,8 +379,8 @@ function getTmpl(hash) {
 				async: false,
 				url: tmplUrl,
 				success: function success(data) {
-					_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
-					filterTextNode.call(_this, _this.router[hash]['temp']);
+					_this.routes[hash]['temp'].appendChild(tmpl.create(data.tmpl));
+					filterTextNode.call(_this, _this.routes[hash]['temp']);
 					_this.changeRoutereStatus(false);
 				},
 				error: function error(data) {
@@ -392,8 +392,8 @@ function getTmpl(hash) {
 				async: false,
 				url: tmplUrl,
 				success: function success(data) {
-					_this.router[hash]['temp'].appendChild(tmpl.create(data.tmpl));
-					filterTextNode.call(_this, _this.router[hash]['temp']);
+					_this.routes[hash]['temp'].appendChild(tmpl.create(data.tmpl));
+					filterTextNode.call(_this, _this.routes[hash]['temp']);
 					_this.changeRoutereStatus(false);
 				},
 				error: function error(data) {
@@ -403,9 +403,9 @@ function getTmpl(hash) {
 		}
 	} else if (tmplId) {
 		try {
-			this.router[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板	
+			this.routes[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板	
 		} catch (e) {
-			this.router[hash]['temp'].appendChild(tmpl.create(''));
+			this.routes[hash]['temp'].appendChild(tmpl.create(''));
 		}
 		this.changeRoutereStatus(true);
 	}
@@ -433,7 +433,7 @@ function filterTextNode(parentEl) {
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
 exports.default = protoHashChange;
 /*
@@ -441,166 +441,154 @@ exports.default = protoHashChange;
  * */
 function protoHashChange() {
 
-	var fn = this.constructor.fn;
+    var fn = this.constructor.fn;
 
-	var path = window.location.hash.replace('#', '');
+    var path = window.location.hash.replace('#', '');
 
-	var hash = this.getHash(path); //获取hash
+    var hash = this.getHash(path); //获取hash
 
-	var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
+    var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
 
-	var hasAlias = false; //是否有别名
+    var hasAlias = false; //是否有别名
 
-	if (hash === '') hash = '/'; //如果不存在hash设置为根目录
+    if (hash === '') hash = '/'; //如果不存在hash设置为根目录
 
-	//走别名路由
-	if (this.alias[hash]) {
-		hasAlias = true;
-		hash = getPathAlias.apply(this, [hash === '/' ? hash : path, null]); //判断是不是别名的路由	
-	}
+    //走别名路由
+    if (this.alias[hash]) {
+        hasAlias = true;
+        hash = getPathAlias.apply(this, [hash === '/' ? hash : path, null]); //判断是不是别名的路由	
+    }
 
-	if (routerBtns.length === 0) return this; //存在路由绑定
+    if (routerBtns.length === 0) return this; //存在路由绑定
 
-	if (!this.alias[hash] && !this.router[hash]) {
-		//error页面
-		fn.run(this.config.error, this);
-		return;
-	}
+    if (!this.alias[hash] && !this.routes[hash]) {
+        //error页面
+        fn.run(this.config.error, this);
+        return;
+    }
 
-	/*路由进入的钩子*/
-	fn.run(this.config.routerEnter, this, [path]);
+    /*路由进入的钩子*/
+    fn.run(this.config.routerEnter, this, [path]);
 
-	/*如果是存在别名路径，返回代理的那个路径*/
-	hashChange.apply(this, [routerBtns, hasAlias ? hash : path]);
+    /*如果是存在别名路径，返回代理的那个路径*/
+    hashChange.apply(this, [routerBtns, hasAlias ? hash : path]);
 }
 
 /*hashChange的处理*/
 function hashChange(routerBtns, path) {
-	var _this = this;
+    var _this = this;
 
-	var fn = this.constructor.fn;
+    var fn = this.constructor.fn,
+        tmpl = this.constructor.tmpl,
+        hash = this.getHash(path);
 
-	var tmpl = this.constructor.tmpl;
+    var alinkEl = null;
 
-	var alinkEl = null;
+    this.getTmpl(hash); //默认动态加载模块
 
-	var hash = this.getHash(path);
+    //是否存在最后一个路由地址
+    if (this.lastRouter) {
+        /*如果不是匹配的路由视图，则不显示在路由视图中*/
+        hideTmplEl.call(this, this.lastRouter);
+    }
 
-	this.getTmpl(hash); //默认动态加载模块
+    this.lastRouter = hash; //记录最后的路由路径
 
-	//是否存在最后一个路由地址
-	if (this.lastRouter) {
-		/*如果不是匹配的路由视图，则不显示在路由视图中*/
-		hideTmplEl.call(this, this.lastRouter);
-	}
+    showTmplEl.apply(this, [hash]); //显示路由的view
 
-	this.lastRouter = hash; //记录最后的路由路径
+    //修改对应的状态
+    fn.each(routerBtns, function (el, index) {
+        var path = tmpl.attr(el, 'href'),
+            href = _this.getHash(path);
 
-	showTmplEl.apply(this, [hash]); //显示路由的view
+        if (href === hash) {
+            _this.currentRouter = href; //保存当前的路由
 
-	setRouterStatus.call(this, hash); //设置路由的链接状态
+            alinkEl = el; //保存按钮节点
 
-	//修改对应的状态
-	fn.each(routerBtns, function (el, index) {
-		var path = tmpl.attr(el, 'href'),
-		    href = _this.getHash(path);
+            tmpl.addClass(el, _this.config.routerLinkActive); //修改路由link的样式
 
-		if (href === hash) {
-			_this.currentRouter = href; //保存当前的路由
+            /*是否使用了保存之前的状态*/
+            if (_this.config.keepLive && _this.routes[href].keepLive) {
+                setScrollTop.call(_this, _this.routes[href].scrollTop);
+            } else {
+                setScrollTop.call(_this, 0);
+            }
+        } else {
+            /*存在配置路由*/
+            if (_this.routes[href]) {
+                hideTmplEl.call(_this, href); //如果不是匹配的路由视图，则不显示在路由视图中
+            }
+            tmpl.removeClass(el, _this.config.routerLinkActive);
+        }
 
-			alinkEl = el; //保存按钮节点
-
-			tmpl.addClass(el, _this.config.routerLinkActive); //修改路由link的样式
-
-			/*是否使用了保存之前的状态*/
-			if (_this.config.keepLive && _this.router[href]['keepLive']) {
-				setScrollTop.call(_this, _this.router[href]['scrollTop']);
-			} else {
-				setScrollTop.call(_this, 0);
-			}
-		} else {
-			/*存在配置路由*/
-			if (_this.router[href]) {
-				hideTmplEl.call(_this, href); //如果不是匹配的路由视图，则不显示在路由视图中
-			}
-			tmpl.removeClass(el, _this.config.routerLinkActive);
-		}
-
-		/*如果设置的节点没有绑定到对应的节点上*/
-		if (!alinkEl) {
-			_this.currentRouter = hash;
-		}
-	});
-	//调用钩子
-	fn.run(this.config.routerEntered, this, [path, alinkEl]);
+        /*如果设置的节点没有绑定到对应的节点上*/
+        if (!alinkEl) {
+            _this.currentRouter = hash;
+        }
+    });
+    //调用钩子
+    fn.run(this.config.routerEntered, this, [path, alinkEl]);
 }
 
 /*检查当前路径是否存在别名*/
 function getPathAlias(path, el) {
 
-	var fn = this.constructor.fn,
-	    hash = this.getHash(path),
-	    alias = this.alias[hash];
+    var fn = this.constructor.fn,
+        hash = this.getHash(path),
+        alias = this.alias[hash];
 
-	//别名触发钩子
-	if (this.router[hash]) {
-		fn.run(this.config.routerEnter, this, [path, el]);
-		fn.run(this.config.routerEntered, this, [path, el]);
-	}
+    //别名触发钩子
+    if (this.routes[hash]) {
+        fn.run(this.config.routerEnter, this, [path, el]);
+        fn.run(this.config.routerEntered, this, [path, el]);
+    }
 
-	//如果别名存在别名，递归使用
-	if (this.alias[alias]) {
-		return getPathAlias.apply(this, [alias, el]);
-	} else {
-		return alias;
-	}
+    //如果别名存在别名，递归使用
+    if (this.alias[alias]) {
+        return getPathAlias.apply(this, [alias, el]);
+    } else {
+        return alias;
+    }
 }
 
 /*保存节点信息*/
 function hideTmplEl(hash) {
-	var _this2 = this;
+    var _this2 = this;
 
-	var fn = this.constructor.fn;
-	/*如果不是匹配的路由视图，则不显示在路由视图中*/
-	fn.each(this.router[hash]['view'], function (el, index) {
-		_this2.router[hash]['temp'].appendChild(el);
-	});
-	this.router[hash]['view'] = [];
+    var fn = this.constructor.fn;
+    /*如果不是匹配的路由视图，则不显示在路由视图中*/
+    fn.each(this.routes[hash].view, function (el, index) {
+        _this2.routes[hash].temp.appendChild(el);
+    });
+    this.routes[hash].view = [];
 }
 
 /*显示节点信息*/
 function showTmplEl(hash) {
-	var _this3 = this;
+    var _this3 = this;
 
-	var fn = this.constructor.fn,
-	    tmpl = this.constructor.tmpl,
-	    view = this.routerView;
+    var fn = this.constructor.fn,
+        tmpl = this.constructor.tmpl,
+        view = this.routerView;
 
-	view.appendChild(this.router[hash]['temp']); //更新view层
+    view.appendChild(this.routes[hash].temp); //更新view层
 
-	fn.each(tmpl.children(view), function (el, index) {
-		//保存view层节点
-		_this3.router[hash]['view'].push(el);
-	});
-}
-
-/* 设置路由的状态，针对没有方法加载的路由模板中存在方法的 */
-function setRouterStatus(hash) {
-	/*修改路由状态*/
-	if (this.router[hash]['routerStatus'] == true) {
-		this.changeRoutereStatus(true);
-	}
+    fn.each(tmpl.children(view), function (el, index) {
+        //保存view层节点
+        _this3.routes[hash].view.push(el);
+    });
 }
 
 /*设置scrollTop*/
 function setScrollTop(num) {
-	var fn = this.constructor.fn;
-	if (!fn.isNum(num)) return 0;
-	try {
-		document.body.scrollTop = parseFloat(num);
-	} catch (e) {
-		document.documentElement.scrollTop = parseFloat(num);
-	}
+    var fn = this.constructor.fn;
+    if (!fn.isNum(num)) return 0;
+    try {
+        document.body.scrollTop = parseFloat(num);
+    } catch (e) {
+        document.documentElement.scrollTop = parseFloat(num);
+    }
 }
 
 /***/ }),
@@ -629,7 +617,7 @@ function init(opts) {
 
 	var fn = this.constructor.fn;
 
-	this.router = {};
+	this.routes = {};
 
 	//把第一次的实例对象挂在到构造上
 	this.constructor.tmplRouter = this;
@@ -641,7 +629,7 @@ function init(opts) {
 
 	this.routerView = fn.getEl(this.config.routerView);
 
-	_set.setRouter.call(this, this.config.router ? this.config.router : {});
+	_set.setRouter.call(this, this.config.routes ? this.config.routes : {});
 
 	_set.setInstance.call(this, 'methods'); //设置methods
 
@@ -653,7 +641,7 @@ function init(opts) {
 
 	_set.setkeepLive.call(this); //设置保持状态
 
-	_set.setPaths.call(this, this.router); //处理路由详情 
+	_set.setPaths.call(this, this.routes); //处理路由详情 
 
 	_set.setHashEvent.call(this); //设置hash
 
@@ -674,7 +662,7 @@ function init(opts) {
 
 
 Object.defineProperty(exports, "__esModule", {
-	value: true
+    value: true
 });
 exports.setRouter = setRouter;
 exports.setInstance = setInstance;
@@ -685,152 +673,156 @@ exports.setPaths = setPaths;
 exports.setHashEvent = setHashEvent;
 //设置路由的路径
 function setRouter(routers, path) {
-	var _this = this;
+    var _this = this;
 
-	var fn = this.constructor.fn,
-	    _path = path ? path : '';
+    var fn = this.constructor.fn,
+        _path = path ? path : '';
 
-	fn.each(routers, function (router, key) {
-		if (fn.isObj(router.modules)) {
-			setRouter.apply(_this, [router.modules, _path + key]);
-		}
-		_this.router[_path + key] = router;
-		delete router['modules'];
-	});
+    fn.each(routers, function (router, index) {
+        if (router.path === undefined) return;
+        var __path = _path + router.path;
+        if (fn.isObj(router.modules)) {
+            setRouter.apply(_this, [router.modules, __path]);
+        }
+        _this.routes[__path] = router;
+        delete router.modules;
+    });
 }
 
 //设置data和methods方法
 function setInstance(type) {
-	var _this2 = this;
+    var _this2 = this;
 
-	var fn = this.constructor.fn,
-	    get = this.config[type];
+    var fn = this.constructor.fn,
+        get = this.config[type];
 
-	if (!fn.isObj(get)) {
-		return;
-	}
+    if (!fn.isObj(get)) {
+        return;
+    }
 
-	fn.each(get, function (_get, key) {
-		_this2[key] = _get;
-	});
+    fn.each(get, function (_get, key) {
+        _this2[key] = _get;
+    });
 }
 
 /*设置路由的状态是够允许跳转*/
 function setRouterLinkStatus() {
-	var _this3 = this;
+    var _this3 = this;
 
-	var fn = this.constructor.fn;
+    var fn = this.constructor.fn;
 
-	var tmpl = this.constructor.tmpl;
+    var tmpl = this.constructor.tmpl;
 
-	this.changeRoutereStatus(true);
+    this.changeRoutereStatus(true);
 
-	var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
+    var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
 
-	fn.each(routerBtns, function (routerBtn, index) {
-		fn.on(routerBtn, 'click', function (event) {
-			var path = tmpl.attr(routerBtn, 'href'),
-			    hash = _this3.getHash(path);
-			if (!(_this3.lastRouter === hash)) {
-				//点击路由链接触发的钩子
-				fn.run(_this3.config.triggerRouter, _this3, [path, routerBtn]);
-			}
-			if (!_this3.routerStatus) {
-				event.preventDefault();
-			}
-		});
-	});
+    fn.each(routerBtns, function (routerBtn, index) {
+        fn.on(routerBtn, 'click', function (event) {
+            var path = tmpl.attr(routerBtn, 'href'),
+                hash = _this3.getHash(path);
+            if (!(_this3.lastRouter === hash)) {
+                //点击路由链接触发的钩子
+                fn.run(_this3.config.triggerRouter, _this3, [path, routerBtn]);
+            }
+            if (!_this3.routerStatus) {
+                event.preventDefault();
+            } else {
+                _this3.redirect(path);
+            }
+        });
+    });
 }
 
 /*设置路由的锚点形式*/
 function setRouterAnchor(time) {
-	var _this4 = this;
+    var _this4 = this;
 
-	var fn = this.constructor.fn,
-	    tmpl = this.constructor.tmpl;
+    var fn = this.constructor.fn,
+        tmpl = this.constructor.tmpl;
 
-	function stopScroll(event) {
-		event.preventDefault();
-	}
+    function stopScroll(event) {
+        event.preventDefault();
+    }
 
-	//获取路由绑定的节点
-	tmpl.on(document, this.config.routerAnchor, 'click', function (event, el) {
+    //获取路由绑定的节点
+    tmpl.on(document, this.config.routerAnchor, 'click', function (event, el) {
 
-		var anchorId = tmpl.attr(el, _this4.config.routerAnchorAttr),
-		    anchorEl = fn.getEl(anchorId);
+        var anchorId = tmpl.attr(el, _this4.config.routerAnchorAttr),
+            anchorEl = fn.getEl(anchorId);
 
-		var anchorOffsetTop = tmpl.attr(el, _this4.config.routerAnchorTop);
+        var anchorOffsetTop = tmpl.attr(el, _this4.config.routerAnchorTop);
 
-		anchorOffsetTop = fn.isNum(anchorOffsetTop) ? Number(anchorOffsetTop) : 0;
+        anchorOffsetTop = fn.isNum(anchorOffsetTop) ? Number(anchorOffsetTop) : 0;
 
-		if (fn.isEl(anchorEl)) {
-			//定义滑动阻止默认动作
-			window.addEventListener('mousewheel', stopScroll);
+        if (fn.isEl(anchorEl)) {
+            //定义滑动阻止默认动作
+            window.addEventListener('mousewheel', stopScroll);
 
-			tmpl.animate(document, {
-				'scrollTop': tmpl.offset(anchorEl).top + anchorOffsetTop
-			}, time, function () {
-				window.removeEventListener('mousewheel', stopScroll);
-			});
-		}
-	});
+            tmpl.animate(document, {
+                'scrollTop': tmpl.offset(anchorEl).top + anchorOffsetTop
+            }, time, function () {
+                window.removeEventListener('mousewheel', stopScroll);
+            });
+        }
+    });
 }
 
 /*设置保持状态*/
 function setkeepLive() {
-	var _this5 = this;
+    var _this5 = this;
 
-	var fn = this.constructor.fn;
-	if (!this.config.keepLive) return;
-	fn.on(window, 'scroll', function (event) {
-		if (_this5.router[_this5.currentRouter] && _this5.router[_this5.currentRouter]['keepLive']) {
-			_this5.router[_this5.currentRouter]['scrollTop'] = document.body.scrollTop || document.documentElement.scrollTop;
-		}
-	});
+    var fn = this.constructor.fn;
+    if (!this.config.keepLive) return;
+    fn.on(window, 'scroll', function (event) {
+        if (_this5.routes[_this5.currentRouter] && _this5.routes[_this5.currentRouter]['keepLive']) {
+            _this5.routes[_this5.currentRouter]['scrollTop'] = document.body.scrollTop || document.documentElement.scrollTop;
+        }
+    });
 }
 
 //初始处理路由信息
 function setPaths(routes) {
-	var _this6 = this;
+    var _this6 = this;
 
-	var fn = this.constructor.fn;
+    var fn = this.constructor.fn;
 
-	this.alias = {};
+    this.alias = {};
 
-	fn.each(routes, function (router, path) {
+    fn.each(routes, function (router, path) {
 
-		var alias = router.alias;
+        var alias = router.alias;
 
-		_this6.router[path]['view'] = []; //设置视图节点
+        _this6.routes[path]['view'] = []; //设置视图节点
 
-		//如果设置了全局的keepLive，就会默认设置保持节点为true,全局设定状态的时候是支持保持状态的
-		if (_this6.config.keepLive && _this6.router[path]['keepLive'] === undefined) {
-			_this6.router[path]['keepLive'] = true;
-		}
+        //如果设置了全局的keepLive，就会默认设置保持节点为true,全局设定状态的时候是支持保持状态的
+        if (_this6.config.keepLive && _this6.routes[path]['keepLive'] === undefined) {
+            _this6.routes[path]['keepLive'] = true;
+        }
 
-		_this6.router[path]['temp'] = document.createDocumentFragment(); //设置临时存放节点
+        _this6.routes[path]['temp'] = document.createDocumentFragment(); //设置临时存放节点
 
-		//存在别名
-		if (alias) {
-			_this6.alias[alias] = path;
-		}
-	});
+        //存在别名
+        if (alias) {
+            _this6.alias[alias] = path;
+        }
+    });
 }
 
 //设置hash
 function setHashEvent() {
-	var _this7 = this;
+    var _this7 = this;
 
-	var tmpl = this.constructor.tmpl;
+    var tmpl = this.constructor.tmpl;
 
-	if (!this.constructor.hasTmplRouter) {
-		//修改hash时触发修改
-		window.onhashchange = function (event) {
-			_this7.hashChange();
-			tmpl.preventDefault(event);
-		};
-		this.constructor.hasTmplRouter = true;
-	}
+    if (!this.constructor.hasTmplRouter) {
+        //修改hash时触发修改
+        window.onhashchange = function (event) {
+            _this7.hashChange();
+            tmpl.preventDefault(event);
+        };
+        this.constructor.hasTmplRouter = true;
+    }
 }
 
 /***/ })

@@ -28,6 +28,9 @@ demand.define(function() {
 					success: function(data) {
 						_this.page = page;
 						_this.render(data).appendTo(_this.view);
+					},
+					error:function(){
+					    _this.page = null;
 					}
 				});
 			}
@@ -38,7 +41,7 @@ demand.define(function() {
 		},
 		mounted: function() {
 			this.getData();
-			router.router['/detail']['tmpl'] = this;
+			router.routes['/detail']['tmpl'] = this;
 		}
 	});
 });

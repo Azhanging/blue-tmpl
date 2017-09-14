@@ -16,9 +16,9 @@ demand.define(function() {
 		switch(_path) {
 			case '/detail':
 				(function() {
-					var el = this.constructor.fn.getEl(this.router['/detail']['viewWrap']);
-					if(el &&　this.router['/detail'].tmpl) {
-						this.router['/detail'].tmpl.getData(el);
+					var el = this.constructor.fn.getEl(this.routes['/detail']['viewWrap']);
+					if(el &&　this.routes['/detail'].tmpl) {
+						this.routes['/detail'].tmpl.getData(el);
 					}
 				}).call(this);
 				break;
