@@ -36,7 +36,7 @@ demand.define(function() {
 			}
 		},
 		created: function() {
-			var view = this.fn.getEl('tmp1');
+			var view = this.getEl('tmp1');
 			this.view = view;
 		},
 		mounted: function() {

@@ -28,7 +28,7 @@ export function setInstance(type) {
 //设置this.el
 export function setEl(){
 	if(inBrowser) {
-		return fn.getEl(this.config.el)
+		return this.getEl(this.config.el)
 	} else {
 		return this.config.el;
 	}

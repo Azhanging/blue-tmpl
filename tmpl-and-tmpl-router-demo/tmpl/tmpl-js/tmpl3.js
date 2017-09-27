@@ -15,7 +15,7 @@ demand.define(function() {
 				}
 			},
 			created: function() {
-				const view = this.fn.getEl('tmp3');
+				const view = this.getEl('tmp3');
 				this.view = view;
 			},
 			mounted: function() {

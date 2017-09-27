@@ -118,7 +118,7 @@
 					methods: {
 						showDetailed: function(event, el) {
 							var content = this.html(el);
-							var wrap = this.fn.getEl('detailed');
+							var wrap = this.getEl('detailed');
 							this.html(wrap, content);
 							this.toggle(wrap);
 						},

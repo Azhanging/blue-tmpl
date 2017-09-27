@@ -38,25 +38,7 @@ class Fn {
             }
         }
     }
-
-    getEl(exp) { //获取节点
-        if(!exp) return null;
-        if(!this.isFn(document.querySelector))
-            return document.getElementById(exp);
-        const getEl = document.querySelector(exp),
-            el = document.getElementById(exp);
-        return getEl !== null ? getEl : (el ? el : null);
-    }
-
-    getEls(exp) { //获取多个节点
-        if(!exp) return null;
-        if(!this.isFn(document.querySelectorAll))
-            return document.getElementsByClassName(exp);
-        const getEls = document.querySelectorAll(exp),
-            el = document.getElementsByClassName(exp);
-        return getEls.length > 0 ? getEls : (el ? el : []);
-    }
-
+    
     extend(obj, options) { //合并
         this.each(options, (option, key) => {
             obj[key] = option;

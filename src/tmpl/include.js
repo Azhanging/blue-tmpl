@@ -42,7 +42,7 @@ export default function replaceInclude() {
         const replaceIncludeRegExp = new RegExp(fn.initRegExp(includeTmpl[index]), 'g');
         /*浏览器环境下执行*/
         if(inBrowser) {
-            const el = fn.getEl(id);
+            const el = this.getEl(id);
             if(el) this.template = this.template.replace(replaceIncludeRegExp, this.html(el));
             //找不到就清空原来的内容
             else this.template = this.template.replace(replaceIncludeRegExp, '');

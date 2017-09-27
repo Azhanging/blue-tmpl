@@ -31,14 +31,14 @@ demand.define(function() {
 				},
 				showDetailed: function(event, el) {
 					var content = this.html(el);
-					var wrap = this.fn.getEl('detailed');
+					var wrap = this.getEl('detailed');
 					this.html(wrap, content);
 					this.toggle(wrap);
 				}
 			},
 			created: function() {
 
-				const view = this.fn.getEl('tmp1');
+				const view = this.getEl('tmp1');
 
 				this.view = view;
 

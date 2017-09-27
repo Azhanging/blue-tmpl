@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Thu Sep 14 2017 21:44:18 GMT+0800 (中国标准时间)
+ * 			time:Wed Sep 27 2017 20:24:56 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -158,26 +158,6 @@ var Fn = function () {
                     if (obj.hasOwnProperty(i)) cb(obj[i], i);
                 }
             }
-        }
-    }, {
-        key: 'getEl',
-        value: function getEl(exp) {
-            //获取节点
-            if (!exp) return null;
-            if (!this.isFn(document.querySelector)) return document.getElementById(exp);
-            var getEl = document.querySelector(exp),
-                el = document.getElementById(exp);
-            return getEl !== null ? getEl : el ? el : null;
-        }
-    }, {
-        key: 'getEls',
-        value: function getEls(exp) {
-            //获取多个节点
-            if (!exp) return null;
-            if (!this.isFn(document.querySelectorAll)) return document.getElementsByClassName(exp);
-            var getEls = document.querySelectorAll(exp),
-                el = document.getElementsByClassName(exp);
-            return getEls.length > 0 ? getEls : el ? el : [];
         }
     }, {
         key: 'extend',
@@ -1103,9 +1083,29 @@ var Dom = function () {
 	}
 
 	_createClass(Dom, [{
-		key: 'on',
-
+		key: 'getEl',
+		value: function getEl(exp) {
+			//获取节点
+			if (!exp) return null;
+			if (!this.fn.isFn(document.querySelector)) return document.getElementById(exp);
+			var getEl = document.querySelector(exp),
+			    el = document.getElementById(exp);
+			return getEl !== null ? getEl : el ? el : null;
+		}
+	}, {
+		key: 'getEls',
+		value: function getEls(exp) {
+			//获取多个节点
+			if (!exp) return null;
+			if (!this.fn.isFn(document.querySelectorAll)) return document.getElementsByClassName(exp);
+			var getEls = document.querySelectorAll(exp),
+			    el = document.getElementsByClassName(exp);
+			return getEls.length > 0 ? getEls : el ? el : [];
+		}
 		//绑定事件
+
+	}, {
+		key: 'on',
 		value: function on(ctx, exp, type, cb) {
 			var _this2 = this;
 
@@ -1819,7 +1819,7 @@ function replaceInclude() {
         var replaceIncludeRegExp = new RegExp(_fn2.default.initRegExp(includeTmpl[index]), 'g');
         /*浏览器环境下执行*/
         if (_in_browser2.default) {
-            var el = _fn2.default.getEl(id);
+            var el = _this.getEl(id);
             if (el) _this.template = _this.template.replace(replaceIncludeRegExp, _this.html(el));
             //找不到就清空原来的内容
             else _this.template = _this.template.replace(replaceIncludeRegExp, '');
@@ -1929,7 +1929,7 @@ function init() {
 
 
 Object.defineProperty(exports, "__esModule", {
-		value: true
+        value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
@@ -1954,57 +1954,58 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Render = function () {
-		function Render(opts) {
-				_classCallCheck(this, Render);
+        function Render(opts) {
+                _classCallCheck(this, Render);
 
-				this.init(opts);
-		}
-		//初始render类
+                this.init(opts);
+        }
+        //初始render类
 
 
-		_createClass(Render, [{
-				key: 'init',
-				value: function init(opts) {
+        _createClass(Render, [{
+                key: 'init',
+                value: function init(opts) {
 
-						this.tmpl = opts.tmpl;
+                        this.tmpl = opts.tmpl;
 
-						this.data = opts.data;
+                        this.data = opts.data;
 
-						this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
+                        this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
 
-						_in_browser2.default ? this.fragment = this.tmpl.create(this.dom) : null;
-				}
-				//在父节点中插入解析后的模板
+                        _in_browser2.default ? this.fragment = this.tmpl.create(this.dom) : null;
+                }
+                //在父节点中插入解析后的模板
 
-		}, {
-				key: 'appendTo',
-				value: function appendTo(el, cb) {
+        }, {
+                key: 'appendTo',
+                value: function appendTo(el, cb) {
 
-						var fn = this.tmpl.fn;
+                        var fn = this.tmpl.fn;
 
-						if (el.nodeType === 1) el.appendChild(this.fragment);else fn.getEl(el).appendChild(this.fragment);
+                        if (el.nodeType === 1) el.appendChild(this.fragment);else fn.getEl(el).appendChild(this.fragment);
 
-						fn.cb(cb, this.tmpl);
+                        fn.cb(cb, this.tmpl);
 
-						return this.tmpl;
-				}
-				//在el子节点ex中插入解析后的模板	
+                        return this.tmpl;
+                }
+                //在el子节点ex中插入解析后的模板	
 
-		}, {
-				key: 'insertBefore',
-				value: function insertBefore(el, ex, cb) {
+        }, {
+                key: 'insertBefore',
+                value: function insertBefore(el, ex, cb) {
 
-						var fn = this.tmpl.fn;
+                        var ctx = this.tmpl,
+                            fn = ctx.fn;
 
-						fn.getEl(el).insertBefore(this.fragment, ex);
+                        ctx.getEl(el).insertBefore(this.fragment, ex);
 
-						fn.cb(cb, this.tmpl);
+                        fn.cb(cb, ctx);
 
-						return this.tmpl;
-				}
-		}]);
+                        return this.tmpl;
+                }
+        }]);
 
-		return Render;
+        return Render;
 }();
 
 exports.default = Render;
@@ -2102,7 +2103,7 @@ function setInstance(type) {
 //设置this.el
 function setEl() {
 	if (_in_browser2.default) {
-		return _fn2.default.getEl(this.config.el);
+		return this.getEl(this.config.el);
 	} else {
 		return this.config.el;
 	}

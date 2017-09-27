@@ -66,6 +66,23 @@ function setEntrust(ctx, type, cb) {
 }
 
 class Dom {
+    getEl(exp) { //获取节点
+        if(!exp) return null;
+        if(!this.fn.isFn(document.querySelector))
+            return document.getElementById(exp);
+        const getEl = document.querySelector(exp),
+            el = document.getElementById(exp);
+        return getEl !== null ? getEl : (el ? el : null);
+    }
+
+    getEls(exp) { //获取多个节点
+        if(!exp) return null;
+        if(!this.fn.isFn(document.querySelectorAll))
+            return document.getElementsByClassName(exp);
+        const getEls = document.querySelectorAll(exp),
+            el = document.getElementsByClassName(exp);
+        return getEls.length > 0 ? getEls : (el ? el : []);
+    }
 	//绑定事件
 	on(ctx, exp, type, cb) {
 		if(arguments.length === 4) {

@@ -7,47 +7,48 @@ import inBrowser from './in_browser';
 //常用的方法
 import fn from './fn';
 class Render {
-	constructor(opts) {
+    constructor(opts) {
 
-		this.init(opts);
+        this.init(opts);
 
-	}
-	//初始render类
-	init(opts) {
+    }
+    //初始render类
+    init(opts) {
 
-		this.tmpl = opts.tmpl;
+        this.tmpl = opts.tmpl;
 
-		this.data = opts.data;
+        this.data = opts.data;
 
-		this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
+        this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
 
-		inBrowser ? (this.fragment = this.tmpl.create(this.dom)) : null;
+        inBrowser ? (this.fragment = this.tmpl.create(this.dom)) : null;
 
-	}
-	//在父节点中插入解析后的模板
-	appendTo(el, cb) {
+    }
+    //在父节点中插入解析后的模板
+    appendTo(el, cb) {
 
-		const fn = this.tmpl.fn;
+        const fn = this.tmpl.fn;
 
-		if(el.nodeType === 1) el.appendChild(this.fragment);
+        if(el.nodeType === 1) el.appendChild(this.fragment);
 
-		else fn.getEl(el).appendChild(this.fragment);
+        else fn.getEl(el).appendChild(this.fragment);
 
-		fn.cb(cb, this.tmpl);
+        fn.cb(cb, this.tmpl);
 
-		return this.tmpl;
-	}
-	//在el子节点ex中插入解析后的模板	
-	insertBefore(el, ex, cb) {
+        return this.tmpl;
+    }
+    //在el子节点ex中插入解析后的模板	
+    insertBefore(el, ex, cb) {
 
-		const fn = this.tmpl.fn;
+        const ctx = this.tmpl,
+            fn = ctx.fn;
 
-		fn.getEl(el).insertBefore(this.fragment, ex);
+        ctx.getEl(el).insertBefore(this.fragment, ex);
 
-		fn.cb(cb, this.tmpl);
+        fn.cb(cb, ctx);
 
-		return this.tmpl;
-	}
+        return this.tmpl;
+    }
 
 }
 

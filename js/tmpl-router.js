@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl-router
- * 			time:Sat Sep 16 2017 23:37:06 GMT+0800 (中国标准时间)
+ * 			time:Wed Sep 27 2017 20:33:07 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -400,7 +400,7 @@ function getTmpl(hash) {
 		}
 	} else if (tmplId) {
 		try {
-			this.routes[hash]['temp'].appendChild(tmpl.create(tmpl.html(fn.getEl(tmplId)))); //非动态模板	
+			this.routes[hash]['temp'].appendChild(tmpl.create(tmpl.html(tmpl.getEl(tmplId)))); //非动态模板	
 		} catch (e) {
 			this.routes[hash]['temp'].appendChild(tmpl.create(''));
 		}
@@ -440,8 +440,9 @@ exports.default = protoHashChange;
 function protoHashChange() {
 
     var fn = this.constructor.fn,
+        tmpl = this.constructor.tmpl,
         path = window.location.hash.replace('#', ''),
-        routerBtns = fn.getEls(this.config.routerLink),
+        routerBtns = tmpl.getEls(this.config.routerLink),
         //获取路由绑定的节点
     lastRouter = this.$lastRouter;
 
@@ -633,7 +634,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //配置参数
 function init(opts) {
 
-	var fn = this.constructor.fn;
+	var fn = this.constructor.fn,
+	    tmpl = this.constructor.tmpl;
 
 	this.routes = {};
 
@@ -645,7 +647,7 @@ function init(opts) {
 
 	this.config = fn.extend(fn.copy(_config2.default), opts);
 
-	this.routerView = fn.getEl(this.config.routerView);
+	this.routerView = tmpl.getEl(this.config.routerView);
 
 	_set.setRouter.call(this, this.config.routes ? this.config.routes : {});
 
@@ -733,7 +735,7 @@ function setRouterLinkStatus() {
 
     this.changeRoutereStatus(true);
 
-    var routerBtns = fn.getEls(this.config.routerLink); //获取路由绑定的节点
+    var routerBtns = tmpl.getEls(this.config.routerLink); //获取路由绑定的节点
 
     fn.each(routerBtns, function (routerBtn, index) {
         fn.on(routerBtn, 'click', function (event) {
@@ -767,7 +769,7 @@ function setRouterAnchor(time) {
     tmpl.on(document, this.config.routerAnchor, 'click', function (event, el) {
 
         var anchorId = tmpl.attr(el, _this4.config.routerAnchorAttr),
-            anchorEl = fn.getEl(anchorId);
+            anchorEl = tmpl.getEl(anchorId);
 
         var anchorOffsetTop = tmpl.attr(el, _this4.config.routerAnchorTop);
 
