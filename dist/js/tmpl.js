@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Wed Sep 27 2017 20:24:56 GMT+0800 (中国标准时间)
+ * 			time:Fri Nov 03 2017 17:18:21 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -353,8 +353,11 @@ exports.default = inBrowser;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-var FILTER_TRANFORM = /[\b\t\r\f\n]/g,
+var FILTER_TRANFORM = /[\b\t\f\n\r\v]/g,
     //过滤转义字符
+//script的表达是
+SCRIPT = /<script.*?>([\s\S]*?)<\/script>/g,
+
 //转义双引号
 QUEST = /"/g,
 
@@ -377,9 +380,10 @@ BLOCK_APPEND = /^append:/,
 BLOCK_INSETR = /^insert:/,
 
 //base路径解析
-EXTENDS = /<tmpl-extend .*?file=(\'|\")([\s\S]*?)\1.*?\/>/g;
+EXTEND = /<tmpl-extend .*?file=(\'|\")([\s\S]*?)\1.*?\/>/g;
 
 exports.FILTER_TRANFORM = FILTER_TRANFORM;
+exports.SCRIPT = SCRIPT;
 exports.QUEST = QUEST;
 exports.INCLUDE_ID = INCLUDE_ID;
 exports.INCLUDE_FILE = INCLUDE_FILE;
@@ -387,7 +391,7 @@ exports.INCLUDE_ERROR = INCLUDE_ERROR;
 exports.BLOCK = BLOCK;
 exports.BLOCK_APPEND = BLOCK_APPEND;
 exports.BLOCK_INSETR = BLOCK_INSETR;
-exports.EXTENDS = EXTENDS;
+exports.EXTEND = EXTEND;
 
 /***/ }),
 /* 3 */
@@ -446,7 +450,7 @@ exports.default = fs;
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+	value: true
 });
 exports.setRegExp = setRegExp;
 exports.setDom = setDom;
@@ -518,108 +522,118 @@ CLOSE_TAG_REGEXP = void 0;
 //常用的方法
 function setRegExp() {
 
-    var open_tag = _fn2.default.initRegExp(this.config.open_tag),
-        close_tag = _fn2.default.initRegExp(this.config.close_tag);
-    //解析所有的表达式
-    SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
-    //原生的script
-    NATIVE_SCRIPT = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag, 'g');
-    //解析输出的表达式
-    ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=([\\\s\\\S]*?)' + close_tag, 'g');
-    //转义输出
-    ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-([\\\s\\\S]*?)' + close_tag, 'g');
-    //替换输出的开头表达式
-    REPLACE_ECHO_SCRIPT_OPEN_TAG = new RegExp(open_tag + '=', 'g');
-    //转义的开头表达式
-    ECHO_ESCAPE_REGEXP_OPEN_TAG = new RegExp(open_tag + '-', 'g');
-    //替换输出的开始表达式
-    OPEN_TAG_REGEXP = new RegExp(open_tag, 'g');
-    //替换输出的结束表达式
-    CLOSE_TAG_REGEXP = new RegExp(close_tag, 'g');
+	var open_tag = _fn2.default.initRegExp(this.config.open_tag),
+	    close_tag = _fn2.default.initRegExp(this.config.close_tag);
+	//解析所有的表达式
+	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
+	//原生的script
+	NATIVE_SCRIPT = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag, 'g');
+	//解析输出的表达式
+	ECHO_SCRIPT_REGEXP = new RegExp(open_tag + '=([\\\s\\\S]*?)' + close_tag, 'g');
+	//转义输出
+	ECHO_ESCAPE_REGEXP = new RegExp(open_tag + '-([\\\s\\\S]*?)' + close_tag, 'g');
+	//替换输出的开头表达式
+	REPLACE_ECHO_SCRIPT_OPEN_TAG = new RegExp(open_tag + '=', 'g');
+	//转义的开头表达式
+	ECHO_ESCAPE_REGEXP_OPEN_TAG = new RegExp(open_tag + '-', 'g');
+	//替换输出的开始表达式
+	OPEN_TAG_REGEXP = new RegExp(open_tag, 'g');
+	//替换输出的结束表达式
+	CLOSE_TAG_REGEXP = new RegExp(close_tag, 'g');
 }
 
 //初始化dom生成
 function setDom() {
 
-    //node中使用block
-    if (!_in_browser2.default) {
-        _block2.default.call(this);
-    }
+	//node中使用block
+	if (!_in_browser2.default) {
+		_block2.default.call(this);
+	}
 
-    /*重新检查依赖里面有没有引入的数据*/
-    replaceAlias.call(this);
+	/*重新检查依赖里面有没有引入的数据*/
+	replaceAlias.call(this);
 
-    /*清除遗留的block块*/
-    clearBlock.call(this);
+	/*清除遗留的block块*/
+	clearBlock.call(this);
 
-    /*替换include中的内容*/
-    _include2.default.call(this);
+	/*替换include中的内容*/
+	_include2.default.call(this);
 
-    /*解析script*/
-    var script = this.template.match(SCRIPT_REGEXP);
+	/*解析script*/
+	var script = this.template.match(SCRIPT_REGEXP);
 
-    var replaceScript = setSeize.call(this),
-        echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/),
-        domString = [];
+	var replaceScript = setSeize.call(this),
+	    echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/),
+	    domString = [];
 
-    if (!script) script = [];
+	if (!script) script = [];
 
-    var longString = echoString.length > script.length ? echoString : script;
+	var longString = echoString.length > script.length ? echoString : script;
 
-    _fn2.default.each(echoString, function (_echoString, index) {
-        echoString[index] = "___.push(\"" + filterTransferredMeaning(_echoString) + "\");";
-    });
+	_fn2.default.each(echoString, function (_echoString, index) {
+		echoString[index] = "___.push(\"" + filterTransferredMeaning(_echoString) + "\");";
+	});
 
-    _fn2.default.each(script, function (_string, index) {
+	_fn2.default.each(script, function (_string, index) {
 
-        //恢复正则的索引位置
-        ECHO_SCRIPT_REGEXP.lastIndex = 0;
-        NATIVE_SCRIPT.lastIndex = 0;
-        ECHO_ESCAPE_REGEXP.lastIndex = 0;
+		//恢复正则的索引位置
+		ECHO_SCRIPT_REGEXP.lastIndex = 0;
+		NATIVE_SCRIPT.lastIndex = 0;
+		ECHO_ESCAPE_REGEXP.lastIndex = 0;
 
-        //处理对应表达式
-        if (ECHO_SCRIPT_REGEXP.test(_string)) {
-            script[index] = _string.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(").replace(CLOSE_TAG_REGEXP, ");");
-        } else if (NATIVE_SCRIPT.test(_string)) {
-            script[index] = _string.replace(OPEN_TAG_REGEXP, '').replace(CLOSE_TAG_REGEXP, '');
-        } else if (ECHO_ESCAPE_REGEXP.test(_string)) {
-            script[index] = _string.replace(ECHO_ESCAPE_REGEXP_OPEN_TAG, "___.push(_this_.escape(").replace(CLOSE_TAG_REGEXP, "));");
-        }
-    });
+		//处理对应表达式
+		if (ECHO_SCRIPT_REGEXP.test(_string)) {
+			script[index] = _string.replace(REPLACE_ECHO_SCRIPT_OPEN_TAG, "___.push(").replace(CLOSE_TAG_REGEXP, ");");
+		} else if (NATIVE_SCRIPT.test(_string)) {
+			script[index] = _string.replace(OPEN_TAG_REGEXP, '').replace(CLOSE_TAG_REGEXP, '');
+		} else if (ECHO_ESCAPE_REGEXP.test(_string)) {
+			script[index] = _string.replace(ECHO_ESCAPE_REGEXP_OPEN_TAG, "___.push(_this_.escape(").replace(CLOSE_TAG_REGEXP, "));");
+		}
+	});
 
-    _fn2.default.each(longString, function (_longString, index) {
-        if (typeof echoString[index] === 'string') domString.push(echoString[index]);
-        if (typeof script[index] === 'string') domString.push(script[index].replace(_tmplRegexp.FILTER_TRANFORM, ""));
-    });
+	_fn2.default.each(longString, function (_longString, index) {
+		if (_fn2.default.isStr(echoString[index])) {
+			//直接输出的dom结构
+			domString.push(echoString[index]);
+		}
+		if (_fn2.default.isStr(script[index])) {
+			//js的源码
+			domString.push(script[index].replace(_tmplRegexp.FILTER_TRANFORM, " "));
+		}
+	});
 
-    this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
+	this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
 };
 
 /*替换别名的常量*/
 function replaceAlias() {
-    var _this = this;
+	var _this = this;
 
-    var constructor = this.constructor;
-    _fn2.default.each(constructor.alias, function (replaceAlias, alias) {
-        _this.template = _this.template.replace(new RegExp(_fn2.default.initRegExp(alias), 'g'), replaceAlias);
-    });
+	var constructor = this.constructor;
+	_fn2.default.each(constructor.alias, function (replaceAlias, alias) {
+		_this.template = _this.template.replace(new RegExp(_fn2.default.initRegExp(alias), 'g'), replaceAlias);
+	});
 }
 
 /*清除多余的block块*/
 function clearBlock() {
-    this.template = this.template.replace(_tmplRegexp.EXTENDS, '').replace(_tmplRegexp.BLOCK, '');
+	this.template = this.template.replace(_tmplRegexp.EXTEND, '').replace(_tmplRegexp.BLOCK, '');
 }
 
 //设置占位
 function setSeize() {
-    var replaceScript = this.template.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___').replace(SCRIPT_REGEXP, '___SCRIPT___');
-    return replaceScript;
+	var replaceScript = this.template.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___').replace(SCRIPT_REGEXP, '___SCRIPT___');
+	return replaceScript;
 }
 
 //过滤string中的引号
 function filterTransferredMeaning(string) {
-    return string.replace(_tmplRegexp.FILTER_TRANFORM, "").replace(_tmplRegexp.QUEST, '\\\"');
+	console.log(string);
+	console.log(string.match(_tmplRegexp.SCRIPT));
+	return string.replace(_tmplRegexp.FILTER_TRANFORM, "").replace(_tmplRegexp.QUEST, '\\\"');
 }
+
+//转义的时候不处理script
 
 /***/ }),
 /* 6 */
@@ -885,7 +899,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 
 Object.defineProperty(exports, "__esModule", {
-    value: true
+	value: true
 });
 exports.default = replaceBlock;
 
@@ -909,63 +923,67 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //在node环境中使用需要用到fs获取文件
 //常用的方法
 function replaceBlock() {
-    //先设置获取include的引入模板
-    _tmplRender.replaceAlias.call(this);
+	//先设置获取include的引入模板
+	_tmplRender.replaceAlias.call(this);
 
-    var baseFile = _fn2.default.unique(this.template.match(_tmplRegexp.EXTENDS)),
+	var baseFile = _fn2.default.unique(this.template.match(_tmplRegexp.EXTEND)),
 
-    /*只获取第一个base的名字*/
-    baseFileName = baseFile.toString().replace(_tmplRegexp.EXTENDS, "$2").split(',')[0];
+	/*只获取第一个base的名字*/
+	baseFileName = baseFile.toString().replace(_tmplRegexp.EXTEND, "$2").split(',')[0];
 
-    /*如果不存在block的内容，直接跳出*/
-    if (baseFileName === '') return;
+	/*如果不存在block的内容，直接跳出*/
+	if (baseFileName === '') return;
 
-    var blockTmpl = _fn2.default.unique(this.template.match(_tmplRegexp.BLOCK));
+	//获取入口模板
+	var blockTmpl = _fn2.default.unique(this.template.match(_tmplRegexp.BLOCK));
 
-    var tmpl = _fs2.default.readFileSync(baseFileName, {
-        encoding: 'UTF8'
-    });
+	//获取继承的模板
+	var layoutTmpl = _fs2.default.readFileSync(baseFileName, {
+		encoding: 'UTF8'
+	});
 
-    var baseTmpl = tmpl.match(_tmplRegexp.BLOCK),
-        baseBlockName = baseTmpl.toString().replace(_tmplRegexp.BLOCK, "$2").split(',');
+	//从继承模板中筛选出block
+	var layoutTmplFindBlock = layoutTmpl.match(_tmplRegexp.BLOCK) || [],
+	    layoutTmplFindBlockStr = layoutTmplFindBlock.toString(),
+	    baseBlockName = layoutTmplFindBlockStr !== '' ? layoutTmplFindBlockStr.replace(_tmplRegexp.BLOCK, "$2").split(',') : [];
 
-    _fn2.default.each(baseBlockName, function (name, index) {
+	_fn2.default.each(baseBlockName, function (name, index) {
 
-        var replaceBlock = new RegExp(_fn2.default.initRegExp(baseTmpl[index]), 'g');
+		var block = layoutTmplFindBlock[index];
 
-        var hasBlock = false;
+		var replaceBlock = new RegExp(_fn2.default.initRegExp(block), 'g');
 
-        _fn2.default.each(blockTmpl, function (blocktmpl, _index) {
+		var hasBlock = false;
 
-            _tmplRegexp.BLOCK.test(blocktmpl);
+		_fn2.default.each(blockTmpl, function (blocktmpl, _index) {
 
-            var _name = RegExp.$2,
-                blockContent = RegExp.$3;
+			_tmplRegexp.BLOCK.test(blocktmpl);
 
-            //匹配到name的
-            if (name === _name) {
+			var _name = RegExp.$2,
+			    blockContent = RegExp.$3;
 
-                tmpl = tmpl.replace(replaceBlock, blockContent);
-                hasBlock = true;
-            } else if (_tmplRegexp.BLOCK_APPEND.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_APPEND, '')) {
+			//匹配到name的
+			if (name === _name) {
+				layoutTmpl = layoutTmpl.replace(replaceBlock, blockContent);
+				hasBlock = true;
+			} else if (_tmplRegexp.BLOCK_APPEND.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_APPEND, '')) {
+				layoutTmpl = layoutTmpl.replace(replaceBlock, block.replace(_tmplRegexp.BLOCK, "$3") + blockContent);
+				hasBlock = true;
+			} else if (_tmplRegexp.BLOCK_INSETR.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_INSETR, '')) {
+				layoutTmpl = layoutTmpl.replace(replaceBlock, blockContent + block.replace(_tmplRegexp.BLOCK, "$3"));
+				hasBlock = true;
+			}
 
-                tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(_tmplRegexp.BLOCK, "$3") + blockContent);
-                hasBlock = true;
-            } else if (_tmplRegexp.BLOCK_INSETR.test(_name) && name === _name.replace(_tmplRegexp.BLOCK_INSETR, '')) {
+			_tmplRegexp.BLOCK.lastIndex = 0;
+		});
 
-                tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(_tmplRegexp.BLOCK, "$3"));
-                hasBlock = true;
-            }
-            _tmplRegexp.BLOCK.lastIndex = 0;
-        });
+		/*如果当前的block是在extends的模板中不存在，则显示默认里面的*/
+		if (!hasBlock) {
+			layoutTmpl = layoutTmpl.replace(replaceBlock, block.replace(_tmplRegexp.BLOCK, '$3'));
+		}
+	});
 
-        /*如果当前的block是在extends的模板中不存在，则显示默认里面的*/
-        if (!hasBlock) {
-            tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(_tmplRegexp.BLOCK, '$3'));
-        }
-    });
-
-    this.template = tmpl;
+	this.template = layoutTmpl;
 }
 
 //模板正则配置
@@ -1969,6 +1987,8 @@ var Render = function () {
                         this.tmpl = opts.tmpl;
 
                         this.data = opts.data;
+
+                        console.log(this.tmpl.dom);
 
                         this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
 

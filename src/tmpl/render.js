@@ -6,6 +6,7 @@
 import inBrowser from './in_browser';
 //常用的方法
 import fn from './fn';
+
 class Render {
     constructor(opts) {
 
@@ -18,6 +19,8 @@ class Render {
         this.tmpl = opts.tmpl;
 
         this.data = opts.data;
+        
+        console.log(this.tmpl.dom);
 
         this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
 

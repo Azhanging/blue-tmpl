@@ -14,9 +14,9 @@
 
 #### 静态方法：
 
-**Tmpl.install(constructor):**安装插件
+**Tmpl.install(constructor):** 安装插件
 
-**Tmpl.alias(constructor):**一些别名的常量，替换到模板中对应别名的常量值
+**Tmpl.alias(constructor):** 一些别名的常量，替换到模板中对应别名的常量值
 
 *******
 
@@ -76,7 +76,7 @@ name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-
 也可使用append:加到block的name中，这样设置的节点为在默认内容后插入。
 
 ```html
-<!-extends.tmpl->
+<!--extends.tmpl-->
 <html>
   <body>
   	<header>
@@ -94,15 +94,15 @@ name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-
 ```
 
 ```html
-<!-include.tmpl->
+<!--include.tmpl-->
 <div>
   include content
 </div>
 ```
 
 ```html
-<!-index.tmpl->
-<tmpl-extends file="extends.tmpl"></tmpl-extends> <!-设置包含当前tmpl的文件->
+<!--index.tmpl-->
+<tmpl-extends file="extends.tmpl"></tmpl-extends> <!--设置包含当前tmpl的文件-->
 
 <tmpl-block name="header">
 	<div>
@@ -120,7 +120,7 @@ name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-
 ```
 
 ```html
-<!-这是解析的内容->
+<!--这是解析的内容-->
 <html>
   <body>
   	<header>

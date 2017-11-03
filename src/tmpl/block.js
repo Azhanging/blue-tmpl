@@ -2,7 +2,7 @@
 import fn from './fn';
 
 import {
-    replaceAlias
+	replaceAlias
 } from './tmpl-render';
 
 //在node环境中使用需要用到fs获取文件
@@ -10,71 +10,76 @@ import fs from './fs';
 
 //模板正则配置
 import {
-    BLOCK,
-    BLOCK_APPEND,
-    BLOCK_INSETR,
-    EXTENDS
+	BLOCK,
+	BLOCK_APPEND,
+	BLOCK_INSETR,
+	EXTEND
 } from './tmpl-regexp';
 
 /*替换Block块内容*/
 export default function replaceBlock() {
-    //先设置获取include的引入模板
-    replaceAlias.call(this);
+	//先设置获取include的引入模板
+	replaceAlias.call(this);
 
-    const baseFile = fn.unique(this.template.match(EXTENDS)),
-        /*只获取第一个base的名字*/
-        baseFileName = baseFile.toString().replace(EXTENDS, "$2").split(',')[0];
+	const baseFile = fn.unique(this.template.match(EXTEND)),
+		/*只获取第一个base的名字*/
+		baseFileName = baseFile.toString()
+		.replace(EXTEND, "$2")
+		.split(',')[0];
 
-    /*如果不存在block的内容，直接跳出*/
-    if(baseFileName === '') return;
+	/*如果不存在block的内容，直接跳出*/
+	if(baseFileName === '') return;
 
-    const blockTmpl = fn.unique(this.template.match(BLOCK));
+	//获取入口模板
+	const blockTmpl = fn.unique(this.template.match(BLOCK));
 
-    let tmpl = fs.readFileSync(baseFileName, {
-        encoding: 'UTF8'
-    });
+	//获取继承的模板
+	let layoutTmpl = fs.readFileSync(baseFileName, {
+		encoding: 'UTF8'
+	});
 
-    const baseTmpl = tmpl.match(BLOCK),
-        baseBlockName = baseTmpl.toString().replace(BLOCK, "$2").split(',');
+	//从继承模板中筛选出block
+	const layoutTmplFindBlock = layoutTmpl.match(BLOCK) || [],
+		layoutTmplFindBlockStr = layoutTmplFindBlock.toString(),
+		baseBlockName = layoutTmplFindBlockStr !== '' ? (layoutTmplFindBlockStr.replace(BLOCK, "$2")
+			.split(',')) : [];
 
-    fn.each(baseBlockName, (name, index) => {
+	fn.each(baseBlockName, (name, index) => {
 
-        const replaceBlock = new RegExp(fn.initRegExp(baseTmpl[index]), 'g');
+		const block = layoutTmplFindBlock[index];
 
-        let hasBlock = false;
+		const replaceBlock = new RegExp(fn.initRegExp(block), 'g');
 
-        fn.each(blockTmpl, (blocktmpl, _index) => {
+		let hasBlock = false;
 
-            BLOCK.test(blocktmpl);
+		fn.each(blockTmpl, (blocktmpl, _index) => {
 
-            const _name = RegExp.$2,
-                blockContent = RegExp.$3;
+			BLOCK.test(blocktmpl);
 
-            //匹配到name的
-            if(name === _name) {
+			const _name = RegExp.$2,
+				blockContent = RegExp.$3;
 
-                tmpl = tmpl.replace(replaceBlock, blockContent);
-                hasBlock = true;
+			//匹配到name的
+			if(name === _name) {
+				layoutTmpl = layoutTmpl.replace(replaceBlock, blockContent);
+				hasBlock = true;
+			} else if(BLOCK_APPEND.test(_name) && name === _name.replace(BLOCK_APPEND, '')) {
+				layoutTmpl = layoutTmpl.replace(replaceBlock, block.replace(BLOCK, "$3") + blockContent);
+				hasBlock = true;
+			} else if(BLOCK_INSETR.test(_name) && name === _name.replace(BLOCK_INSETR, '')) {
+				layoutTmpl = layoutTmpl.replace(replaceBlock, blockContent + block.replace(BLOCK, "$3"));
+				hasBlock = true;
+			}
+			
+			BLOCK.lastIndex = 0;
+			
+		});
 
-            } else if(BLOCK_APPEND.test(_name) && name === _name.replace(BLOCK_APPEND, '')) {
+		/*如果当前的block是在extends的模板中不存在，则显示默认里面的*/
+		if(!hasBlock) {
+			layoutTmpl = layoutTmpl.replace(replaceBlock, block.replace(BLOCK, '$3'));
+		}
+	});
 
-                tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(BLOCK, "$3") + blockContent);
-                hasBlock = true;
-
-            } else if(BLOCK_INSETR.test(_name) && name === _name.replace(BLOCK_INSETR, '')) {
-
-                tmpl = tmpl.replace(replaceBlock, blockContent + baseTmpl[index].replace(BLOCK, "$3"));
-                hasBlock = true;
-
-            }
-            BLOCK.lastIndex = 0;
-        });
-
-        /*如果当前的block是在extends的模板中不存在，则显示默认里面的*/
-        if(!hasBlock) {
-            tmpl = tmpl.replace(replaceBlock, baseTmpl[index].replace(BLOCK, '$3'));
-        }
-    });
-
-    this.template = tmpl;
+	this.template = layoutTmpl;
 }

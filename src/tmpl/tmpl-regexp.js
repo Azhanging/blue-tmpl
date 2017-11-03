@@ -1,4 +1,6 @@
-const FILTER_TRANFORM = /[\b\t\r\f\n]/g, //过滤转义字符
+const FILTER_TRANFORM = /[\b\t\f\n\r\v]/g, //过滤转义字符
+	//script的表达是
+	SCRIPT = /<script.*?>([\s\S]*?)<\/script>/g,
 	//转义双引号
 	QUEST = /"/g,
 	//引入模板
@@ -14,10 +16,11 @@ const FILTER_TRANFORM = /[\b\t\r\f\n]/g, //过滤转义字符
 	//inser_block
 	BLOCK_INSETR = /^insert:/,
 	//base路径解析
-	EXTENDS = /<tmpl-extend .*?file=(\'|\")([\s\S]*?)\1.*?\/>/g;
+	EXTEND = /<tmpl-extend .*?file=(\'|\")([\s\S]*?)\1.*?\/>/g;
 
 export {
 	FILTER_TRANFORM,
+	SCRIPT,
 	QUEST,
 	INCLUDE_ID,
 	INCLUDE_FILE,
@@ -25,5 +28,5 @@ export {
 	BLOCK,
 	BLOCK_APPEND,
 	BLOCK_INSETR,
-	EXTENDS
+	EXTEND
 }
