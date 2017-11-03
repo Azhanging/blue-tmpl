@@ -16,9 +16,15 @@ var tmpl = fs.readFileSync('./tmpl-views/tmpl1.tmpl', {
 	encoding: 'UTF8'
 });
 
+let time = new Date().getTime();
+
 let t = new Tmpl({
 	el: tmpl
 });
+
+console.log('处理耗时:' + (new Date().getTime() - time));
+
+
 
 let http = require('http');
 
@@ -29,6 +35,7 @@ for(var i = 0; i < 10; i++) {
 }
 
 http.createServer(function(req, res) {
+    
 	
 	if(/.*\.js(.*?)/.test(req.url)) {
 
@@ -43,14 +50,19 @@ http.createServer(function(req, res) {
 		res.write(js);
 
 	} else {
+	    
 
 		res.writeHead(200, {
 			'Content-Type': 'text-plain'
 		});
 		
 		res.write(t.render(data).dom);
+		
+		delete t.render(data).dom;
 
+		
 	}
+	
 
 	res.end();
 

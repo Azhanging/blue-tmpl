@@ -20,7 +20,7 @@ class Render {
 
         this.data = opts.data;
         
-        console.log(this.tmpl.dom);
+//      console.log(this.tmpl.dom);
 
         this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
 
