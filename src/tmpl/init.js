@@ -24,14 +24,16 @@ import {
 } from './router';
 
 export default function init() {
-	//构建开始的钩子
-	fn.run(this.config.created, this);
+    //构建开始的钩子
+    fn.run(this.config.create, this);
 	//初始配置信息
 	this.el = setEl.call(this);
 	//初始化方法
 	setInstance.call(this, 'methods');
 	//初始化数据
 	setInstance.call(this, 'data');
+	//构建开始后的钩子
+    fn.run(this.config.created, this);
 	//初始化路由
 	setRouter.call(this);
 	//查找模板

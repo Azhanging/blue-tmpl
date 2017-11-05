@@ -30,27 +30,28 @@ class Render {
     //在父节点中插入解析后的模板
     appendTo(el, cb) {
 
-        const fn = this.tmpl.fn;
+        const tmpl = this.tmpl,
+            fn = tmpl.fn;
 
         if(el.nodeType === 1) el.appendChild(this.fragment);
 
-        else fn.getEl(el).appendChild(this.fragment);
+        else tmpl.getEl(el).appendChild(this.fragment);
 
         fn.cb(cb, this.tmpl);
 
-        return this.tmpl;
+        return tmpl;
     }
     //在el子节点ex中插入解析后的模板	
     insertBefore(el, ex, cb) {
 
-        const ctx = this.tmpl,
-            fn = ctx.fn;
+        const tmpl = this.tmpl,
+            fn = tmpl.fn;
 
-        ctx.getEl(el).insertBefore(this.fragment, ex);
+        tmpl.getEl(el).insertBefore(this.fragment, ex);
 
-        fn.cb(cb, ctx);
+        fn.cb(cb, tmpl);
 
-        return this.tmpl;
+        return tmpl;
     }
 
 }

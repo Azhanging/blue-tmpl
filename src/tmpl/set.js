@@ -4,11 +4,12 @@ import fn from './fn';
 import inBrowser from './in_browser';
 
 //初始化时间中的参数
-export function setEvent() {
-	//初始化事件
-	this.events = {};
-	//设置事件类型
-	this.eventType = [];
+export function setEvent() {	
+	this._event = {
+	    events :{},
+	    eventType:[],
+	    eventEl:[]
+	}
 }
 
 //设置实例

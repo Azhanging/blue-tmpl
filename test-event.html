@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<body>
+		
+		<div id="div1">
+			<button class="on-event0">1</button>
+			<div id="div2">
+				<button class="on-event0">2</button>
+			</div>
+		</div>
+		
+		<div id="div3">
+			<button class="on-event0">3</button>
+			<div id="div4">
+				<button class="on-event0">4</button>
+			</div>
+		</div>
+		
+		<script src="dist/js/tmpl.js" type="text/javascript" charset="utf-8"></script>
+		<script type="text/javascript">
+			new Tmpl({
+				events:function(){
+					this.on(this.getEl('div1'),'on-event0','click',function(){
+						console.log('on-event1');
+					});
+					
+					this.on(this.getEl('div2'),'on-event0','click',function(event){
+						console.log('on-event2');
+					});
+					
+					this.on(this.getEl('div3'),'on-event0','click',function(){
+						console.log('on-event3');
+					});
+					
+					this.on(this.getEl('div3'),'on-event0','mouseout',function(){
+						console.log('moveout on-event3');
+					});
+					
+					this.on(this.getEl('div4'),'on-event0','click',function(event){
+						console.log('on-event4');
+					});
+				}
+			})
+		</script>
+	</body>
+</html>
