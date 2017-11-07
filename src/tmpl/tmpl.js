@@ -10,6 +10,8 @@ import Dom from './dom';
 import config from './config';
 //转义html
 import escapeCode from './escapeCode';
+//set
+import { setEl } from './set';
 
 export default class Tmpl extends Dom {
     //Tmpl构造
@@ -40,7 +42,7 @@ export default class Tmpl extends Dom {
 
     //添加数据更新模板
     update() {
-        this.template = this.config.template;
+        this.template = setEl.call(this);
         setDom.call(this);
     }
 

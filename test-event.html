@@ -22,7 +22,10 @@
 		
 		<script src="dist/js/tmpl.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
-			new Tmpl({
+			var tmpl = new Tmpl({
+				template:`
+					<div>1</div>
+				`,
 				events:function(){
 					this.on(this.getEl('div1'),'on-event0','click',function(){
 						console.log('on-event1');
@@ -44,7 +47,7 @@
 						console.log('on-event4');
 					});
 				}
-			})
+			});
 		</script>
 	</body>
 </html>

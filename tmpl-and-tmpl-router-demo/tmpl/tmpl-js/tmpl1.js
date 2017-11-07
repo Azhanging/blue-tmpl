@@ -4,11 +4,11 @@ demand.define(function() {
 	function tmpl1() {
 
 		var mBtn = new Tmpl({
-			el: "m-btn"
+			template: "m-btn"
 		});
 
 		new Tmpl({
-			el: "tmpl1",
+			template: "tmpl1",
 			data: {
 				isReady: false,
 				i: 0

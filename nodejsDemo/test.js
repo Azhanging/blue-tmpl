@@ -19,7 +19,7 @@ var tmpl = fs.readFileSync('./tmpl-views/tmpl1.tmpl', {
 let time = new Date().getTime();
 
 let t = new Tmpl({
-	el: tmpl
+	template: tmpl
 });
 
 console.log('处理耗时:' + (new Date().getTime() - time));

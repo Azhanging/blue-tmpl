@@ -16,7 +16,7 @@
 
 **Tmpl.install(constructor):** 安装插件
 
-**Tmpl.alias(constructor):** 一些别名的常量，替换到模板中对应别名的常量值
+**Tmpl.alias(objs):** 一些别名的常量，替换到模板中对应别名的常量值，key:为别名名称，value为别名的具体值
 
 *******
 
@@ -142,7 +142,7 @@ name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-
 
 *************
 
-##### el : 绑定模板的script的id，在使用script模板的时候需要添加 "text/template"，如：
+##### template : 绑定模板的script的id，在使用script模板的时候需要添加 "text/template"，如：
 
 ```html
 <script id="temp" type="text/template"></script>
@@ -231,7 +231,7 @@ app.b // 2
 </script>
 
 <script>
-	new Tmpl({el:"tmpl"}).render({title:'我是标题'，content:"我是内容"}).appendTo('app');
+	new Tmpl({template:"tmpl"}).render({title:'我是标题'，content:"我是内容"}).appendTo('app');
 </script>
 
 ```

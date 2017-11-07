@@ -4,7 +4,7 @@ demand.define(function() {
 	var router = Tmpl.router;
 
 	var tmpl = new Tmpl({
-		el: 'detail',
+		template: 'detail',
 		data: {
 			page: ''
 		},

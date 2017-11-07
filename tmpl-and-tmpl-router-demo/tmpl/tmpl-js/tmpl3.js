@@ -3,7 +3,7 @@ demand.define(function() {
 
 	return function tmpl1() {
 		new Tmpl({
-			el: "tmpl3",
+			template: "tmpl3",
 			data: {
 				i: 0,
 				isReady: false

@@ -27,7 +27,7 @@ export default function init() {
     //构建开始的钩子
     fn.run(this.config.create, this);
 	//初始配置信息
-	this.el = setEl.call(this);
+	this.template = setEl.call(this);
 	//初始化方法
 	setInstance.call(this, 'methods');
 	//初始化数据
@@ -37,8 +37,7 @@ export default function init() {
 	//初始化路由
 	setRouter.call(this);
 	//查找模板
-	if(this.el) {
-		this.template = setTemplate.call(this);
+	if(this.template) {
 
 		setRegExp.call(this);
 		//转化为js执行

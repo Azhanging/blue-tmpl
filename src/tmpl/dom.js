@@ -98,9 +98,9 @@ class Dom {
         if(arguments.length === 4) {
 
             //初始化事件
-            if(this._event.eventEl.indexOf(ele) == -1) {
+            if(this.constructor._event.eventEl.indexOf(ele) == -1) {
                 
-                this._event.eventEl.push(ele);
+                this.constructor._event.eventEl.push(ele);
                 
                 ele.event = {
                     eventType:[],
@@ -139,14 +139,14 @@ class Dom {
     }
 
     //取消绑定事件
-    off(ctx, exp, type, cb) {
+    off(ele, exp, type, cb) {
         if(arguments.length === 4) {
             var eventIndex = this.events[type][exp].indexOf(cb);
             if(eventIndex != -1)
-                this._event.events[type][exp].splice(eventIndex, 1);
+                ele.events[type][exp].splice(eventIndex, 1);
         } else if(arguments.length === 3) {
             /*删除事件*/
-            fn.off(ctx, type, cb);
+            fn.off(ele, type, cb);
         }
         return this;
     }

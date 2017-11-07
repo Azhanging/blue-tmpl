@@ -4,8 +4,9 @@ import fn from './fn';
 import inBrowser from './in_browser';
 
 //初始化时间中的参数
-export function setEvent() {	
-	this._event = {
+export function setEvent() {
+	if(this.constructor._event) return;
+	this.constructor._event = {
 	    events :{},
 	    eventType:[],
 	    eventEl:[]
@@ -26,23 +27,16 @@ export function setInstance(type) {
 	});
 }
 
-//设置this.el
+//设置this.template
 export function setEl(){
 	if(inBrowser) {
-		return this.getEl(this.config.el)
+		try{			
+			return this.getEl(this.config.template).innerHTML; 
+		}catch(e){
+			return null;
+		}
 	} else {
-		return this.config.el;
-	}
-}
-
-//设置当前的template
-export function setTemplate(){
-	if(inBrowser) {
-		this.config.template = this.el.innerHTML;
-		return this.el.innerHTML;
-	} else {
-		this.config.template = this.el;
-		return this.el;
+		return this.config.template;
 	}
 }
 

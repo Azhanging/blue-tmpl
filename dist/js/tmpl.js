@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Sun Nov 05 2017 23:01:40 GMT+0800 (中国标准时间)
+ * 			time:Tue Nov 07 2017 18:04:45 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/dist";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 9);
+/******/ 	return __webpack_require__(__webpack_require__.s = 10);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -454,6 +454,71 @@ exports.default = fs;
 
 
 Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.setEvent = setEvent;
+exports.setInstance = setInstance;
+exports.setEl = setEl;
+
+var _fn = __webpack_require__(0);
+
+var _fn2 = _interopRequireDefault(_fn);
+
+var _in_browser = __webpack_require__(1);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//初始化时间中的参数
+//常用的方法
+function setEvent() {
+	if (this.constructor._event) return;
+	this.constructor._event = {
+		events: {},
+		eventType: [],
+		eventEl: []
+	};
+}
+
+//设置实例
+
+//运行环境是否在浏览器
+function setInstance(type) {
+	var _this = this;
+
+	var get = this.config[type];
+
+	if (!_fn2.default.isObj(get)) {
+		return;
+	}
+
+	_fn2.default.each(get, function (_get, key) {
+		_this[key] = _get;
+	});
+}
+
+//设置this.template
+function setEl() {
+	if (_in_browser2.default) {
+		try {
+			return this.getEl(this.config.template).innerHTML;
+		} catch (e) {
+			return null;
+		}
+	} else {
+		return this.config.template;
+	}
+}
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
     value: true
 });
 exports.setRegExp = setRegExp;
@@ -468,11 +533,11 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _include = __webpack_require__(13);
+var _include = __webpack_require__(14);
 
 var _include2 = _interopRequireDefault(_include);
 
-var _block = __webpack_require__(10);
+var _block = __webpack_require__(11);
 
 var _block2 = _interopRequireDefault(_block);
 
@@ -646,7 +711,7 @@ function filterScriptTag(string, scriptTags) {
 }
 
 /***/ }),
-/* 6 */
+/* 7 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -676,7 +741,7 @@ module.exports = function (module) {
 };
 
 /***/ }),
-/* 7 */
+/* 8 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -731,7 +796,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 exports.default = true;
 
 /***/ }),
-/* 8 */
+/* 9 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -743,11 +808,11 @@ Object.defineProperty(exports, "__esModule", {
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
 
-var _init2 = __webpack_require__(14);
+var _init2 = __webpack_require__(15);
 
 var _init3 = _interopRequireDefault(_init2);
 
-var _render = __webpack_require__(15);
+var _render = __webpack_require__(16);
 
 var _render2 = _interopRequireDefault(_render);
 
@@ -755,17 +820,19 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _dom = __webpack_require__(12);
+var _dom = __webpack_require__(13);
 
 var _dom2 = _interopRequireDefault(_dom);
 
-var _config = __webpack_require__(11);
+var _config = __webpack_require__(12);
 
 var _config2 = _interopRequireDefault(_config);
 
 var _escapeCode = __webpack_require__(3);
 
 var _escapeCode2 = _interopRequireDefault(_escapeCode);
+
+var _set = __webpack_require__(5);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -784,6 +851,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 //config配置
 
 //转义html
+
+//set
 
 
 var Tmpl = function (_Dom) {
@@ -829,7 +898,7 @@ var Tmpl = function (_Dom) {
     }, {
         key: 'update',
         value: function update() {
-            this.template = this.config.template;
+            this.template = _set.setEl.call(this);
             setDom.call(this);
         }
 
@@ -872,7 +941,7 @@ Tmpl.prototype.fn = _fn2.default;
 Tmpl.alias = {};
 
 /***/ }),
-/* 9 */
+/* 10 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -883,11 +952,11 @@ var _typeof = typeof Symbol === "function" && typeof Symbol.iterator === "symbol
 //Tmpl 文件入口
 
 
-var _compatibility = __webpack_require__(7);
+var _compatibility = __webpack_require__(8);
 
 var _compatibility2 = _interopRequireDefault(_compatibility);
 
-var _tmpl = __webpack_require__(8);
+var _tmpl = __webpack_require__(9);
 
 var _tmpl2 = _interopRequireDefault(_tmpl);
 
@@ -899,10 +968,10 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
     _tmpl2.default.version = "v1.0.5";
     return _tmpl2.default;
 });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(6)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
 
 /***/ }),
-/* 10 */
+/* 11 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -917,7 +986,7 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRender = __webpack_require__(5);
+var _tmplRender = __webpack_require__(6);
 
 var _fs = __webpack_require__(4);
 
@@ -998,7 +1067,7 @@ function replaceBlock() {
 //模板正则配置
 
 /***/ }),
-/* 11 */
+/* 12 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1019,7 +1088,7 @@ var config = {
 exports.default = config;
 
 /***/ }),
-/* 12 */
+/* 13 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1148,9 +1217,9 @@ var Dom = function () {
             if (arguments.length === 4) {
 
                 //初始化事件
-                if (this._event.eventEl.indexOf(ele) == -1) {
+                if (this.constructor._event.eventEl.indexOf(ele) == -1) {
 
-                    this._event.eventEl.push(ele);
+                    this.constructor._event.eventEl.push(ele);
 
                     ele.event = {
                         eventType: [],
@@ -1191,13 +1260,13 @@ var Dom = function () {
 
     }, {
         key: 'off',
-        value: function off(ctx, exp, type, cb) {
+        value: function off(ele, exp, type, cb) {
             if (arguments.length === 4) {
                 var eventIndex = this.events[type][exp].indexOf(cb);
-                if (eventIndex != -1) this._event.events[type][exp].splice(eventIndex, 1);
+                if (eventIndex != -1) ele.events[type][exp].splice(eventIndex, 1);
             } else if (arguments.length === 3) {
                 /*删除事件*/
-                _fn2.default.off(ctx, type, cb);
+                _fn2.default.off(ele, type, cb);
             }
             return this;
         }
@@ -1820,7 +1889,7 @@ var Dom = function () {
 exports.default = Dom;
 
 /***/ }),
-/* 13 */
+/* 14 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1912,7 +1981,7 @@ function replaceInclude() {
 //常用的方法
 
 /***/ }),
-/* 14 */
+/* 15 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -1927,7 +1996,7 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRender = __webpack_require__(5);
+var _tmplRender = __webpack_require__(6);
 
 var _tmplRender2 = _interopRequireDefault(_tmplRender);
 
@@ -1935,9 +2004,9 @@ var _in_browser = __webpack_require__(1);
 
 var _in_browser2 = _interopRequireDefault(_in_browser);
 
-var _set = __webpack_require__(17);
+var _set = __webpack_require__(5);
 
-var _router = __webpack_require__(16);
+var _router = __webpack_require__(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -1949,7 +2018,7 @@ function init() {
 	//构建开始的钩子
 	_fn2.default.run(this.config.create, this);
 	//初始配置信息
-	this.el = _set.setEl.call(this);
+	this.template = _set.setEl.call(this);
 	//初始化方法
 	_set.setInstance.call(this, 'methods');
 	//初始化数据
@@ -1959,8 +2028,7 @@ function init() {
 	//初始化路由
 	_router.setRouter.call(this);
 	//查找模板
-	if (this.el) {
-		this.template = _set.setTemplate.call(this);
+	if (this.template) {
 
 		_tmplRender.setRegExp.call(this);
 		//转化为js执行
@@ -1983,7 +2051,7 @@ function init() {
 //解析方法
 
 /***/ }),
-/* 15 */
+/* 16 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2075,7 +2143,7 @@ var Render = function () {
 exports.default = Render;
 
 /***/ }),
-/* 16 */
+/* 17 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2110,78 +2178,6 @@ function checkRouterStatus() {
 	    status = this.config.async;
 	if (!(status === false) && router) {
 		router.changeRoutereStatus(true);
-	}
-}
-
-/***/ }),
-/* 17 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.setEvent = setEvent;
-exports.setInstance = setInstance;
-exports.setEl = setEl;
-exports.setTemplate = setTemplate;
-
-var _fn = __webpack_require__(0);
-
-var _fn2 = _interopRequireDefault(_fn);
-
-var _in_browser = __webpack_require__(1);
-
-var _in_browser2 = _interopRequireDefault(_in_browser);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//初始化时间中的参数
-//常用的方法
-function setEvent() {
-	this._event = {
-		events: {},
-		eventType: [],
-		eventEl: []
-	};
-}
-
-//设置实例
-
-//运行环境是否在浏览器
-function setInstance(type) {
-	var _this = this;
-
-	var get = this.config[type];
-
-	if (!_fn2.default.isObj(get)) {
-		return;
-	}
-
-	_fn2.default.each(get, function (_get, key) {
-		_this[key] = _get;
-	});
-}
-
-//设置this.el
-function setEl() {
-	if (_in_browser2.default) {
-		return this.getEl(this.config.el);
-	} else {
-		return this.config.el;
-	}
-}
-
-//设置当前的template
-function setTemplate() {
-	if (_in_browser2.default) {
-		this.config.template = this.el.innerHTML;
-		return this.el.innerHTML;
-	} else {
-		this.config.template = this.el;
-		return this.el;
 	}
 }
 
