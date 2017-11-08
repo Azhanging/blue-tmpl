@@ -9,6 +9,8 @@ import fn from './fn';
 import replaceInclude from './include';
 //extend
 import replaceBlock from './block';
+//html中的转义
+import escapeCode from './escapeCode';
 //模板正则配置
 import {
     FILTER_TRANFORM,
@@ -19,8 +21,6 @@ import {
     EXTEND
 } from './tmpl-regexp';
 
-//html中的转义
-import escapeCode from './escapeCode';
 
 //由于模块接口中都是只读的，不能放在配置中；
 let SCRIPT_REGEXP,
@@ -63,7 +63,7 @@ export function setRegExp() {
 }
 
 //初始化dom生成
-export function setDom() {
+export function render() {
     //node中使用block
     if(!inBrowser) {
         replaceBlock.call(this);

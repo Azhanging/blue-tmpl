@@ -98,9 +98,9 @@ class Dom {
         if(arguments.length === 4) {
 
             //初始化事件
-            if(this.constructor._event.eventEl.indexOf(ele) == -1) {
+            if(this.constructor._event_.eventEl.indexOf(ele) == -1) {
                 
-                this.constructor._event.eventEl.push(ele);
+                this.constructor._event_.eventEl.push(ele);
                 
                 ele.event = {
                     eventType:[],

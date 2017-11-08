@@ -12,6 +12,10 @@ import config from './config';
 import escapeCode from './escapeCode';
 //set
 import { setEl } from './set';
+//tmpl的render解析
+import {
+	render
+} from './tmpl-render';
 
 export default class Tmpl extends Dom {
     //Tmpl构造
@@ -25,6 +29,17 @@ export default class Tmpl extends Dom {
     static install(constructor) {
         constructor.install(this);
     }
+    
+    //直接解析
+    static render(domStr,data){
+    	const tmpl = new this({
+    		template:domStr
+    	});
+    	
+    	console.log(tmpl);
+    	
+    	return tmpl.render(data).dom;
+    }
 
     //初始化对象
     init() {
@@ -33,9 +48,8 @@ export default class Tmpl extends Dom {
 
     //解析模板和数据
     render(data) {
-        var tmpl = this;
         return new Render({
-            tmpl: tmpl,
+            tmpl: this,
             data: data
         });
     }
@@ -43,7 +57,8 @@ export default class Tmpl extends Dom {
     //添加数据更新模板
     update() {
         this.template = setEl.call(this);
-        setDom.call(this);
+        render.call(this);
+        return this;
     }
 
     /*回调*/

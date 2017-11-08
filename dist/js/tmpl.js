@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Tue Nov 07 2017 18:04:45 GMT+0800 (中国标准时间)
+ * 			time:Wed Nov 08 2017 09:59:18 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -407,122 +407,8 @@ exports.EXTEND = EXTEND;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-// html转义
-var escapeCode = {
-    "&": "&amp;",
-    "<": "&lt;",
-    ">": "&gt;",
-    '"': "&quot;",
-    "'": "&#x27;",
-    "`": "&#x60;"
-};
-
-exports.default = escapeCode;
-
-/***/ }),
-/* 4 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
-
-var _in_browser = __webpack_require__(1);
-
-var _in_browser2 = _interopRequireDefault(_in_browser);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//在node环境中使用需要用到fs获取文件
-var fs = void 0; //运行环境是否在浏览器
-
-
-if (!_in_browser2.default) {
-    fs = require('fs');
-}
-
-exports.default = fs;
-
-/***/ }),
-/* 5 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-	value: true
-});
-exports.setEvent = setEvent;
-exports.setInstance = setInstance;
-exports.setEl = setEl;
-
-var _fn = __webpack_require__(0);
-
-var _fn2 = _interopRequireDefault(_fn);
-
-var _in_browser = __webpack_require__(1);
-
-var _in_browser2 = _interopRequireDefault(_in_browser);
-
-function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
-
-//初始化时间中的参数
-//常用的方法
-function setEvent() {
-	if (this.constructor._event) return;
-	this.constructor._event = {
-		events: {},
-		eventType: [],
-		eventEl: []
-	};
-}
-
-//设置实例
-
-//运行环境是否在浏览器
-function setInstance(type) {
-	var _this = this;
-
-	var get = this.config[type];
-
-	if (!_fn2.default.isObj(get)) {
-		return;
-	}
-
-	_fn2.default.each(get, function (_get, key) {
-		_this[key] = _get;
-	});
-}
-
-//设置this.template
-function setEl() {
-	if (_in_browser2.default) {
-		try {
-			return this.getEl(this.config.template).innerHTML;
-		} catch (e) {
-			return null;
-		}
-	} else {
-		return this.config.template;
-	}
-}
-
-/***/ }),
-/* 6 */
-/***/ (function(module, exports, __webpack_require__) {
-
-"use strict";
-
-
-Object.defineProperty(exports, "__esModule", {
-    value: true
-});
 exports.setRegExp = setRegExp;
-exports.setDom = setDom;
+exports.render = render;
 exports.replaceAlias = replaceAlias;
 
 var _in_browser = __webpack_require__(1);
@@ -541,17 +427,17 @@ var _block = __webpack_require__(11);
 
 var _block2 = _interopRequireDefault(_block);
 
-var _tmplRegexp = __webpack_require__(2);
-
-var _escapeCode = __webpack_require__(3);
+var _escapeCode = __webpack_require__(4);
 
 var _escapeCode2 = _interopRequireDefault(_escapeCode);
+
+var _tmplRegexp = __webpack_require__(2);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //由于模块接口中都是只读的，不能放在配置中；
 
-//模板正则配置
+//html中的转义
 
 //include
 /*
@@ -583,8 +469,7 @@ CLOSE_TAG_REGEXP = void 0;
 
 //设置正则
 
-
-//html中的转义
+//模板正则配置
 
 //extend
 
@@ -612,7 +497,7 @@ function setRegExp() {
 }
 
 //初始化dom生成
-function setDom() {
+function render() {
     //node中使用block
     if (!_in_browser2.default) {
         _block2.default.call(this);
@@ -708,6 +593,116 @@ function filterScriptTag(string, scriptTags) {
         }
     });
     return dom.join("");
+}
+
+/***/ }),
+/* 4 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+// html转义
+var escapeCode = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': "&quot;",
+    "'": "&#x27;",
+    "`": "&#x60;"
+};
+
+exports.default = escapeCode;
+
+/***/ }),
+/* 5 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+    value: true
+});
+
+var _in_browser = __webpack_require__(1);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//在node环境中使用需要用到fs获取文件
+var fs = void 0; //运行环境是否在浏览器
+
+
+if (!_in_browser2.default) {
+    fs = require('fs');
+}
+
+exports.default = fs;
+
+/***/ }),
+/* 6 */
+/***/ (function(module, exports, __webpack_require__) {
+
+"use strict";
+
+
+Object.defineProperty(exports, "__esModule", {
+	value: true
+});
+exports.setEvent = setEvent;
+exports.setInstance = setInstance;
+exports.setEl = setEl;
+
+var _fn = __webpack_require__(0);
+
+var _fn2 = _interopRequireDefault(_fn);
+
+var _in_browser = __webpack_require__(1);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
+function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
+
+//初始化时间中的参数
+//常用的方法
+function setEvent() {
+	if (this.constructor._event_) return;
+	this.constructor._event_ = {
+		eventEl: []
+	};
+}
+
+//设置实例属性
+
+//运行环境是否在浏览器
+function setInstance(type) {
+	var _this = this;
+
+	var get = this.config[type];
+	if (!_fn2.default.isObj(get)) {
+		return;
+	}
+	_fn2.default.each(get, function (_get, key) {
+		_this[key] = _get;
+	});
+}
+
+//设置this.template
+function setEl() {
+	if (_in_browser2.default) {
+		try {
+			return this.getEl(this.config.template).innerHTML;
+		} catch (e) {
+			return this.config.template;
+		}
+	} else {
+		return this.config.template;
+	}
 }
 
 /***/ }),
@@ -828,11 +823,13 @@ var _config = __webpack_require__(12);
 
 var _config2 = _interopRequireDefault(_config);
 
-var _escapeCode = __webpack_require__(3);
+var _escapeCode = __webpack_require__(4);
 
 var _escapeCode2 = _interopRequireDefault(_escapeCode);
 
-var _set = __webpack_require__(5);
+var _set = __webpack_require__(6);
+
+var _tmplRender = __webpack_require__(3);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
@@ -853,6 +850,8 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 //转义html
 
 //set
+
+//tmpl的render解析
 
 
 var Tmpl = function (_Dom) {
@@ -886,9 +885,8 @@ var Tmpl = function (_Dom) {
     }, {
         key: 'render',
         value: function render(data) {
-            var tmpl = this;
             return new _render2.default({
-                tmpl: tmpl,
+                tmpl: this,
                 data: data
             });
         }
@@ -899,7 +897,8 @@ var Tmpl = function (_Dom) {
         key: 'update',
         value: function update() {
             this.template = _set.setEl.call(this);
-            setDom.call(this);
+            _tmplRender.render.call(this);
+            return this;
         }
 
         /*回调*/
@@ -925,6 +924,20 @@ var Tmpl = function (_Dom) {
         key: 'install',
         value: function install(constructor) {
             constructor.install(this);
+        }
+
+        //直接解析
+
+    }, {
+        key: 'render',
+        value: function render(domStr, data) {
+            var tmpl = new this({
+                template: domStr
+            });
+
+            console.log(tmpl);
+
+            return tmpl.render(data).dom;
         }
     }]);
 
@@ -986,9 +999,9 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRender = __webpack_require__(6);
+var _tmplRender = __webpack_require__(3);
 
-var _fs = __webpack_require__(4);
+var _fs = __webpack_require__(5);
 
 var _fs2 = _interopRequireDefault(_fs);
 
@@ -1217,9 +1230,9 @@ var Dom = function () {
             if (arguments.length === 4) {
 
                 //初始化事件
-                if (this.constructor._event.eventEl.indexOf(ele) == -1) {
+                if (this.constructor._event_.eventEl.indexOf(ele) == -1) {
 
-                    this.constructor._event.eventEl.push(ele);
+                    this.constructor._event_.eventEl.push(ele);
 
                     ele.event = {
                         eventType: [],
@@ -1908,7 +1921,7 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _fs = __webpack_require__(4);
+var _fs = __webpack_require__(5);
 
 var _fs2 = _interopRequireDefault(_fs);
 
@@ -1996,23 +2009,15 @@ var _fn = __webpack_require__(0);
 
 var _fn2 = _interopRequireDefault(_fn);
 
-var _tmplRender = __webpack_require__(6);
+var _tmplRender = __webpack_require__(3);
 
-var _tmplRender2 = _interopRequireDefault(_tmplRender);
-
-var _in_browser = __webpack_require__(1);
-
-var _in_browser2 = _interopRequireDefault(_in_browser);
-
-var _set = __webpack_require__(5);
+var _set = __webpack_require__(6);
 
 var _router = __webpack_require__(17);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 //初始化设置
-
-//运行环境是否在浏览器
 //常用的方法
 function init() {
 	//构建开始的钩子
@@ -2029,10 +2034,10 @@ function init() {
 	_router.setRouter.call(this);
 	//查找模板
 	if (this.template) {
-
+		//创建配置的解析正则
 		_tmplRender.setRegExp.call(this);
 		//转化为js执行
-		_tmplRender.setDom.call(this);
+		_tmplRender.render.call(this);
 	}
 	//初始化事件
 	_set.setEvent.call(this);
@@ -2047,8 +2052,6 @@ function init() {
 //router相关
 
 //tmpl的render解析
-
-//解析方法
 
 /***/ }),
 /* 16 */

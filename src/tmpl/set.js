@@ -5,23 +5,18 @@ import inBrowser from './in_browser';
 
 //初始化时间中的参数
 export function setEvent() {
-	if(this.constructor._event) return;
-	this.constructor._event = {
-	    events :{},
-	    eventType:[],
+	if(this.constructor._event_) return;
+	this.constructor._event_ = {
 	    eventEl:[]
 	}
 }
 
-//设置实例
+//设置实例属性
 export function setInstance(type) {
-
 	const get = this.config[type];
-
 	if(!fn.isObj(get)) {
 		return;
 	}
-
 	fn.each(get, (_get, key) => {
 		this[key] = _get;
 	});
@@ -33,7 +28,7 @@ export function setEl(){
 		try{			
 			return this.getEl(this.config.template).innerHTML; 
 		}catch(e){
-			return null;
+			return this.config.template;
 		}
 	} else {
 		return this.config.template;

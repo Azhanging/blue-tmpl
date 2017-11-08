@@ -1,20 +1,15 @@
 //常用的方法
 import fn from './fn';
-//解析方法
-import tmplRender from './tmpl-render';
-//运行环境是否在浏览器
-import inBrowser from './in_browser';
 //tmpl的render解析
 import {
 	setRegExp,
-	setDom
+	render
 } from './tmpl-render';
 //初始化设置
 import {
 	setInstance,
 	setEvent,
-	setEl,
-	setTemplate
+	setEl
 } from './set';
 
 //router相关
@@ -38,10 +33,10 @@ export default function init() {
 	setRouter.call(this);
 	//查找模板
 	if(this.template) {
-
+		//创建配置的解析正则
 		setRegExp.call(this);
 		//转化为js执行
-		setDom.call(this);
+		render.call(this);
 	}
 	//初始化事件
 	setEvent.call(this);
