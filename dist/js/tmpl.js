@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Wed Nov 08 2017 09:59:18 GMT+0800 (中国标准时间)
+ * 			time:Wed Nov 08 2017 22:59:08 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -353,11 +353,8 @@ exports.default = inBrowser;
 Object.defineProperty(exports, "__esModule", {
     value: true
 });
-var FILTER_TRANFORM = /[\b\t\f\n\r\v]/g,
-    //过滤转义字符
-//script输出节点信息
-FILTER_SCRIPT = /[\b\f\r\v]/g,
-
+var FILTER_TRANFORM = /[\b\f\r\v]/g,
+    //过滤转义字符  
 //script的表达是
 SCRIPT_TAG = /<script.*?>([\s\S]*?)<\/script>/g,
 
@@ -386,7 +383,6 @@ BLOCK_INSETR = /^insert:/,
 EXTEND = /<tmpl-extend .*?file=(\'|\")([\s\S]*?)\1.*?\/>/g;
 
 exports.FILTER_TRANFORM = FILTER_TRANFORM;
-exports.FILTER_SCRIPT = FILTER_SCRIPT;
 exports.SCRIPT_TAG = SCRIPT_TAG;
 exports.QUEST = QUEST;
 exports.INCLUDE_ID = INCLUDE_ID;
@@ -577,7 +573,7 @@ function setSeize() {
 function filterTransferredMeaning(string) {
     //检查script的标签
     var scriptTags = string.match(_tmplRegexp.SCRIPT_TAG),
-        _string = string.replace(_tmplRegexp.SCRIPT_TAG, '___SCRIPT_TAG___').replace(_tmplRegexp.FILTER_TRANFORM, "").replace(_tmplRegexp.QUEST, '\\\"');
+        _string = filterDomStr(string.replace(_tmplRegexp.SCRIPT_TAG, '___SCRIPT_TAG___'));
 
     return !scriptTags ? _string : filterScriptTag(_string, scriptTags);
 }
@@ -589,10 +585,15 @@ function filterScriptTag(string, scriptTags) {
     _fn2.default.each(splitScriptTag, function (script, index) {
         dom.push(script);
         if (scriptTags[index]) {
-            dom.push(scriptTags[index].replace(_tmplRegexp.QUEST, '\\\"').replace(_tmplRegexp.FILTER_SCRIPT, '').replace(/\n/g, '\\n'));
+            dom.push(filterDomStr(scriptTags[index]));
         }
     });
     return dom.join("");
+}
+
+//过滤方法
+function filterDomStr(domStr) {
+    return domStr.replace(_tmplRegexp.FILTER_TRANFORM, '').replace(/\n/g, '\\n').replace(_tmplRegexp.QUEST, '\\\"');
 }
 
 /***/ }),

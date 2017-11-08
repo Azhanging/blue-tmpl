@@ -14,7 +14,6 @@ import escapeCode from './escapeCode';
 //模板正则配置
 import {
     FILTER_TRANFORM,
-    FILTER_SCRIPT,
     SCRIPT_TAG,
     QUEST,
     BLOCK,
@@ -151,10 +150,7 @@ function setSeize() {
 function filterTransferredMeaning(string) {
     //检查script的标签
     const scriptTags = string.match(SCRIPT_TAG),
-        _string = string
-        .replace(SCRIPT_TAG, '___SCRIPT_TAG___')
-        .replace(FILTER_TRANFORM, "")
-        .replace(QUEST, '\\\"');
+        _string = filterDomStr(string.replace(SCRIPT_TAG, '___SCRIPT_TAG___'));
 
     return !scriptTags ? _string : (filterScriptTag(_string, scriptTags));
 }
@@ -166,12 +162,15 @@ function filterScriptTag(string, scriptTags) {
     fn.each(splitScriptTag, (script, index) => {
         dom.push(script);
         if(scriptTags[index]) {
-            dom.push(scriptTags[index]
-                .replace(QUEST, '\\\"')
-                .replace(FILTER_SCRIPT, '')
-                .replace(/\n/g, '\\n')
-            );
+            dom.push(filterDomStr(scriptTags[index]));
         }
     });
     return dom.join("");
+}
+
+//过滤方法
+function filterDomStr(domStr){
+    return domStr.replace(FILTER_TRANFORM, '')
+    .replace(/\n/g, '\\n')
+    .replace(QUEST, '\\\"');
 }

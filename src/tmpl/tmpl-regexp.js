@@ -1,6 +1,4 @@
-const FILTER_TRANFORM = /[\b\t\f\n\r\v]/g, //过滤转义字符
-    //script输出节点信息
-    FILTER_SCRIPT = /[\b\f\r\v]/g,    
+const FILTER_TRANFORM = /[\b\f\r\v]/g, //过滤转义字符  
     //script的表达是
     SCRIPT_TAG = /<script.*?>([\s\S]*?)<\/script>/g,
     //转义双引号
@@ -22,7 +20,6 @@ const FILTER_TRANFORM = /[\b\t\f\n\r\v]/g, //过滤转义字符
 
 export {
     FILTER_TRANFORM,
-    FILTER_SCRIPT,
     SCRIPT_TAG,
     QUEST,
     INCLUDE_ID,
