@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Wed Nov 08 2017 22:59:08 GMT+0800 (中国标准时间)
+ * 			time:Thu Nov 09 2017 20:05:09 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -671,12 +671,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //初始化时间中的参数
 //常用的方法
-function setEvent() {
-	if (this.constructor._event_) return;
-	this.constructor._event_ = {
-		eventEl: []
-	};
-}
+function setEvent() {}
 
 //设置实例属性
 
@@ -1170,7 +1165,7 @@ function setEntrust(ele, type, cb) {
     _fn2.default.on(ele, type, function (event) {
         var ev = event || window.event,
             el = ev.target || ev.srcElement,
-            eventType = ele.event.events[type];
+            eventType = ele.events[type];
 
         _fn2.default.each(eventType, function (_eventType, bind) {
 
@@ -1231,34 +1226,27 @@ var Dom = function () {
             if (arguments.length === 4) {
 
                 //初始化事件
-                if (this.constructor._event_.eventEl.indexOf(ele) == -1) {
-
-                    this.constructor._event_.eventEl.push(ele);
-
-                    ele.event = {
-                        eventType: [],
-                        events: {}
-                    };
+                if (!ele.events) {
+                    ele.events = {};
                 }
 
-                if (ele.event.eventType.indexOf(type) == -1) {
-                    setEntrust.apply(this, [ele, type, cb]);
+                if (!ele.events[type]) {
                     //添加委托事件
-                    ele.event.eventType.push(type);
+                    setEntrust.apply(this, [ele, type, cb]);
                 }
 
                 //查找现在的节点是否存在事件
-                if (!ele.event.events[type]) {
-                    ele.event.events[type] = {};
+                if (!ele.events[type]) {
+                    ele.events[type] = {};
                 }
 
                 //当前的事件是否有设置
-                if (!ele.event.events[type][exp]) {
-                    ele.event.events[type][exp] = [];
+                if (!ele.events[type][exp]) {
+                    ele.events[type][exp] = [];
                 }
 
                 //添加处理函数到事件列表中
-                ele.event.events[type][exp].push(cb);
+                ele.events[type][exp].push(cb);
             } else if (arguments.length === 3) {
                 cb = type;
                 type = exp;

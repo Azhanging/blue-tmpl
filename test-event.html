@@ -37,6 +37,14 @@
 					this.on(this.getEl('div1'), 'on-event0', 'click', function() {
 						console.log('on-event1');
 					});
+					
+					this.on(this.getEl('div1'), 'on-event0', 'click', function() {
+						console.log('on-event1');
+					});
+					
+					this.on(this.getEl('div1'), 'on-event0', 'mouseover', function() {
+						console.log('on-event1');
+					});
 
 					this.on(this.getEl('div2'), 'on-event0', 'click', function(event) {
 						console.log('on-event2');

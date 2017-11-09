@@ -5,10 +5,8 @@ import inBrowser from './in_browser';
 
 //初始化时间中的参数
 export function setEvent() {
-	if(this.constructor._event_) return;
-	this.constructor._event_ = {
-	    eventEl:[]
-	}
+
+
 }
 
 //设置实例属性
