@@ -7,7 +7,7 @@ demand.define(function() {
 			template: "m-btn"
 		});
 
-		new Tmpl({
+		var tmpl = new Tmpl({
 			template: "tmpl1",
 			data: {
 				isReady: false,
@@ -50,6 +50,7 @@ demand.define(function() {
 				this.on(this.view, 'on-add-tmpl', 'click', this.add);
 			}
 		});
+		console.log(tmpl);
 	}
 	return tmpl1;
 });

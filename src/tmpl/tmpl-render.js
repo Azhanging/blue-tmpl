@@ -20,7 +20,6 @@ import {
     EXTEND
 } from './tmpl-regexp';
 
-
 //由于模块接口中都是只读的，不能放在配置中；
 let SCRIPT_REGEXP,
     /*原生script*/
@@ -119,7 +118,7 @@ export function render() {
         }
     });
 
-    this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
+    this.vTmpl = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
 
 };
 
@@ -149,28 +148,7 @@ function setSeize() {
 //过滤string中的引号
 function filterTransferredMeaning(string) {
     //检查script的标签
-    const scriptTags = string.match(SCRIPT_TAG),
-        _string = filterDomStr(string.replace(SCRIPT_TAG, '___SCRIPT_TAG___'));
-
-    return !scriptTags ? _string : (filterScriptTag(_string, scriptTags));
-}
-
-//过滤script标签
-function filterScriptTag(string, scriptTags) {
-    const splitScriptTag = string.split('___SCRIPT_TAG___'),
-        dom = [];
-    fn.each(splitScriptTag, (script, index) => {
-        dom.push(script);
-        if(scriptTags[index]) {
-            dom.push(filterDomStr(scriptTags[index]));
-        }
-    });
-    return dom.join("");
-}
-
-//过滤方法
-function filterDomStr(domStr){
-    return domStr.replace(FILTER_TRANFORM, '')
-    .replace(/\n/g, '\\n')
-    .replace(QUEST, '\\\"');
+    return string.replace(FILTER_TRANFORM, '')
+        .replace(/\n/g, '\\n')
+        .replace(QUEST, '\\\"');
 }

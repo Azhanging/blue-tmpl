@@ -19,12 +19,10 @@ class Render {
         this.tmpl = opts.tmpl;
 
         this.data = opts.data;
-        
-//      console.log(this.tmpl.dom);
 
-        this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
+        this.vTmpl = new Function('data', this.tmpl.vTmpl).apply(this.tmpl, [this.data]);
 
-        inBrowser ? (this.fragment = this.tmpl.create(this.dom)) : null;
+        inBrowser ? (this.fragment = this.tmpl.create(this.vTmpl)) : null;
 
     }
     //在父节点中插入解析后的模板

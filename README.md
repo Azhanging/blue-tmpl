@@ -646,6 +646,22 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 
 **.serialize(obj)**:序列化表单内容
 
+******
+
+###实例属性：
+
+**template：**解析前的源码，建议不修改
+
+**vTmpl：**解析后js的dom代码，建议不修改
+
+**config：**最初配置的文件，建议不修改
+
+**methods：**设置的methods的方法都会挂在实例属性上
+
+**data：**设置的data值都会挂在这个实例属性上
+
+**注：如果data和methods存在同名，data的优先级比methods的高；**
+
 
 
 

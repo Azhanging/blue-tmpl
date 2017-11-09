@@ -32,13 +32,12 @@ export default class Tmpl extends Dom {
     
     //直接解析
     static render(domStr,data){
+        
     	const tmpl = new this({
     		template:domStr
     	});
     	
-    	console.log(tmpl);
-    	
-    	return tmpl.render(data).dom;
+    	return tmpl.render(data).vTmpl;
     }
 
     //初始化对象

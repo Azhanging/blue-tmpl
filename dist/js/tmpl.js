@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Thu Nov 09 2017 20:05:09 GMT+0800 (中国标准时间)
+ * 			time:Fri Nov 10 2017 00:13:40 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -545,7 +545,7 @@ function render() {
         }
     });
 
-    this.dom = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
+    this.vTmpl = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
 };
 
 /*替换别名的常量*/
@@ -572,28 +572,7 @@ function setSeize() {
 //过滤string中的引号
 function filterTransferredMeaning(string) {
     //检查script的标签
-    var scriptTags = string.match(_tmplRegexp.SCRIPT_TAG),
-        _string = filterDomStr(string.replace(_tmplRegexp.SCRIPT_TAG, '___SCRIPT_TAG___'));
-
-    return !scriptTags ? _string : filterScriptTag(_string, scriptTags);
-}
-
-//过滤script标签
-function filterScriptTag(string, scriptTags) {
-    var splitScriptTag = string.split('___SCRIPT_TAG___'),
-        dom = [];
-    _fn2.default.each(splitScriptTag, function (script, index) {
-        dom.push(script);
-        if (scriptTags[index]) {
-            dom.push(filterDomStr(scriptTags[index]));
-        }
-    });
-    return dom.join("");
-}
-
-//过滤方法
-function filterDomStr(domStr) {
-    return domStr.replace(_tmplRegexp.FILTER_TRANFORM, '').replace(/\n/g, '\\n').replace(_tmplRegexp.QUEST, '\\\"');
+    return string.replace(_tmplRegexp.FILTER_TRANFORM, '').replace(/\n/g, '\\n').replace(_tmplRegexp.QUEST, '\\\"');
 }
 
 /***/ }),
@@ -927,13 +906,12 @@ var Tmpl = function (_Dom) {
     }, {
         key: 'render',
         value: function render(domStr, data) {
+
             var tmpl = new this({
                 template: domStr
             });
 
-            console.log(tmpl);
-
-            return tmpl.render(data).dom;
+            return tmpl.render(data).vTmpl;
         }
     }]);
 
@@ -2091,11 +2069,9 @@ var Render = function () {
 
                         this.data = opts.data;
 
-                        //      console.log(this.tmpl.dom);
+                        this.vTmpl = new Function('data', this.tmpl.vTmpl).apply(this.tmpl, [this.data]);
 
-                        this.dom = new Function('data', this.tmpl.dom).apply(this.tmpl, [this.data]);
-
-                        _in_browser2.default ? this.fragment = this.tmpl.create(this.dom) : null;
+                        _in_browser2.default ? this.fragment = this.tmpl.create(this.vTmpl) : null;
                 }
                 //在父节点中插入解析后的模板
 
