@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Fri Nov 10 2017 00:13:40 GMT+0800 (中国标准时间)
+ * 			time:Mon Nov 20 2017 09:10:02 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -911,7 +911,7 @@ var Tmpl = function (_Dom) {
                 template: domStr
             });
 
-            return tmpl.render(data).vTmpl;
+            return tmpl.render(data).template;
         }
     }]);
 
@@ -950,7 +950,7 @@ var _tmpl2 = _interopRequireDefault(_tmpl);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function (global, factory) {
-    if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('tmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();else global ? global.Tmpl = factory() : {};
+    if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('tmpl', factory);else if (typeof _require === 'function' && typeof _require.define === 'function') _require.define('tmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();else global ? global.Tmpl = factory() : {};
 })(typeof window !== 'undefined' ? window : undefined, function () {
     _tmpl2.default.version = "v1.0.5";
     return _tmpl2.default;
@@ -2069,9 +2069,9 @@ var Render = function () {
 
                         this.data = opts.data;
 
-                        this.vTmpl = new Function('data', this.tmpl.vTmpl).apply(this.tmpl, [this.data]);
+                        this.template = new Function('data', this.tmpl.vTmpl).apply(this.tmpl, [this.data]);
 
-                        _in_browser2.default ? this.fragment = this.tmpl.create(this.vTmpl) : null;
+                        _in_browser2.default ? this.fragment = this.tmpl.create(this.template) : null;
                 }
                 //在父节点中插入解析后的模板
 

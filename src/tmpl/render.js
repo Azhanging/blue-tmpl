@@ -20,9 +20,9 @@ class Render {
 
         this.data = opts.data;
 
-        this.vTmpl = new Function('data', this.tmpl.vTmpl).apply(this.tmpl, [this.data]);
+        this.template = new Function('data', this.tmpl.vTmpl).apply(this.tmpl, [this.data]);
 
-        inBrowser ? (this.fragment = this.tmpl.create(this.vTmpl)) : null;
+        inBrowser ? (this.fragment = this.tmpl.create(this.template)) : null;
 
     }
     //在父节点中插入解析后的模板

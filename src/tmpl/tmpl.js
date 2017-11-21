@@ -37,7 +37,7 @@ export default class Tmpl extends Dom {
     		template:domStr
     	});
     	
-    	return tmpl.render(data).vTmpl;
+    	return tmpl.render(data).template;
     }
 
     //初始化对象

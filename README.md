@@ -303,10 +303,11 @@ async：模板的状态，设置为false为非异步模块，针对动态模板�
 #### 实例方法：
 
 **render(data)**:绑定数据到当前模板实例上，返回一个Render的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：
-
 	appendTo(el,cb):把绑定的数据模板添加到指定的el的子节点上,cb为回调；
 	inserBefore(el,ex,cb):把绑定的数据模板添加到指定的el的ex子节点前,cb为回调；
-
+	
+	属性：
+	template为解析完毕的dom string
 *****
 
 **on(bindEl[,bindClassName],eventType,fn)**: 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
