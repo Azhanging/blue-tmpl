@@ -56,9 +56,9 @@ http.createServer(function(req, res) {
 			'Content-Type': 'text-plain'
 		});
 		
-		res.write(t.render(data).vTmpl);
+		res.write(t.render(data).template);
 		
-		delete t.render(data).vTmpl;
+		delete t.render(data).template;
 
 		
 	}
