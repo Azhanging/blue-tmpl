@@ -8,6 +8,8 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 //打包公共的chunk 
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
+const version = 'v1.0.6';
+
 module.exports = {
 	//文件起始路径
 	/*context: path.resolve(__dirname, 'src'),*/
@@ -48,7 +50,7 @@ module.exports = {
 	devtool: 'source-map',
 	plugins: [
 		new webpack.BannerPlugin(`
-			tmpl.js v1.0.5
+			tmpl.js ${version}
 			(c) 2016-2017 Blue
 			Released under the MIT License.
 			https://github.com/azhanging/tmpl

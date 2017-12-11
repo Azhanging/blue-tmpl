@@ -13,6 +13,6 @@ import Tmpl from './tmpl/tmpl';
     else
         (global ? (global.Tmpl = factory()) : {});
 })(typeof window !== 'undefined' ? window : this, function() {
-    Tmpl.version = "v1.0.5";
+    Tmpl.version = "v1.0.6";
     return Tmpl;
 });

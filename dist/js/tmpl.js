@@ -1,10 +1,10 @@
 /*!
  * 
- * 			tmpl.js v1.0.5
+ * 			tmpl.js v1.0.6
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl
- * 			time:Mon Nov 20 2017 09:10:02 GMT+0800 (中国标准时间)
+ * 			time:Mon Dec 11 2017 08:56:10 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -952,7 +952,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 (function (global, factory) {
     if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('tmpl', factory);else if (typeof _require === 'function' && typeof _require.define === 'function') _require.define('tmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();else global ? global.Tmpl = factory() : {};
 })(typeof window !== 'undefined' ? window : undefined, function () {
-    _tmpl2.default.version = "v1.0.5";
+    _tmpl2.default.version = "v1.0.6";
     return _tmpl2.default;
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
@@ -1987,32 +1987,22 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //初始化设置
 //常用的方法
 function init() {
-	//构建开始的钩子
 	_fn2.default.run(this.config.create, this);
-	//初始配置信息
 	this.template = _set.setEl.call(this);
-	//初始化方法
 	_set.setInstance.call(this, 'methods');
-	//初始化数据
 	_set.setInstance.call(this, 'data');
-	//构建开始后的钩子
 	_fn2.default.run(this.config.created, this);
 	//初始化路由
 	_router.setRouter.call(this);
-	//查找模板
 	if (this.template) {
 		//创建配置的解析正则
 		_tmplRender.setRegExp.call(this);
 		//转化为js执行
 		_tmplRender.render.call(this);
 	}
-	//初始化事件
 	_set.setEvent.call(this);
-	//设置事件
 	_fn2.default.run(this.config.events, this);
-	//所有完毕后的钩子
 	_fn2.default.run(this.config.mounted, this);
-	//检查是否存在路由的状态
 	_router.checkRouterStatus.call(this);
 }
 
@@ -2095,9 +2085,11 @@ var Render = function () {
                 value: function insertBefore(el, ex, cb) {
 
                         var tmpl = this.tmpl,
-                            fn = tmpl.fn;
+                            fn = tmpl.fn,
+                            _el = el.nodeType === 1 ? el : tmpl.getEl(el),
+                            _ex = el.nodeType === 1 ? ex : tmpl.getEl(ex);
 
-                        tmpl.getEl(el).insertBefore(this.fragment, ex);
+                        _el.insertBefore(this.fragment, _ex);
 
                         fn.cb(cb, tmpl);
 

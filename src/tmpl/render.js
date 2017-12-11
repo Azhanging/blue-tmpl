@@ -43,9 +43,11 @@ class Render {
     insertBefore(el, ex, cb) {
 
         const tmpl = this.tmpl,
-            fn = tmpl.fn;
+            fn = tmpl.fn,
+            _el = el.nodeType === 1 ? el : tmpl.getEl(el), 
+            _ex = el.nodeType === 1 ? ex : tmpl.getEl(ex);
 
-        tmpl.getEl(el).insertBefore(this.fragment, ex);
+        _el.insertBefore(this.fragment, _ex);
 
         fn.cb(cb, tmpl);
 
