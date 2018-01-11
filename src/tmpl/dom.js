@@ -6,686 +6,691 @@ import fn from './fn';
 //绑定相关函数
 function bindFn(el, className, type) {
 
-    const _className = el.className.split(' ');
+	const _className = el.className.split(' ');
 
-    //替换
-    if(fn.isObj(className) && (type == 'replaceBind' || type == 'replaceClass')) {
-        fn.each(className, (__className, key) => {
-            var findIndex = _className.indexOf(key);
-            if(findIndex != -1) _className[findIndex] = __className;
-        });
-    } else {
-        //获得el中的className{type:string}
-        className = className.split(' ');
+	//替换
+	if(fn.isObj(className) && (type == 'replaceBind' || type == 'replaceClass')) {
+		fn.each(className, (__className, key) => {
+			var findIndex = _className.indexOf(key);
+			if(findIndex != -1) _className[findIndex] = __className;
+		});
+	} else {
+		//获得el中的className{type:string}
+		className = className.split(' ');
 
-        for(var index = 0; index < className.length; index++) {
+		for (var index = 0; index < className.length; index++) {
 
-            const findIndex = _className.indexOf(className[index]);
+			const findIndex = _className.indexOf(className[index]);
 
-            if(type == 'bind' || type == 'addClass') {
+			if(type == 'bind' || type == 'addClass') {
 
-                if(findIndex == -1) _className.push(className[index]);
+				if(findIndex == -1) _className.push(className[index]);
 
-            } else if(type == 'unbind' || type == 'removeClass') {
+			} else if(type == 'unbind' || type == 'removeClass') {
 
-                if(findIndex != -1) _className.splice(findIndex, 1);
+				if(findIndex != -1) _className.splice(findIndex, 1);
 
-            }
-        }
-    }
+			}
+		}
+	}
 
-    el.className = _className.join(' ');
+	el.className = _className.join(' ');
 
-    return this;
+	return this;
 }
 
 //设置主的委托事件
 function setEntrust(ele, type, cb) {
-    fn.on(ele, type, (event) => {
-        const ev = event || window.event,
+	fn.on(ele, type, (event) => {
+		const ev = event || window.event,
 
-            el = ev.target || ev.srcElement,
+			el = ev.target || ev.srcElement,
 
-            eventType = ele.events[type];
+			eventType = ele.events[type];
 
-        fn.each(eventType, (_eventType, bind) => {
+		fn.each(eventType, (_eventType, bind) => {
 
-            if(!this.hasClass(el, bind)) return;
+			if(!this.hasClass(el, bind)) return;
 
-            fn.each(_eventType, (cb, index) => {
+			fn.each(_eventType, (cb, index) => {
 
-                cb.apply(this, [ev, el]);
+				cb.apply(this, [ev, el]);
 
-            });
-        });
+			});
+		});
 
-    });
-    
+	});
+
 }
 
 class Dom {
-    getEl(exp) { 
-        
-        //获取节点
-        if(!exp) return null;
-        
-        if(!this.fn.isFn(document.querySelector)){            
-            return document.getElementById(exp);
-        }
-        
-        const getEl = document.querySelector(exp),
-            el = document.getElementById(exp);
-            
-        return getEl !== null ? getEl : (el ? el : null);
-    }
-
-    getEls(exp) {
-        
-        //获取多个节点
-        if(!exp) return null;
-        
-        if(!this.fn.isFn(document.querySelectorAll)){            
-            return document.getElementsByClassName(exp);
-        }
-        
-        const getEls = document.querySelectorAll(exp),
-            el = document.getElementsByClassName(exp);
-            
-        return getEls.length > 0 ? getEls : (el ? el : []);
-    }
-    //绑定事件
-    on(ele, exp, type, cb) {
-        if(arguments.length === 4) {
-
-            //初始化事件
-            if(!ele.events) {
-                ele.events = {};    
-            }
-            
-            if(!ele.events[type]) {
-                //添加委托事件
-                setEntrust.apply(this, [ele, type, cb]);
-            }
-
-            //查找现在的节点是否存在事件
-            if(!ele.events[type]) {
-                ele.events[type] = {};
-            }
-
-            //当前的事件是否有设置
-            if(!ele.events[type][exp]) {
-                ele.events[type][exp] = [];
-            }
-
-            //添加处理函数到事件列表中
-            ele.events[type][exp].push(cb);
-
-        } else if(arguments.length === 3) {
-            cb = type;
-            type = exp;
-            fn.on(ele, type, (event) => {
-                cb.call(this, event);
-            });
-        }
-
-        return this;
-    }
-
-    //取消绑定事件
-    off(ele, exp, type, cb) {
-        if(arguments.length === 4) {
-            var eventIndex = this.events[type][exp].indexOf(cb);
-            if(eventIndex != -1)
-                ele.events[type][exp].splice(eventIndex, 1);
-        } else if(arguments.length === 3) {
-            /*删除事件*/
-            fn.off(ele, type, cb);
-        }
-        return this;
-    }
-
-    //设置事件委托的class
-    bind(el, bind) {
-        bindFn.apply(this, [el, bind, 'bind']);
-        return this;
-    }
-
-    //取消方法绑定
-    unbind(el, bind) {
-        bindFn.apply(this, [el, bind, 'unbind']);
-        return this;
-    }
-
-    //替换绑定
-    replaceBind(el, bind) {
-        bindFn.apply(this, [el, bind, 'replaceBind']);
-        return this;
-    }
-
-    //添加class
-    addClass(el, className) {
-        bindFn.apply(this, [el, className, 'addClass']);
-        return this;
-    }
+	getEl(exp) {
+
+		//获取节点
+		if(!exp) return null;
+
+		if(!this.fn.isFn(document.querySelector)) {
+			return document.getElementById(exp);
+		}
+
+		const getEl = document.querySelector(exp),
+			el = document.getElementById(exp);
+
+		return getEl !== null ? getEl : (el ? el : null);
+	}
+
+	getEls(exp) {
+
+		//获取多个节点
+		if(!exp) return null;
+
+		if(!this.fn.isFn(document.querySelectorAll)) {
+			return document.getElementsByClassName(exp);
+		}
+
+		const getEls = document.querySelectorAll(exp),
+			el = document.getElementsByClassName(exp);
+
+		return getEls.length > 0 ? getEls : (el ? el : []);
+	}
+
+	//绑定事件
+	on(ele, exp, type, cb) {
+		if(arguments.length === 4) {
+
+			//初始化事件
+			if(!ele.events) {
+				ele.events = {};
+			}
+
+			if(!ele.events[type]) {
+				//添加委托事件
+				setEntrust.apply(this, [ele, type, cb]);
+			}
+
+			//查找现在的节点是否存在事件
+			if(!ele.events[type]) {
+				ele.events[type] = {};
+			}
+
+			//当前的事件是否有设置
+			if(!ele.events[type][exp]) {
+				ele.events[type][exp] = [];
+			}
+
+			//添加处理函数到事件列表中
+			ele.events[type][exp].push(cb);
+
+		} else if(arguments.length === 3) {
+			cb = type;
+			type = exp;
+			fn.on(ele, type, (event) => {
+				cb.call(this, event);
+			});
+		}
 
-    //删除class
-    removeClass(el, className) {
-        bindFn.apply(this, [el, className, 'removeClass']);
-        return this;
-    }
+		return this;
+	}
 
-    //替换className
-    replaceClass(el, className) {
-        bindFn.apply(this, [el, className, 'replaceClass']);
-        return this;
-    }
+	//取消绑定事件
+	off(ele, exp, type, cb) {
+		if(arguments.length === 4) {
+			var eventIndex = ele.events[type][exp].indexOf(cb);
+			if(eventIndex != -1){
+				ele.events[type][exp].splice(eventIndex, 1);
+			}
+			if(ele.events[type][exp].length === 0){
+				fn.off(ele, type, cb);
+			}
+		} else if(arguments.length === 3) {
+			/*删除事件*/
+			fn.off(ele, type, cb);
+		}
+		return this;
+	}
 
-    //是否存在class
-    hasClass(el, className) {    
-        try {
-            //节点中存在的className
-            const _className = el.className.split(' '),
-                //是否存在的className
-                hasClassName = className.split(' ');
+	//设置事件委托的class
+	bind(el, bind) {
+		bindFn.apply(this, [el, bind, 'bind']);
+		return this;
+	}
 
-            let hasLen = 0;
+	//取消方法绑定
+	unbind(el, bind) {
+		bindFn.apply(this, [el, bind, 'unbind']);
+		return this;
+	}
 
-            for(var index = 0; index < hasClassName.length; index++) {
-                if(_className.indexOf(hasClassName[index]) !== -1) ++hasLen;
-            }
+	//替换绑定
+	replaceBind(el, bind) {
+		bindFn.apply(this, [el, bind, 'replaceBind']);
+		return this;
+	}
 
-            if(hasLen === hasClassName.length) return true;
+	//添加class
+	addClass(el, className) {
+		bindFn.apply(this, [el, className, 'addClass']);
+		return this;
+	}
 
-            return false;
+	//删除class
+	removeClass(el, className) {
+		bindFn.apply(this, [el, className, 'removeClass']);
+		return this;
+	}
 
-        } catch(e) {
+	//替换className
+	replaceClass(el, className) {
+		bindFn.apply(this, [el, className, 'replaceClass']);
+		return this;
+	}
 
-            return false;
+	//是否存在class
+	hasClass(el, className) {
+		try {
+			//节点中存在的className
+			const _className = el.className.split(' '),
+				//是否存在的className
+				hasClassName = className.split(' ');
 
-        }
-    }
+			let hasLen = 0;
 
-    //获取属性
-    attr(el, attr) {
-        if(fn.isObj(attr)) {
+			for (var index = 0; index < hasClassName.length; index++) {
+				if(_className.indexOf(hasClassName[index]) !== -1) ++hasLen;
+			}
 
-            fn.each(attr, (_attr, key) => {
+			if(hasLen === hasClassName.length) return true;
 
-                if(typeof _attr === 'boolean') {
+			return false;
 
-                    el[key] = _attr;
+		} catch (e) {
 
-                    el.setAttribute(key, _attr);
+			return false;
 
-                } else if(_attr === '') {
+		}
+	}
 
-                    el.removeAttribute(key);
+	//获取属性
+	attr(el, attr) {
+		if(fn.isObj(attr)) {
 
-                } else {
+			fn.each(attr, (_attr, key) => {
 
-                    el.setAttribute(key, _attr);
+				if(typeof _attr === 'boolean') {
 
-                }
-            });
+					el[key] = _attr;
 
-            return this;
+					el.setAttribute(key, _attr);
 
-        } else {
+				} else if(_attr === '') {
 
-            if(attr instanceof Array) {
+					el.removeAttribute(key);
 
-                var attrs = [];
+				} else {
 
-                fn.each(attr, (_attr, index) => {
+					el.setAttribute(key, _attr);
 
-                    attrs.push(this.attr(el, _attr));
+				}
+			});
 
-                });
+			return this;
 
-                return attrs;
+		} else {
 
-            } else if(/^bind-\S*/.test(attr)) {
+			if(attr instanceof Array) {
 
-                return new Function('return ' + el.getAttribute(attr) + ';')
-                    .apply(this);
+				var attrs = [];
 
-            } else {
+				fn.each(attr, (_attr, index) => {
 
-                return el.getAttribute(attr);
+					attrs.push(this.attr(el, _attr));
 
-            }
-        }
-    }
+				});
 
-    //获取、设置prop属性
-    prop(el, prop) {
-        //设置节点属性
-        if(fn.isObj(prop)) {
-            fn.each(prop, (_prop, key) => {
+				return attrs;
 
-                el[key] = _prop;
+			} else if(/^bind-\S*/.test(attr)) {
 
-            });
+				return new Function('return ' + el.getAttribute(attr) + ';')
+					.apply(this);
 
-            return this;
+			} else {
 
-        } else if(fn.isStr(prop)) { //获得节点属性
+				return el.getAttribute(attr);
 
-            if(/^bind-\S*/.test(prop))
+			}
+		}
+	}
 
-                return new Function('return ' + el[prop] + ';')
-                    .apply(this);
+	//获取、设置prop属性
+	prop(el, prop) {
+		//设置节点属性
+		if(fn.isObj(prop)) {
+			fn.each(prop, (_prop, key) => {
 
-            return el[prop];
+				el[key] = _prop;
 
-        }
-    }
+			});
 
-    //获取、设置html
-    html(el, html) {
-        if(html === undefined) return el.innerHTML;
-        el.innerHTML = html;
-        return this;
-    }
+			return this;
 
-    //获取、设置value
-    val(el, val) {
-        if(val === undefined) return el.value;
-        el.value = val;
-        return this;
-    }
+		} else if(fn.isStr(prop)) { //获得节点属性
 
-    //获取、设置textContent
-    text(el, text) {
-        if(text === undefined) return el.textContent;
-        el.textContent = text;
-        return this;
-    }
+			if(/^bind-\S*/.test(prop))
 
-    //查找符合的一个父级节点
-    parent(el, hasClassName) {
+				return new Function('return ' + el[prop] + ';')
+					.apply(this);
 
-        var parent = el.parentNode;
+			return el[prop];
 
-        if(parent === document || parent === null) return null;
+		}
+	}
 
-        if(!hasClassName) return parent;
+	//获取、设置html
+	html(el, html) {
+		if(html === undefined) return el.innerHTML;
+		el.innerHTML = html;
+		return this;
+	}
 
-        if(this.hasClass(parent, hasClassName)) return parent;
+	//获取、设置value
+	val(el, val) {
+		if(val === undefined) return el.value;
+		el.value = val;
+		return this;
+	}
 
-        return this.parent(parent, hasClassName);
+	//获取、设置textContent
+	text(el, text) {
+		if(text === undefined) return el.textContent;
+		el.textContent = text;
+		return this;
+	}
 
-    }
+	//查找符合的一个父级节点
+	parent(el, hasClassName) {
 
-    //超找所有符合的父元素
-    parents(el, hasClassName, hasClassParent) {
+		var parent = el.parentNode;
 
-        var parent = el.parentNode;
+		if(parent === document || parent === null) return null;
 
-        hasClassParent = (hasClassParent ? hasClassParent : []);
+		if(!hasClassName) return parent;
 
-        if(parent === document || parent === null) return null;
+		if(this.hasClass(parent, hasClassName)) return parent;
 
-        if(this.hasClass(parent, hasClassName)) hasClassParent.push(parent);
+		return this.parent(parent, hasClassName);
 
-        this.parents(parent, hasClassName, hasClassParent);
+	}
 
-        return hasClassParent;
-    }
+	//超找所有符合的父元素
+	parents(el, hasClassName, hasClassParent) {
 
-    //获取直接的当个子节点
-    children(el) {
-        const els = [];
-        fn.each(el.childNodes, (child) => {
-            if(child.nodeType === 1) {
-                els.push(child);
-            }
-        });
-        return els;
-    };
+		var parent = el.parentNode;
 
-    //查找对应的class存在的节点
-    childrens(el, className, hasClassChild) {
-        var i = 0;
-        hasClassChild = (hasClassChild ? hasClassChild : []);
-        for(; i < el.children.length; i++) {
-            if(this.hasClass(el.children[i], className)) hasClassChild.push(el.children[i]);
-            this.childrens(el.children[i], className, hasClassChild);
-        }
-        return hasClassChild;
-    }
+		hasClassParent = (hasClassParent ? hasClassParent : []);
 
-    //下一个节点
-    next(el) {
-        const nextEl = el.nextSibling;
-        if(nextEl === null) return null;
-        if(nextEl.nodeType !== 1) return this.next(nextEl);
-        return nextEl;
-    }
+		if(parent === document || parent === null) return null;
 
-    //获取当前元素同级前的节点
-    nextAll(el) {
-        return this.siblings(el, 'nextAll');
-    }
+		if(this.hasClass(parent, hasClassName)) hasClassParent.push(parent);
 
-    //获取当前元素同级后的节点
-    prevAll(el) {
-        return this.siblings(el, 'prevAll');
-    }
+		this.parents(parent, hasClassName, hasClassParent);
 
-    //上一个节点
-    prev(el) {
-        const prevEl = el.previousSibling;
-        if(prevEl === null) return null;
-        if(prevEl.nodeType !== 1) return this.prev(prevEl);
-        return prevEl;
-    }
+		return hasClassParent;
+	}
 
-    //获取同级的兄弟节点
-    siblings(el, type) {
-        const parent = this.parent(el);
+	//获取直接的当个子节点
+	children(el) {
+		const els = [];
+		fn.each(el.childNodes, (child) => {
+			if(child.nodeType === 1) {
+				els.push(child);
+			}
+		});
+		return els;
+	};
 
-        if(parent === null) return null;
+	//查找对应的class存在的节点
+	childrens(el, className, hasClassChild) {
+		var i = 0;
+		hasClassChild = (hasClassChild ? hasClassChild : []);
+		for (; i < el.children.length; i++) {
+			if(this.hasClass(el.children[i], className)) hasClassChild.push(el.children[i]);
+			this.childrens(el.children[i], className, hasClassChild);
+		}
+		return hasClassChild;
+	}
 
-        const child = parent.children;
+	//下一个节点
+	next(el) {
+		const nextEl = el.nextSibling;
+		if(nextEl === null) return null;
+		if(nextEl.nodeType !== 1) return this.next(nextEl);
+		return nextEl;
+	}
 
-        const siblings = [];
+	//获取当前元素同级前的节点
+	nextAll(el) {
+		return this.siblings(el, 'nextAll');
+	}
 
-        let i = 0;
+	//获取当前元素同级后的节点
+	prevAll(el) {
+		return this.siblings(el, 'prevAll');
+	}
 
-        if(type === 'nextAll')
-            i = Array.prototype.indexOf.call(child, el);
+	//上一个节点
+	prev(el) {
+		const prevEl = el.previousSibling;
+		if(prevEl === null) return null;
+		if(prevEl.nodeType !== 1) return this.prev(prevEl);
+		return prevEl;
+	}
 
-        for(; i < child.length; i++) {
+	//获取同级的兄弟节点
+	siblings(el, type) {
+		const parent = this.parent(el);
 
-            if(child[i] !== el) siblings.push(child[i]);
+		if(parent === null) return null;
 
-            if(type === 'prevAll' && child[i] === el) return siblings;
+		const child = parent.children;
 
-        }
+		const siblings = [];
 
-        return siblings;
-    }
+		let i = 0;
 
-    //显示
-    hide(el, time) {
+		if(type === 'nextAll')
+			i = Array.prototype.indexOf.call(child, el);
 
-        var opacity = this.css(el, 'opacity');
+		for (; i < child.length; i++) {
 
-        el.opacity = opacity ? opacity : 1;
+			if(child[i] !== el) siblings.push(child[i]);
 
-        fn.isNum(time) ? (this.animate(el, {
-            opacity: 0
-        }, time, () => {
-            el.style.display = 'none';
-        })) : el.style.display = 'none';
+			if(type === 'prevAll' && child[i] === el) return siblings;
 
-        return this;
-    }
+		}
 
-    //隐藏
-    show(el, time) {
+		return siblings;
+	}
 
-        var opactiy = el.opactiy ? el.opactiy : 100;
+	//显示
+	hide(el, time) {
 
-        if(fn.isNum(time)) {
+		var opacity = this.css(el, 'opacity');
 
-            this.css(el, {
-                opacity: 0
-            });
+		el.opacity = opacity ? opacity : 1;
 
-            el.style.display = '';
+		fn.isNum(time) ? (this.animate(el, {
+			opacity: 0
+		}, time, () => {
+			el.style.display = 'none';
+		})) : el.style.display = 'none';
 
-            this.animate(el, {
-                opacity: opactiy
-            }, time);
+		return this;
+	}
 
-        } else {
-            el.style.display = '';
-        }
-        return this;
-    }
+	//隐藏
+	show(el, time) {
 
-    /*切换显示状态*/
-    toggle(el, time) {
-        if(el.style.display === '') this.hide(el, time);
-        else this.show(el, time);
-    }
+		var opactiy = el.opactiy ? el.opactiy : 100;
 
-    /*动画*/
-    animate(el, animate, time, cb) {
+		if(fn.isNum(time)) {
 
-        if(!el) return;
+			this.css(el, {
+				opacity: 0
+			});
 
-        el.timer = setInterval(() => {
+			el.style.display = '';
 
-            let animateStatus = true;
+			this.animate(el, {
+				opacity: opactiy
+			}, time);
 
-            fn.each(animate, (val, type) => {
+		} else {
+			el.style.display = '';
+		}
+		return this;
+	}
 
-                let speed = 0,
-                    cssVal = 0;
+	/*切换显示状态*/
+	toggle(el, time) {
+		if(el.style.display === '') this.hide(el, time);
+		else this.show(el, time);
+	}
 
-                if(type === 'opacity') {
+	/*动画*/
+	animate(el, animate, time, cb) {
 
-                    cssVal = Number(this.css(el, 'opacity')) * 100;
+		if(!el) return;
 
-                } else if(type === 'scrollTop') {
+		el.timer = setInterval(() => {
 
-                    cssVal = Math.ceil(document.documentElement.scrollTop || document.body.scrollTop);
+			let animateStatus = true;
 
-                    let maxScrollTop = Math.ceil(document.body.scrollHeight - window.innerHeight);
+			fn.each(animate, (val, type) => {
 
-                    if(val > maxScrollTop) {
-                        val = maxScrollTop;
-                        animate['scrollTop'] = maxScrollTop;
-                    }
+				let speed = 0,
+					cssVal = 0;
 
-                } else {
-                    cssVal = parseInt(this.css(el, type));
-                }
+				if(type === 'opacity') {
 
-                speed = (val - cssVal) / 8;
+					cssVal = Number(this.css(el, 'opacity')) * 100;
 
-                speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
+				} else if(type === 'scrollTop') {
 
-                const setVal = {};
+					cssVal = Math.ceil(document.documentElement.scrollTop || document.body.scrollTop);
 
-                if(type === 'opacity') {
-                    setVal['opacity'] = (cssVal + speed) / 100;
-                    this.css(el, setVal);
-                } else if(type === 'scrollTop') {
-                    this.setScrollTop(cssVal + speed);
-                } else {
-                    setVal[type] = cssVal + speed + 'px';
-                    this.css(el, setVal);
-                }
+					let maxScrollTop = Math.ceil(document.body.scrollHeight - window.innerHeight);
 
-                if(parseInt(val) !== cssVal) {
-                    animateStatus = false;
-                }
-            });
+					if(val > maxScrollTop) {
+						val = maxScrollTop;
+						animate['scrollTop'] = maxScrollTop;
+					}
 
-            if(animateStatus) {
-                clearInterval(el.timer);
-                fn.cb(cb, this);
-            }
+				} else {
+					cssVal = parseInt(this.css(el, type));
+				}
 
-        }, time / 60);
-    }
+				speed = (val - cssVal) / 8;
 
-    /*操作css*/
-    css(el, css) {
-        //获取css
-        if(fn.isStr(css)) {
-            return this.curCss(el, css);
-        } else if(fn.isObj(css)) {
-            //设置style
-            this.setStyle(el, css);
-            return this;
-        }
-    }
+				speed = speed > 0 ? Math.ceil(speed) : Math.floor(speed);
 
-    /*处理驼峰和非驼峰*/
-    camelCase(text, isCameCase) {
-        let camelCases;
+				const setVal = {};
 
-        const AZ = /[A-Z]/g,
-            _AZ = /-[a-z]/g;
+				if(type === 'opacity') {
+					setVal['opacity'] = (cssVal + speed) / 100;
+					this.css(el, setVal);
+				} else if(type === 'scrollTop') {
+					this.setScrollTop(cssVal + speed);
+				} else {
+					setVal[type] = cssVal + speed + 'px';
+					this.css(el, setVal);
+				}
 
-        if(!fn.isStr(text)) return text;
+				if(parseInt(val) !== cssVal) {
+					animateStatus = false;
+				}
+			});
 
-        camelCases = isCameCase ? text.match(_AZ) : text.match(AZ);
+			if(animateStatus) {
+				clearInterval(el.timer);
+				fn.cb(cb, this);
+			}
 
-        camelCases = camelCases ? camelCases : [];
+		}, time / 60);
+	}
 
-        fn.each(camelCases, (str, index) => {
-            if(isCameCase) text = text.replace(str, str.replace(/-/g, '')
-                .toUpperCase());
-            else text = text.replace(str, '-' + str.toLowerCase());
-        });
+	/*操作css*/
+	css(el, css) {
+		//获取css
+		if(fn.isStr(css)) {
+			return this.curCss(el, css);
+		} else if(fn.isObj(css)) {
+			//设置style
+			this.setStyle(el, css);
+			return this;
+		}
+	}
 
-        return text;
-    }
+	/*处理驼峰和非驼峰*/
+	camelCase(text, isCameCase) {
+		let camelCases;
 
-    /*获取计算好的值*/
-    curCss(el, css) {
+		const AZ = /[A-Z]/g,
+			_AZ = /-[a-z]/g;
 
-        let _css;
+		if(!fn.isStr(text)) return text;
 
-        if(window.getComputedStyle) {
+		camelCases = isCameCase ? text.match(_AZ) : text.match(AZ);
 
-            _css = this.camelCase(css, true);
+		camelCases = camelCases ? camelCases : [];
 
-            return window.getComputedStyle(el, null)[_css];
+		fn.each(camelCases, (str, index) => {
+			if(isCameCase) text = text.replace(str, str.replace(/-/g, '')
+				.toUpperCase());
+			else text = text.replace(str, '-' + str.toLowerCase());
+		});
 
-        } else if(document.documentElement.currentStyle) {
+		return text;
+	}
 
-            _css = this.camelCase(css, false);
+	/*获取计算好的值*/
+	curCss(el, css) {
 
-            return document.documentElement.currentStyle[_css];
+		let _css;
 
-        }
-    }
+		if(window.getComputedStyle) {
 
-    /*设置css*/
-    setStyle(el, css) {
+			_css = this.camelCase(css, true);
 
-        fn.each(css, (style, cssName) => {
+			return window.getComputedStyle(el, null)[_css];
 
-            el.style[cssName] = style;
+		} else if(document.documentElement.currentStyle) {
 
-        });
-    }
+			_css = this.camelCase(css, false);
 
-    /*删除节点*/
-    remove(el) {
-        try {
-            el.remove();
-        } catch(e) {
-            const parent = this.parent(el);
-            parent !== null ? parent.removeChild(el) : (console.warn('element remove error!'));
-        }
-        return this;
-    }
+			return document.documentElement.currentStyle[_css];
 
-    /*创建元素*/
-    create(dom) {
+		}
+	}
 
-        const fragment = document.createDocumentFragment();
+	/*设置css*/
+	setStyle(el, css) {
 
-        const tempEl = document.createElement('div');
+		fn.each(css, (style, cssName) => {
 
-        tempEl.innerHTML = dom;
+			el.style[cssName] = style;
 
-        while(tempEl.childNodes.length !== 0) {
+		});
+	}
 
-            let child = tempEl.childNodes[0];
+	/*删除节点*/
+	remove(el) {
+		try {
+			el.remove();
+		} catch (e) {
+			const parent = this.parent(el);
+			parent !== null ? parent.removeChild(el) : (console.warn('element remove error!'));
+		}
+		return this;
+	}
 
-            const childHtml = child.innerHTML;
+	/*创建元素*/
+	create(dom) {
 
-            if(child.tagName === 'SCRIPT') {
+		const fragment = document.createDocumentFragment();
 
-                const newScript = document.createElement('script');
+		const tempEl = document.createElement('div');
 
-                newScript.innerHTML = childHtml;
+		tempEl.innerHTML = dom;
 
-                fn.each(child.attributes, (attr) => {
+		while (tempEl.childNodes.length !== 0) {
 
-                    if(!attr) true;
+			let child = tempEl.childNodes[0];
 
-                    newScript.setAttribute(attr.name, attr.value);
+			const childHtml = child.innerHTML;
 
-                });
+			if(child.tagName === 'SCRIPT') {
 
-                this.remove(child);
+				const newScript = document.createElement('script');
 
-                child = newScript;
+				newScript.innerHTML = childHtml;
 
-            }
+				fn.each(child.attributes, (attr) => {
 
-            fragment.appendChild(child);
+					if(!attr) true;
 
-        }
+					newScript.setAttribute(attr.name, attr.value);
 
-        return fragment;
-    }
+				});
 
-    /*插入节点*/
-    append(el, child) {
+				this.remove(child);
 
-        if(el.nodeType === 1) el.appendChild(child);
+				child = newScript;
 
-        else fn.getEl(el)
-            .appendChild(child);
+			}
 
-        return this;
-    }
+			fragment.appendChild(child);
 
-    //取消冒泡
-    preventDefault(event) {
+		}
 
-        const ev = event || window.event;
+		return fragment;
+	}
 
-        ev.stopPropagation();
+	/*插入节点*/
+	append(el, child) {
 
-        ev.cancelBubble = true;
+		if(el.nodeType === 1) el.appendChild(child);
 
-    }
+		else fn.getEl(el)
+			.appendChild(child);
 
-    //offset
-    offset(el) {
+		return this;
+	}
 
-        const box = el.getBoundingClientRect(),
+	//取消冒泡
+	preventDefault(event) {
 
-            docElem = document.documentElement,
+		const ev = event || window.event;
 
-            body = document.body,
+		ev.stopPropagation();
 
-            win = window,
+		ev.cancelBubble = true;
 
-            clientTop = docElem.clientTop || body.clientTop || 0,
+	}
 
-            clientLeft = docElem.clientLeft || body.clientLeft || 0,
+	//offset
+	offset(el) {
 
-            scrollTop = win.pageYOffset || docElem.scrollTop,
+		const box = el.getBoundingClientRect(),
 
-            scrollLeft = win.pageXOffset || docElem.scrollLeft;
+			docElem = document.documentElement,
 
-        return {
-            top: box.top + scrollTop - clientTop,
-            left: box.left + scrollLeft - clientLeft
-        };
-    }
+			body = document.body,
 
-    /*设置滚动条高度*/
-    setScrollTop(top, animate) {
+			win = window,
 
-        document.body.scrollTop = top;
+			clientTop = docElem.clientTop || body.clientTop || 0,
 
-        document.documentElement.scrollTop = top;
+			clientLeft = docElem.clientLeft || body.clientLeft || 0,
 
-    }
+			scrollTop = win.pageYOffset || docElem.scrollTop,
+
+			scrollLeft = win.pageXOffset || docElem.scrollLeft;
+
+		return {
+			top: box.top + scrollTop - clientTop,
+			left: box.left + scrollLeft - clientLeft
+		};
+	}
+
+	/*设置滚动条高度*/
+	setScrollTop(top, animate) {
+
+		document.body.scrollTop = top;
+
+		document.documentElement.scrollTop = top;
+
+	}
 }
 
 export default Dom;

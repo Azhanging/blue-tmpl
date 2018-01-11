@@ -5,7 +5,7 @@ import inBrowser from './in_browser';
 let fs;
 
 if(!inBrowser) {
-    fs = __non_webpack_require__('fs');
+	fs = __non_webpack_require__('fs');
 }
 
 export default fs;

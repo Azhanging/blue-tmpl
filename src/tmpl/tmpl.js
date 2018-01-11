@@ -12,67 +12,75 @@ import config from './config';
 import escapeCode from './escapeCode';
 //set
 import { setEl } from './set';
+//setAlias
+import { setAlias } from './alias';
+
 //tmpl的render解析
 import {
 	render
 } from './tmpl-render';
 
 export default class Tmpl extends Dom {
-    //Tmpl构造
-    constructor(opts) {
-        super();
-        this.config = fn.extend(fn.copy(config), opts);
-        this.init();
-    }
+	//Tmpl构造
+	constructor(opts) {
+		super();
+		this.config = fn.extend(fn.copy(config), opts);
+		this.init();
+	}
 
-    //安装插件
-    static install(constructor) {
-        constructor.install(this);
-    }
-    
-    //直接解析
-    static render(domStr,data){
-        
-    	const tmpl = new this({
-    		template:domStr
-    	});
-    	
-    	return tmpl.render(data).template;
-    }
+	//安装插件
+	static install(constructor) {
+		constructor.install(this);
+	}
 
-    //初始化对象
-    init() {
-        init.call(this);
-    }
+	//直接解析
+	static render(domStr, state) {
 
-    //解析模板和数据
-    render(data) {
-        return new Render({
-            tmpl: this,
-            data: data
-        });
-    }
+		const tmpl = new this({
+			template: domStr
+		});
 
-    //添加数据更新模板
-    update() {
-        this.template = setEl.call(this);
-        render.call(this);
-        return this;
-    }
+		return tmpl.render(state).template;
+	}
 
-    /*回调*/
-    cb(cb) {
-        fn.cb(cb, this);
-        return this;
-    }
+	//解析path
+	static setAlias(paths) {
+		setAlias.call(this, paths);
+	}
 
-    /*转义*/
-    escape(escapeVal) {
-        fn.each(escapeCode, (item, key) => {
-            escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
-        });
-        return escapeVal;
-    }
+	//初始化对象
+	init() {
+		init.call(this);
+	}
+
+	//解析模板和数据
+	render(state) {
+		return new Render({
+			tmpl: this,
+			state
+		});
+	}
+
+	//添加数据更新模板
+	update() {
+		this.template = setEl.call(this);
+		render.call(this);
+		return this;
+	}
+
+	/*回调*/
+	cb(cb) {
+		fn.cb(cb, this);
+		return this;
+	}
+
+	/*转义*/
+	escape(escapeVal) {
+		fn.each(escapeCode, (item, key) => {
+			escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
+		});
+		return escapeVal;
+	}
 }
 
 //常用的方法给tmpl的fn属性中

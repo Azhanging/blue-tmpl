@@ -7,67 +7,67 @@ import fs from './fs';
 
 //模板正则配置
 import {
-    INCLUDE_ID,
-    INCLUDE_FILE,
-    INCLUDE_ERROR,
+	INCLUDE_ID,
+	INCLUDE_FILE,
+	INCLUDE_ERROR,
 } from './tmpl-regexp';
 
 /*替换include引入的模板*/
 export default function replaceInclude() {
-    const include = (() => {
-        if(inBrowser) {
-            //在浏览器环境清空include[file]
-            return INCLUDE_ID;
-        } else {
-            //在node环境清空include[name]
-            return INCLUDE_FILE;
-        }
-    })();
+	const include = (() => {
+		if(inBrowser) {
+			//在浏览器环境清空include[file]
+			return INCLUDE_ID;
+		} else {
+			//在node环境清空include[name]
+			return INCLUDE_FILE;
+		}
+	})();
 
-    let includeTmpl, includeId;
+	let includeTmpl, includeId;
 
-    //去重
-    includeTmpl = fn.unique(this.template.match(include));
-    includeId = includeTmpl.toString().replace(include, "$2").split(',');
+	//去重
+	includeTmpl = fn.unique(this.template.match(include));
+	includeId = includeTmpl.toString().replace(include, "$2").split(',');
 
-    //找不到include//查找的id和include匹配的数量必须相同
-    if(includeTmpl.length === 0 || fn.trimArr(includeId)
-        .length === 0 ||
-        !(includeTmpl.length > 0 &&
-            includeId.length > 0 &&
-            includeId.length === includeTmpl.length
-        )) return;
+	//找不到include//查找的id和include匹配的数量必须相同
+	if(includeTmpl.length === 0 || fn.trimArr(includeId)
+			.length === 0 ||
+		!(includeTmpl.length > 0 &&
+			includeId.length > 0 &&
+			includeId.length === includeTmpl.length
+		)) return;
 
-    fn.each(includeId, (id, index) => {
-        const replaceIncludeRegExp = new RegExp(fn.initRegExp(includeTmpl[index]), 'g');
-        /*浏览器环境下执行*/
-        if(inBrowser) {
-            const el = this.getEl(id);
-            if(el) this.template = this.template.replace(replaceIncludeRegExp, this.html(el));
-            //找不到就清空原来的内容
-            else this.template = this.template.replace(replaceIncludeRegExp, '');
-        } else {
-            /*node环境下执行*/
-            try {
-                const tmpl = fs.readFileSync(id, {
-                    encoding: 'UTF8'
-                });
+	fn.each(includeId, (id, index) => {
+		const replaceIncludeRegExp = new RegExp(fn.initRegExp(includeTmpl[index]), 'g');
+		/*浏览器环境下执行*/
+		if(inBrowser) {
+			const el = this.getEl(id);
+			if(el) this.template = this.template.replace(replaceIncludeRegExp, this.html(el));
+			//找不到就清空原来的内容
+			else this.template = this.template.replace(replaceIncludeRegExp, '');
+		} else {
+			/*node环境下执行*/
+			try {
+				const tmpl = fs.readFileSync(id, {
+					encoding: 'UTF8'
+				});
 
-                this.template = this.template.replace(replaceIncludeRegExp, tmpl);
+				this.template = this.template.replace(replaceIncludeRegExp, tmpl);
 
-            } catch(e) {
-                //找不到就清空原来的内容
-                this.template = this.template.replace(replaceIncludeRegExp, '');
-            }
-        }
-    });
+			} catch (e) {
+				//找不到就清空原来的内容
+				this.template = this.template.replace(replaceIncludeRegExp, '');
+			}
+		}
+	});
 
-    /*去掉重复的include*/
-    includeTmpl = fn.unique(this.template.match(include));
+	/*去掉重复的include*/
+	includeTmpl = fn.unique(this.template.match(include));
 
-    /*查找是否还有include的引入*/
-    if(includeTmpl.length > 0) replaceInclude.call(this);
+	/*查找是否还有include的引入*/
+	if(includeTmpl.length > 0) replaceInclude.call(this);
 
-    /*清空错误的include*/
-    this.template = this.template.replace(INCLUDE_ERROR, '');
+	/*清空错误的include*/
+	this.template = this.template.replace(INCLUDE_ERROR, '');
 }

@@ -21,11 +21,11 @@ export function setInstance(type) {
 }
 
 //设置this.template
-export function setEl(){
+export function setEl() {
 	if(inBrowser) {
-		try{			
-			return this.getEl(this.config.template).innerHTML; 
-		}catch(e){
+		try {
+			return this.getEl(this.config.template).innerHTML;
+		} catch (e) {
 			return this.config.template;
 		}
 	} else {

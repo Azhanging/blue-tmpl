@@ -1,5 +1,5 @@
 <!--tmpl2-->
-<% for(var i = 0;i<data.length;i++){ %>
+<% for(var i = 0;i<state.length;i++){ %>
 	<%= i %>
 	<%if(i){%>
 		+<%= i %>
@@ -9,9 +9,9 @@
 	</tmpl-include>
 	<div class="g-media mg-t-10 pd-10 g-bg-danger">
 		<div class="g-media-body">
-			<h4 class="g-media-title">模板2-<%= data[i] %></h4>
+			<h4 class="g-media-title">模板2-<%= state[i] %></h4>
 			<p class="g-media-content on-show-detailed">
-				显示索引：<%= data[i] %>
+				显示索引：<%= state[i] %>
 			</p>
 			<div class="g-media-other-msg">
 				<time><%= new Date() %></time>

@@ -1,193 +1,195 @@
 //运行环境是否在浏览器
 import inBrowser from './in_browser';
+
 /*常用的方法*/
 class Fn {
-    isArr(array) {
-        return array instanceof Array || !!(array && array.length);
-    }
+	isArr(array) {
+		return array instanceof Array || !!(array && array.length);
+	}
 
-    isObj(obj) {
-        return obj instanceof Object && !(obj instanceof Array) && obj !== null;
-    }
+	isObj(obj) {
+		return obj instanceof Object && !(obj instanceof Array) && obj !== null;
+	}
 
-    isFn(fn) {
-        return typeof fn === 'function';
-    }
-    isStr(string) {
-        return typeof string === 'string';
-    }
+	isFn(fn) {
+		return typeof fn === 'function';
+	}
 
-    isNum(num) {
-        return typeof num === 'number' || !isNaN(num);
-    }
+	isStr(string) {
+		return typeof string === 'string';
+	}
 
-    isEl(el) {
-        return !!(el && el.nodeType);
-    }
+	isNum(num) {
+		return typeof num === 'number' || !isNaN(num);
+	}
 
-    each(obj, cb) { //遍历
-        let i = 0,
-            len = obj.length;
-        if(this.isArr(obj)) {
-            for(; i < len; i++) {
-                cb(obj[i], i);
-            }
-        } else {
-            for(i in obj) {
-                if(obj.hasOwnProperty(i)) cb(obj[i], i);
-            }
-        }
-    }
-    
-    extend(obj, options) { //合并
-        this.each(options, (option, key) => {
-            obj[key] = option;
-        });
-        return obj;
-    }
+	isEl(el) {
+		return !!(el && el.nodeType);
+	}
 
-    cb(cb, context, args) { //回调
-        args = args ? args : [];
-        this.isFn(cb) ? (cb.apply(context, args)) : null;
-    }
+	each(obj, cb) { //遍历
+		let i = 0,
+			len = obj.length;
+		if(this.isArr(obj)) {
+			for (; i < len; i++) {
+				cb(obj[i], i);
+			}
+		} else {
+			for (i in obj) {
+				if(obj.hasOwnProperty(i)) cb(obj[i], i);
+			}
+		}
+	}
 
-    run(cb, context, args) { //执行函数
-        this.cb(cb, context, args);
-    }
+	extend(obj, options) { //合并
+		this.each(options, (option, key) => {
+			obj[key] = option;
+		});
+		return obj;
+	}
 
-    unique(arr) { /*去重*/
-        if(!this.isArr(arr)) return [];
-        let newArray = [];
-        this.each(arr, (item, index) => {
-            if(newArray.indexOf(item) === -1) {
-                newArray.push(item);
-            }
-        });
-        return newArray;
-    }
+	cb(cb, context, args) { //回调
+		args = args ? args : [];
+		this.isFn(cb) ? (cb.apply(context, args)) : null;
+	}
 
-    trimArr(arr) { /*清空数组中空的值*/
-        let newArr = [];
-        this.each(arr, (item, index) => {
-            if(item !== '') {
-                newArr.push(item);
-            }
-        });
-        return newArr;
-    }
+	run(cb, context, args) { //执行函数
+		this.cb(cb, context, args);
+	}
 
-    copy(obj) { /*深拷贝*/
-        if(this.isObj(obj) || this.isArr(obj))
-            return JSON.parse(JSON.stringify(obj));
-        return null;
-    }
+	unique(arr) { /*去重*/
+		if(!this.isArr(arr)) return [];
+		let newArray = [];
+		this.each(arr, (item, index) => {
+			if(newArray.indexOf(item) === -1) {
+				newArray.push(item);
+			}
+		});
+		return newArray;
+	}
 
-    ajax(options) {
-        //创建xhr
-        const xhr = new XMLHttpRequest();
-        //连接类型
-        options.type = (options.type ? options.type.toUpperCase() : 'GET');
-        //超时
-        xhr.timeout = options.timeout && options.async !== false ? options.timeout : 0;
+	trimArr(arr) { /*清空数组中空的值*/
+		let newArr = [];
+		this.each(arr, (item, index) => {
+			if(item !== '') {
+				newArr.push(item);
+			}
+		});
+		return newArr;
+	}
 
-        if(options.type === "GET") {
+	copy(obj) { /*深拷贝*/
+		if(this.isObj(obj) || this.isArr(obj))
+			return JSON.parse(JSON.stringify(obj));
+		return null;
+	}
 
-            xhr.open(options.type, (() => {
+	ajax(options) {
+		//创建xhr
+		const xhr = new XMLHttpRequest();
+		//连接类型
+		options.type = (options.type ? options.type.toUpperCase() : 'GET');
+		//超时
+		xhr.timeout = options.timeout && options.async !== false ? options.timeout : 0;
 
-                return options.url.indexOf('?') ?
-                    options.url + this.serialize(options.data) :
-                    options.url + '?' + this.serialize(options.data);
+		if(options.type === "GET") {
 
-            })(), options.async);
+			xhr.open(options.type, (() => {
 
-        } else if(options.type === "POST") {
+				return options.url.indexOf('?') ?
+					options.url + this.serialize(options.data) :
+					options.url + '?' + this.serialize(options.data);
 
-            xhr.open(options.type, options.url, options.async);
+			})(), options.async);
 
-        }
-        xhr.setRequestHeader('Content-Type', options.contentType ?
-            options.contentType :
-            'application/x-www-form-urlencoded; charset=UTF-8');
-        //响应事件
-        xhr.addEventListener('readystatechange', () => {
-            let data;
+		} else if(options.type === "POST") {
 
-            try {
-                data = JSON.parse(xhr.responseText);
-            } catch(e) {
-                data = xhr.responseText;
-            }
+			xhr.open(options.type, options.url, options.async);
 
-            if(xhr.readyState == 4) {
-                if(xhr.status == 200) {
-                    this.cb(options.success, this, [data]);
-                } else if(xhr.status >= 400) {
-                    this.cb(options.error, this, [data]);
-                }
-            }
-        }, false);
+		}
+		xhr.setRequestHeader('Content-Type', options.contentType ?
+			options.contentType :
+			'application/x-www-form-urlencoded; charset=UTF-8');
+		//响应事件
+		xhr.addEventListener('readystatechange', () => {
+			let data;
 
-        //send指令
-        if(options.type === "GET") {
+			try {
+				data = JSON.parse(xhr.responseText);
+			} catch (e) {
+				data = xhr.responseText;
+			}
 
-            xhr.send();
+			if(xhr.readyState == 4) {
+				if(xhr.status == 200) {
+					this.cb(options.success, this, [data]);
+				} else if(xhr.status >= 400) {
+					this.cb(options.error, this, [data]);
+				}
+			}
+		}, false);
 
-        } else if(options.type === "POST") {
+		//send指令
+		if(options.type === "GET") {
 
-            xhr.send(this.serialize(options.data));
+			xhr.send();
 
-        }
-    }
+		} else if(options.type === "POST") {
 
-    serialize(data) { //初始化form数据
-        let result = '';
+			xhr.send(this.serialize(options.data));
 
-        if(!this.isObj(data) || !this.isArr(data)) return '';
+		}
+	}
 
-        this.each(data, (val, key) => {
+	serialize(data) { //初始化form数据
+		let result = '';
 
-            result = result + key + '=' + encodeURIComponent(val) + '&';
+		if(!this.isObj(data) || !this.isArr(data)) return '';
 
-        });
+		this.each(data, (val, key) => {
 
-        return result.substring(0, result.length - 1);
-    }
-    
-    initRegExp(expr) {
-        const tm = '\\/*.?+$^[](){}|\'\"';
-        this.each(tm, (tmItem, index) => {
-            expr = expr.replace(new RegExp('\\' + tmItem, 'g'), '\\' + tmItem);
-        });
-        return expr;
-    }
+			result = result + key + '=' + encodeURIComponent(val) + '&';
+
+		});
+
+		return result.substring(0, result.length - 1);
+	}
+
+	initRegExp(expr) {
+		const tm = '\\/*.?+$^[](){}|\'\"';
+		this.each(tm, (tmItem, index) => {
+			expr = expr.replace(new RegExp('\\' + tmItem, 'g'), '\\' + tmItem);
+		});
+		return expr;
+	}
 }
 
 //设置事件
-Fn.prototype.on = (function() {
-    if(!inBrowser) return;
-    if(typeof document.addEventListener === 'function') {
-        return function on(el, type, cb) {
-            el.addEventListener(type, cb, false);
-        }
-    } else {
-        return function on(el, type, cb) {
-            el.attachEvent('on' + type, cb);
-        };
-    }
+Fn.prototype.on = (function () {
+	if(!inBrowser) return;
+	if(typeof document.addEventListener === 'function') {
+		return function on(el, type, cb) {
+			el.addEventListener(type, cb, false);
+		}
+	} else {
+		return function on(el, type, cb) {
+			el.attachEvent('on' + type, cb);
+		};
+	}
 })();
 
 //移除事件
-Fn.prototype.off = (function() {
-    if(!inBrowser) return;
-    if(typeof document.removeEventListener === 'function') {
-        return function off(el, type, cb) {
-            el.addEventListener(type, cb, false);
-        }
-    } else {
-        return function off(el, type, cb) {
-            el.detachEvent('on' + type, cb);
-        };
-    }
+Fn.prototype.off = (function () {
+	if(!inBrowser) return;
+	if(typeof document.removeEventListener === 'function') {
+		return function off(el, type, cb) {
+			el.removeEventListener(type, cb, false);
+		}
+	} else {
+		return function off(el, type, cb) {
+			el.detachEvent('on' + type, cb);
+		};
+	}
 })();
 
 export default new Fn();

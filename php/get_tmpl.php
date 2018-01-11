@@ -5,7 +5,7 @@
    	
    	$tmpl_data = [];
    	
-   	$get_tmpl = file_get_contents('./../tmpl-and-tmpl-router-demo/tmpl/'.$tmpl.'.tmpl');
+   	$get_tmpl = file_get_contents('./../example/tmpl-and-tmpl-router-demo/tmpl/'.$tmpl.'.tmpl');
    	
    	$tmpl_data['tmpl'] = $get_tmpl;
    	

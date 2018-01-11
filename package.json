@@ -1,7 +1,7 @@
 {
   "name": "blue-tmpl",
-  "version": "1.0.6",
-  "description": "tmpl，js模板；支持浏览器，node环境解析",
+  "version": "1.0.10",
+  "description": "blue-tmpl in browser and blue-tmpl in express views engine or blue-tmpl in koa2 views engine",
   "main": "./index.js",
   "scripts": {
     "server": "webpack-dev-server --hot",
@@ -10,7 +10,7 @@
   "contributors": [
     "Blue"
   ],
-  "keyword":"tmpl template express blue",
+  "keyword": "tmpl template express blue",
   "author": "Blue",
   "license": "ISC",
   "devDependencies": {
@@ -19,9 +19,10 @@
     "babel-plugin-transform-runtime": "^6.22.0",
     "babel-preset-es2015": "^6.22.0",
     "extract-text-webpack-plugin": "^2.0.0-beta.4",
-    "html-webpack-plugin": "^2.30.1",
-    "uglifyjs-webpack-plugin": "^0.1.4",
-    "webpack": "^2.2.1"
+    "html-webpack-plugin": "2.30.1",
+    "uglify-js": "^2.8.28",
+    "uglifyjs-webpack-plugin": "0.1.4",
+    "webpack": "2.2.1"
   },
   "repositories": [
     "https://github.com/Azhanging/tmpl"

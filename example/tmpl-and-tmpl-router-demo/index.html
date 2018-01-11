@@ -16,26 +16,26 @@
 				left: 0;
 				top: 0;
 			}
-			
+
 			#bottom {
 				position: fixed;
 				left: 0;
 				bottom: 0;
 			}
-			
+
 			.tmpl-router-active {
 				color: #fff;
 				background-color: #2E75B2;
 			}
-			
+
 			.background-white {
 				background-color: white;
 			}
-			
+
 			.view {
 				overflow: auto;
 			}
-			
+
 			#detailed {
 				position: fixed;
 				top: 0;
@@ -85,12 +85,12 @@
 		<!--路由显示容器-->
 		<div id="tmpl-router-view" class="row"></div>
 
-		<script src="../js/demand.js" type="text/javascript" charset="utf-8"></script>
+		<script src="../../js/demand.js" type="text/javascript" charset="utf-8"></script>
 		<script src="/dist/js/tmpl.js" type="text/javascript" charset="utf-8"></script>
 		<script src="/js/tmpl-router.js" type="text/javascript" charset="utf-8"></script>
 		<script type="text/javascript">
 			demand.config({
-				baseUrl: '/tmpl-and-tmpl-router-demo/',
+				baseUrl: '/example/tmpl-and-tmpl-router-demo/',
 				alias: {
 					'tjs': './tmpl/tmpl-js',
 					'base-js': './js'
@@ -103,6 +103,14 @@
 			demand(['app'],function() {
 
 				var Tmpl = demand('tmpl');
+
+				Tmpl.setAlias({
+				  '__VIEW__':{
+				  	'__INDEX__':'./views/index'
+				  },
+				  '__ROOT__':'/',
+				  '__A__':null
+				});
 
 				var TmplRouter = demand('tmpl-router');
 
@@ -133,8 +141,6 @@
 					router: router
 				});
 			});
-			
 		</script>
 	</body>
-
 </html>

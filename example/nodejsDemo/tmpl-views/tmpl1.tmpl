@@ -1,15 +1,15 @@
-<tmpl-extend file="__BASE__/base.tmpl" />
+<tmpl-extend file="__BASE__/base.tmpl"/>
 
 <tmpl-block name="body">
-	<% for(var i = 0;i<data.length;i++){ %>
+	<% for(var i = 0;i<state.length;i++){ %>
 		<div class="g-media mg-t-10 pd-10  g-bg-primary" style="background-color:<%= i%2 == 0 ? 'blue' : 'red' %>;">
 			<div class="g-media-head">
-				<img src="" class="wh-64 radius-50perc" />
+				<img src="" class="wh-64 radius-50perc"/>
 			</div>
 			<div class="g-media-body">
-				<h4 class="g-media-title">模板1-<%= data[i] %></h4>
+				<h4 class="g-media-title">模板1-<%= state[i] %></h4>
 				<p class="g-media-content on-show-detailed">
-					显示索引：<%= data[i] %>
+					显示索引：<%= state[i] %>
 				</p>
 				<div class="g-media-other-msg">
 					<time><a href="#/tm1/index"><%= new Date() %></a></time>
@@ -33,14 +33,20 @@
 		</textarea>
 	<% } %>
 
-	<!-- <%- 123456 + 456 + '<div>这是测试</div>' %> -->
-
+    <%- 123456 + 456 + '<div>这是测试</div>' %>
 </tmpl-block>
 
 <tmpl-block name="header">
 	<header>
 		<tmpl-include name="__TMPL__/tmpl10.tmpl"></tmpl-include>
 		<h1>title123</h1>
+	</header>
+</tmpl-block>
+
+<tmpl-block name="header">
+	<header>
+		<tmpl-include name="__TMPL__/tmpl10.tmpl"></tmpl-include>
+		<h1>title2222</h1>
 	</header>
 </tmpl-block>
 

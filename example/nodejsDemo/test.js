@@ -1,4 +1,4 @@
-let Tmpl = require('../dist/js/tmpl');
+let Tmpl = require('../../dist/js/tmpl');
 
 let fs = require('fs');
 
@@ -6,11 +6,11 @@ let path = require('path');
 
 const url = require('url');
 
-Tmpl.alias = {
+Tmpl.setAlias({
 	'__PUBLIC__': './js',
 	'__BASE__': './tmpl-views',
 	'__TMPL__': './tmpl-views'
-}
+});
 
 var tmpl = fs.readFileSync('./tmpl-views/tmpl1.tmpl', {
 	encoding: 'UTF8'

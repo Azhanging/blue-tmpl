@@ -8,51 +8,54 @@ import inBrowser from './in_browser';
 import fn from './fn';
 
 class Render {
-    constructor(opts) {
+	constructor(opts) {
 
-        this.init(opts);
+		this.init(opts);
 
-    }
-    //初始render类
-    init(opts) {
+	}
 
-        this.tmpl = opts.tmpl;
+	//初始render类
+	init(opts) {
 
-        this.data = opts.data;
+		this.tmpl = opts.tmpl;
 
-        this.template = new Function('data', this.tmpl.vTmpl).apply(this.tmpl, [this.data]);
+		this.state = opts.state;
 
-        inBrowser ? (this.fragment = this.tmpl.create(this.template)) : null;
+		this.template = new Function('state', this.tmpl.vTmpl).apply(this.tmpl, [this.state]);
 
-    }
-    //在父节点中插入解析后的模板
-    appendTo(el, cb) {
+		inBrowser ? (this.fragment = this.tmpl.create(this.template)) : null;
 
-        const tmpl = this.tmpl,
-            fn = tmpl.fn;
+	}
 
-        if(el.nodeType === 1) el.appendChild(this.fragment);
+	//在父节点中插入解析后的模板
+	appendTo(el, cb) {
 
-        else tmpl.getEl(el).appendChild(this.fragment);
+		const tmpl = this.tmpl,
+			fn = tmpl.fn;
 
-        fn.cb(cb, this.tmpl);
+		if(el.nodeType === 1) el.appendChild(this.fragment);
 
-        return tmpl;
-    }
-    //在el子节点ex中插入解析后的模板	
-    insertBefore(el, ex, cb) {
+		else tmpl.getEl(el).appendChild(this.fragment);
 
-        const tmpl = this.tmpl,
-            fn = tmpl.fn,
-            _el = el.nodeType === 1 ? el : tmpl.getEl(el), 
-            _ex = el.nodeType === 1 ? ex : tmpl.getEl(ex);
+		fn.cb(cb, this.tmpl);
 
-        _el.insertBefore(this.fragment, _ex);
+		return tmpl;
+	}
 
-        fn.cb(cb, tmpl);
+	//在el子节点ex中插入解析后的模板
+	insertBefore(el, ex, cb) {
 
-        return tmpl;
-    }
+		const tmpl = this.tmpl,
+			fn = tmpl.fn,
+			_el = el.nodeType === 1 ? el : tmpl.getEl(el),
+			_ex = el.nodeType === 1 ? ex : tmpl.getEl(ex);
+
+		_el.insertBefore(this.fragment, _ex);
+
+		fn.cb(cb, tmpl);
+
+		return tmpl;
+	}
 
 }
 

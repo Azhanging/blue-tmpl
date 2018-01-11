@@ -1,6 +1,11 @@
-# Tmpl
+# Tmpl   v1.0.10
 
-##### 更新时间：2017年8月2日17:30:01
+blue-tmpl 可以使用在浏览器以及nodejs环境，可以作为nodejs框架express 或 koa2 的view engine使用；在浏览器中可以作为解析模板使用；
+
+在koa2和express使用参考blue-tmpl-views的npm包的使用
+https://www.npmjs.com/package/blue-tmpl-views
+
+##### 更新时间：2018年1月11日10:23:20
 
 支持IE8-EDGE , chrome , firefox
 
@@ -16,7 +21,12 @@
 
 **Tmpl.install(constructor):** 安装插件
 
-**Tmpl.alias(objs):** 一些别名的常量，替换到模板中对应别名的常量值，key:为别名名称，value为别名的具体值
+**Tmpl.setAlias({Object}):** 设置别名的常量，替换到模板中对应别名的常量值，key:为别名名称，value为别名的具体值，设置后的值都会对应到Tmpl.alias中，多层的对象将会解析成 用 '.' 链接的key；
+
+
+```javascript
+
+````
 
 *******
 
@@ -169,7 +179,7 @@ name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-
 ```
 *************
 
-#### 有关模板的使用open\_tag和close\_tag内写js代码 <% js 代码 %> ，<%= data%>为输出的js代码，<%- js代码 %> 转义的代码（如html的转义）内部可以写js表达式，只能是表达式（自执行函数需要分多行编写，建议不写在一行内，会出现预测不到的结果）；
+#### 有关模板的使用open\_tag和close\_tag内写js代码 <% js 代码 %> ，<%= state %>为输出的js代码，<%- js代码 %> 转义的代码（如html的转义）内部可以写js表达式，只能是表达式（自执行函数需要分多行编写，建议不写在一行内，会出现预测不到的结果）；
 
 
 
@@ -221,13 +231,13 @@ app.b // 2
 ```
 *************
 
-##### 默认从外部传进去的数据只有一个顶层的data变量：
+##### 默认从外部传进去的数据只有一个顶层的state变量：
 
 ```html
 <div id="app"></div>	
 <script type="text/template" id="tmpl">
-	<div><%= data.title %></div>
-	<div><%= data.content %></div>
+	<div><%= state.title %></div>
+	<div><%= state.content %></div>
 </script>
 
 <script>
@@ -302,7 +312,7 @@ async：模板的状态，设置为false为非异步模块，针对动态模板�
 
 #### 实例方法：
 
-**render(data)**:绑定数据到当前模板实例上，返回一个Render的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：
+**render(state)**:绑定数据到当前模板实例上，返回一个Render的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：
 	appendTo(el,cb):把绑定的数据模板添加到指定的el的子节点上,cb为回调；
 	inserBefore(el,ex,cb):把绑定的数据模板添加到指定的el的ex子节点前,cb为回调；
 	
@@ -362,7 +372,7 @@ app.removeClass(buttonEl,'className className');
 app.replaceClass(buttonEl,{'className':'newClassName'}); // class="on-replaceAdd"
 ```
 
-**hasClass(el,className)：**el元素中是否存在对应的className。返回true || false;
+**hasClass(el,className)**：el元素中是否存在对应的className。返回true || false;
 
 ******
 
@@ -651,15 +661,15 @@ app.siblings(el3);  //返回  [el1,el2,el4,el5,el6]
 
 ###实例属性：
 
-**template：**解析前的源码，建议不修改
+**template**：解析前的源码，建议不修改
 
-**vTmpl：**解析后js的dom代码，建议不修改
+**vTmpl**：解析后js的dom代码，建议不修改
 
-**config：**最初配置的文件，建议不修改
+**config**：最初配置的文件，建议不修改
 
-**methods：**设置的methods的方法都会挂在实例属性上
+**methods**：设置的methods的方法都会挂在实例属性上
 
-**data：**设置的data值都会挂在这个实例属性上
+**data**：设置的data值都会挂在这个实例属性上
 
 **注：如果data和methods存在同名，data的优先级比methods的高；**
 
