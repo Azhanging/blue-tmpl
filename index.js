@@ -1,2 +1,2 @@
 /*use module*/
-module.exports = require('./dist/js/tmpl.min.js');
+module.exports = require('./dist/js/blue-tmpl.min.js');

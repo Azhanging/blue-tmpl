@@ -8,15 +8,15 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 //打包公共的chunk 
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
-const version = 'v1.0.10';
+const version = 'v1.0.14';
 
 module.exports = {
 	//文件起始路径
 	/*context: path.resolve(__dirname, 'src'),*/
 	//入口
 	entry: {
-		'tmpl': path.join(__dirname, './src/index.js'),
-		'tmpl.min': path.join(__dirname, './src/index.js')
+		'blue-tmpl': path.join(__dirname, './src/index.js'),
+		'blue-tmpl.min': path.join(__dirname, './src/index.js')
 	},
 	//出口
 	output: {
@@ -25,7 +25,7 @@ module.exports = {
 		publicPath: '/dist', //公共打包的默认路径
 		libraryTarget: 'umd',
 		umdNamedDefine: true,
-		library: "Tmpl"
+		library: "BlueTmpl"
 	},
 	//模块处理器
 	module: {
@@ -50,10 +50,10 @@ module.exports = {
 	devtool: 'source-map',
 	plugins: [
 		new webpack.BannerPlugin(`
-tmpl.js ${version}
+blue-tmpl.js ${version}
 (c) 2016-2017 Blue
 Released under the MIT License.
-https://github.com/azhanging/tmpl
+https://github.com/azhanging/blue-tmpl
 time:${new Date()}
 		`),
 		new Uglifyjs({

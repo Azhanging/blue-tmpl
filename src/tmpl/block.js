@@ -21,7 +21,7 @@ export default function replaceBlock() {
 	//先设置获取include的引入模板
 	replaceAlias.call(this);
 
-	const baseFile = fn.unique(this.template.match(EXTEND)),
+	const baseFile = fn.unique(this.$template.match(EXTEND)),
 		/*只获取第一个base的名字*/
 		baseFileName = baseFile.toString()
 			.replace(EXTEND, "$2")
@@ -31,7 +31,7 @@ export default function replaceBlock() {
 	if(baseFileName === '') return;
 
 	//获取入口模板
-	const blockTmpl = fn.unique(this.template.match(BLOCK));
+	const blockTmpl = fn.unique(this.$template.match(BLOCK));
 
 	//获取继承的模板
 	let layoutTmpl = fs.readFileSync(baseFileName, {
@@ -80,5 +80,5 @@ export default function replaceBlock() {
 		}
 	});
 
-	this.template = layoutTmpl;
+	this.$template = layoutTmpl;
 }

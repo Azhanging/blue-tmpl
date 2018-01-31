@@ -136,10 +136,10 @@ class Dom {
 	off(ele, exp, type, cb) {
 		if(arguments.length === 4) {
 			var eventIndex = ele.events[type][exp].indexOf(cb);
-			if(eventIndex != -1){
+			if(eventIndex != -1) {
 				ele.events[type][exp].splice(eventIndex, 1);
 			}
-			if(ele.events[type][exp].length === 0){
+			if(ele.events[type][exp].length === 0) {
 				fn.off(ele, type, cb);
 			}
 		} else if(arguments.length === 3) {

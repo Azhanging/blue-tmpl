@@ -40,8 +40,8 @@ let SCRIPT_REGEXP,
 //设置正则
 export function setRegExp() {
 
-	const open_tag = fn.initRegExp(this.config.open_tag),
-		close_tag = fn.initRegExp(this.config.close_tag);
+	const open_tag = fn.initRegExp(this.$config.open_tag),
+		close_tag = fn.initRegExp(this.$config.close_tag);
 	//解析所有的表达式
 	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
 	//原生的script
@@ -73,7 +73,7 @@ export function render() {
 	/*替换include中的内容*/
 	replaceInclude.call(this);
 	/*解析script*/
-	let script = this.template.match(SCRIPT_REGEXP) || [];
+	let script = this.$template.match(SCRIPT_REGEXP) || [];
 	//设置占位
 	const replaceScript = setSeize.call(this),
 		echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/), //拆分占位
@@ -118,7 +118,7 @@ export function render() {
 		}
 	});
 
-	this.vTmpl = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
+	this.vTmpl = 'try{var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");}catch(e){console.warn(e);return "";}';
 
 };
 
@@ -126,20 +126,20 @@ export function render() {
 export function replaceAlias() {
 	const constructor = this.constructor;
 	fn.each(constructor.alias, (replaceAlias, alias) => {
-		this.template = this.template.replace(new RegExp(fn.initRegExp(alias), 'g'), replaceAlias);
+		this.$template = this.$template.replace(new RegExp(fn.initRegExp(alias), 'g'), replaceAlias);
 	});
 }
 
 /*清除多余的block块*/
 function clearBlock() {
-	this.template = this.template
+	this.$template = this.$template
 		.replace(EXTEND, '')
 		.replace(BLOCK, '');
 }
 
 //设置占位
 function setSeize() {
-	const replaceScript = this.template
+	const replaceScript = this.$template
 		.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___')
 		.replace(SCRIPT_REGEXP, '___SCRIPT___');
 	return replaceScript;

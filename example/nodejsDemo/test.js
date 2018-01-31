@@ -1,4 +1,4 @@
-let Tmpl = require('../../dist/js/tmpl');
+let Tmpl = require('../../dist/js/blue-tmpl');
 
 let fs = require('fs');
 
@@ -62,7 +62,6 @@ http.createServer(function(req, res) {
 
 		
 	}
-	
 
 	res.end();
 

@@ -11,7 +11,7 @@ export function setEvent() {
 
 //设置实例属性
 export function setInstance(type) {
-	const get = this.config[type];
+	const get = this.$config[type];
 	if(!fn.isObj(get)) {
 		return;
 	}
@@ -20,16 +20,16 @@ export function setInstance(type) {
 	});
 }
 
-//设置this.template
+//设置this.$template
 export function setEl() {
 	if(inBrowser) {
 		try {
-			return this.getEl(this.config.template).innerHTML;
+			return this.getEl(this.$config.template).innerHTML;
 		} catch (e) {
-			return this.config.template;
+			return this.$config.template;
 		}
 	} else {
-		return this.config.template;
+		return this.$config.template;
 	}
 }
 

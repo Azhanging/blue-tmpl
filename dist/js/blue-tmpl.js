@@ -1,21 +1,21 @@
 /*!
  * 
- * tmpl.js v1.0.10
+ * blue-tmpl.js v1.0.14
  * (c) 2016-2017 Blue
  * Released under the MIT License.
- * https://github.com/azhanging/tmpl
- * time:Thu Jan 11 2018 15:57:56 GMT+0800 (中国标准时间)
+ * https://github.com/azhanging/blue-tmpl
+ * time:Wed Jan 31 2018 17:40:15 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("Tmpl", [], factory);
+		define("BlueTmpl", [], factory);
 	else if(typeof exports === 'object')
-		exports["Tmpl"] = factory();
+		exports["BlueTmpl"] = factory();
 	else
-		root["Tmpl"] = factory();
+		root["BlueTmpl"] = factory();
 })(this, function() {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
@@ -472,8 +472,8 @@ CLOSE_TAG_REGEXP = void 0;
 //常用的方法
 function setRegExp() {
 
-	var open_tag = _fn2.default.initRegExp(this.config.open_tag),
-	    close_tag = _fn2.default.initRegExp(this.config.close_tag);
+	var open_tag = _fn2.default.initRegExp(this.$config.open_tag),
+	    close_tag = _fn2.default.initRegExp(this.$config.close_tag);
 	//解析所有的表达式
 	SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
 	//原生的script
@@ -505,7 +505,7 @@ function render() {
 	/*替换include中的内容*/
 	_include2.default.call(this);
 	/*解析script*/
-	var script = this.template.match(SCRIPT_REGEXP) || [];
+	var script = this.$template.match(SCRIPT_REGEXP) || [];
 	//设置占位
 	var replaceScript = setSeize.call(this),
 	    echoString = replaceScript.split(/___SCRIPT___|___ECHO_SCRIPT___/),
@@ -545,7 +545,7 @@ function render() {
 		}
 	});
 
-	this.vTmpl = 'var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");';
+	this.vTmpl = 'try{var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");}catch(e){console.warn(e);return "";}';
 };
 
 /*替换别名的常量*/
@@ -554,18 +554,18 @@ function replaceAlias() {
 
 	var constructor = this.constructor;
 	_fn2.default.each(constructor.alias, function (replaceAlias, alias) {
-		_this.template = _this.template.replace(new RegExp(_fn2.default.initRegExp(alias), 'g'), replaceAlias);
+		_this.$template = _this.$template.replace(new RegExp(_fn2.default.initRegExp(alias), 'g'), replaceAlias);
 	});
 }
 
 /*清除多余的block块*/
 function clearBlock() {
-	this.template = this.template.replace(_tmplRegexp.EXTEND, '').replace(_tmplRegexp.BLOCK, '');
+	this.$template = this.$template.replace(_tmplRegexp.EXTEND, '').replace(_tmplRegexp.BLOCK, '');
 }
 
 //设置占位
 function setSeize() {
-	var replaceScript = this.template.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___').replace(SCRIPT_REGEXP, '___SCRIPT___');
+	var replaceScript = this.$template.replace(ECHO_SCRIPT_REGEXP, '___ECHO_SCRIPT___').replace(SCRIPT_REGEXP, '___SCRIPT___');
 	return replaceScript;
 }
 
@@ -658,7 +658,7 @@ function setEvent() {}
 function setInstance(type) {
 	var _this = this;
 
-	var get = this.config[type];
+	var get = this.$config[type];
 	if (!_fn2.default.isObj(get)) {
 		return;
 	}
@@ -667,16 +667,16 @@ function setInstance(type) {
 	});
 }
 
-//设置this.template
+//设置this.$template
 function setEl() {
 	if (_in_browser2.default) {
 		try {
-			return this.getEl(this.config.template).innerHTML;
+			return this.getEl(this.$config.template).innerHTML;
 		} catch (e) {
-			return this.config.template;
+			return this.$config.template;
 		}
 	} else {
-		return this.config.template;
+		return this.$config.template;
 	}
 }
 
@@ -834,16 +834,16 @@ function _inherits(subClass, superClass) { if (typeof superClass !== "function" 
 //tmpl的render解析
 
 
-var Tmpl = function (_Dom) {
-	_inherits(Tmpl, _Dom);
+var BlueTmpl = function (_Dom) {
+	_inherits(BlueTmpl, _Dom);
 
 	//Tmpl构造
-	function Tmpl(opts) {
-		_classCallCheck(this, Tmpl);
+	function BlueTmpl(opts) {
+		_classCallCheck(this, BlueTmpl);
 
-		var _this = _possibleConstructorReturn(this, (Tmpl.__proto__ || Object.getPrototypeOf(Tmpl)).call(this));
+		var _this = _possibleConstructorReturn(this, (BlueTmpl.__proto__ || Object.getPrototypeOf(BlueTmpl)).call(this));
 
-		_this.config = _fn2.default.extend(_fn2.default.copy(_config2.default), opts);
+		_this.$config = _fn2.default.extend(_fn2.default.copy(_config2.default), opts);
 		_this.init();
 		return _this;
 	}
@@ -851,7 +851,7 @@ var Tmpl = function (_Dom) {
 	//安装插件
 
 
-	_createClass(Tmpl, [{
+	_createClass(BlueTmpl, [{
 		key: 'init',
 
 
@@ -864,10 +864,11 @@ var Tmpl = function (_Dom) {
 
 	}, {
 		key: 'render',
-		value: function render(state) {
+		value: function render(state, stateName) {
 			return new _render2.default({
 				tmpl: this,
-				state: state
+				state: state,
+				stateName: stateName
 			});
 		}
 
@@ -876,7 +877,7 @@ var Tmpl = function (_Dom) {
 	}, {
 		key: 'update',
 		value: function update() {
-			this.template = _set.setEl.call(this);
+			this.$template = _set.setEl.call(this);
 			_tmplRender.render.call(this);
 			return this;
 		}
@@ -928,17 +929,17 @@ var Tmpl = function (_Dom) {
 		}
 	}]);
 
-	return Tmpl;
+	return BlueTmpl;
 }(_dom2.default);
 
 //常用的方法给tmpl的fn属性中
 
 
-exports.default = Tmpl;
-Tmpl.prototype.fn = _fn2.default;
+exports.default = BlueTmpl;
+BlueTmpl.prototype.fn = _fn2.default;
 
 //设置路径别名常量
-Tmpl.alias = {};
+BlueTmpl.alias = {};
 
 /***/ }),
 /* 10 */
@@ -1015,7 +1016,7 @@ function replaceBlock() {
 	//先设置获取include的引入模板
 	_tmplRender.replaceAlias.call(this);
 
-	var baseFile = _fn2.default.unique(this.template.match(_tmplRegexp.EXTEND)),
+	var baseFile = _fn2.default.unique(this.$template.match(_tmplRegexp.EXTEND)),
 
 	/*只获取第一个base的名字*/
 	baseFileName = baseFile.toString().replace(_tmplRegexp.EXTEND, "$2").split(',')[0];
@@ -1024,7 +1025,7 @@ function replaceBlock() {
 	if (baseFileName === '') return;
 
 	//获取入口模板
-	var blockTmpl = _fn2.default.unique(this.template.match(_tmplRegexp.BLOCK));
+	var blockTmpl = _fn2.default.unique(this.$template.match(_tmplRegexp.BLOCK));
 
 	//获取继承的模板
 	var layoutTmpl = _fs2.default.readFileSync(baseFileName, {
@@ -1071,7 +1072,7 @@ function replaceBlock() {
 		}
 	});
 
-	this.template = layoutTmpl;
+	this.$template = layoutTmpl;
 }
 
 //模板正则配置
@@ -1946,7 +1947,7 @@ function replaceInclude() {
 	    includeId = void 0;
 
 	//去重
-	includeTmpl = _fn2.default.unique(this.template.match(include));
+	includeTmpl = _fn2.default.unique(this.$template.match(include));
 	includeId = includeTmpl.toString().replace(include, "$2").split(',');
 
 	//找不到include//查找的id和include匹配的数量必须相同
@@ -1957,9 +1958,9 @@ function replaceInclude() {
 		/*浏览器环境下执行*/
 		if (_in_browser2.default) {
 			var el = _this.getEl(id);
-			if (el) _this.template = _this.template.replace(replaceIncludeRegExp, _this.html(el));
+			if (el) _this.$template = _this.$template.replace(replaceIncludeRegExp, _this.html(el));
 			//找不到就清空原来的内容
-			else _this.template = _this.template.replace(replaceIncludeRegExp, '');
+			else _this.$template = _this.$template.replace(replaceIncludeRegExp, '');
 		} else {
 			/*node环境下执行*/
 			try {
@@ -1967,22 +1968,22 @@ function replaceInclude() {
 					encoding: 'UTF8'
 				});
 
-				_this.template = _this.template.replace(replaceIncludeRegExp, tmpl);
+				_this.$template = _this.$template.replace(replaceIncludeRegExp, tmpl);
 			} catch (e) {
 				//找不到就清空原来的内容
-				_this.template = _this.template.replace(replaceIncludeRegExp, '');
+				_this.$template = _this.$template.replace(replaceIncludeRegExp, '');
 			}
 		}
 	});
 
 	/*去掉重复的include*/
-	includeTmpl = _fn2.default.unique(this.template.match(include));
+	includeTmpl = _fn2.default.unique(this.$template.match(include));
 
 	/*查找是否还有include的引入*/
 	if (includeTmpl.length > 0) replaceInclude.call(this);
 
 	/*清空错误的include*/
-	this.template = this.template.replace(_tmplRegexp.INCLUDE_ERROR, '');
+	this.$template = this.$template.replace(_tmplRegexp.INCLUDE_ERROR, '');
 }
 
 //模板正则配置
@@ -2016,24 +2017,24 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //初始化设置
 //常用的方法
 function init() {
-	_fn2.default.run(this.config.create, this);
-	this.template = _set.setEl.call(this);
+	_fn2.default.run(this.$config.create, this);
+	this.$template = _set.setEl.call(this);
 	_set.setInstance.call(this, 'methods');
 	_set.setInstance.call(this, 'data');
-	_fn2.default.run(this.config.created, this);
+	_fn2.default.run(this.$config.created, this);
 
 	//初始化路由
 	_router.setRouter.call(this);
 
-	if (this.template) {
+	if (this.$template) {
 		//创建配置的解析正则
 		_tmplRender.setRegExp.call(this);
 		//转化为js执行
 		_tmplRender.render.call(this);
 	}
 	_set.setEvent.call(this);
-	_fn2.default.run(this.config.events, this);
-	_fn2.default.run(this.config.mounted, this);
+	_fn2.default.run(this.$config.events, this);
+	_fn2.default.run(this.$config.mounted, this);
 	_router.checkRouterStatus.call(this);
 }
 
@@ -2081,7 +2082,9 @@ var Render = function () {
 				this.init(opts);
 		}
 
-		//初始render类
+		/*
+  * 初始render类
+  * */
 
 
 		_createClass(Render, [{
@@ -2090,9 +2093,9 @@ var Render = function () {
 
 						this.tmpl = opts.tmpl;
 
-						this.state = opts.state;
+						this.state = opts.state || {};
 
-						this.template = new Function('state', this.tmpl.vTmpl).apply(this.tmpl, [this.state]);
+						this.template = new Function(opts.stateName || 'state', this.tmpl.vTmpl).apply(this.tmpl, [this.state]);
 
 						_in_browser2.default ? this.fragment = this.tmpl.create(this.template) : null;
 				}
@@ -2158,8 +2161,8 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 
 //把路由实例挂靠到模板中
 function setRouter() {
-	if (_fn2.default.isObj(this.config.router)) {
-		this.constructor.router = this.config.router;
+	if (_fn2.default.isObj(this.$config.router)) {
+		this.constructor.router = this.$config.router;
 	}
 }
 
@@ -2170,7 +2173,7 @@ function setRouter() {
 function checkRouterStatus() {
 	//获取路由
 	var router = this.constructor.router,
-	    status = this.config.async;
+	    status = this.$config.async;
 	if (!(status === false) && router) {
 		router.changeRoutereStatus(true);
 	}
@@ -2199,14 +2202,14 @@ var _tmpl2 = _interopRequireDefault(_tmpl);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function (global, factory) {
-    if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('tmpl', factory);else if (typeof _require === 'function' && typeof _require.define === 'function') _require.define('tmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();else global ? global.Tmpl = factory() : {};
+	if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('BlueTmpl', factory);else if (typeof _require === 'function' && typeof _require.define === 'function') _require.define('BlueTmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();
 })(typeof window !== 'undefined' ? window : undefined, function () {
-    _tmpl2.default.version = "v1.0.10";
-    return _tmpl2.default;
+	_tmpl2.default.version = "v1.0.14";
+	return _tmpl2.default;
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
 
 /***/ })
 /******/ ]);
 });
-//# sourceMappingURL=tmpl.js.map
+//# sourceMappingURL=blue-tmpl.js.map

@@ -6,6 +6,6 @@ const escapeCode = {
 	'"': "&quot;",
 	"'": "&#x27;",
 	"`": "&#x60;"
-}
+};
 
 export default escapeCode;

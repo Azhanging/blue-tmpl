@@ -5,18 +5,18 @@
         <title>Title</title>
     </head>
     <body>
-        <script src="./dist/js/tmpl.js"></script>
+        <script src="./dist/js/blue-tmpl.js"></script>
 
         <div class="row" id="app"></div>
 
         <script id="tmpl" type="text/template">
             <div class="on-c">
-                click
+                <%= stateName.a %>
             </div>
         </script>
 
         <script>
-            tmpl = new Tmpl({
+            tmpl = new BlueTmpl({
               template:"tmpl",
               methods:{
               	c:function(){
@@ -28,7 +28,7 @@
               }
             })
 
-            tmpl.render(null).appendTo(tmpl.getEl('app'),function(){
+            tmpl.render({a:1},'stateName').appendTo(tmpl.getEl('app'),function(){
             	tmpl.off(this.getEl('app'),'on-c','click',this.c);
             });
 

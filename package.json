@@ -1,6 +1,6 @@
 {
   "name": "blue-tmpl",
-  "version": "1.0.10",
+  "version": "1.0.14",
   "description": "blue-tmpl in browser and blue-tmpl in express views engine or blue-tmpl in koa2 views engine",
   "main": "./index.js",
   "scripts": {
@@ -10,7 +10,7 @@
   "contributors": [
     "Blue"
   ],
-  "keyword": "tmpl template express blue",
+  "keyword": "tmpl express koa template engine",
   "author": "Blue",
   "license": "ISC",
   "devDependencies": {
@@ -25,10 +25,10 @@
     "webpack": "2.2.1"
   },
   "repositories": [
-    "https://github.com/Azhanging/tmpl"
+    "https://github.com/Azhanging/blue-tmpl"
   ],
   "bugs": {
     "mail": "azhanging@qq.com",
-    "web": "https://github.com/Azhanging/tmpl"
+    "web": "https://github.com/Azhanging/blue-tmpl"
   }
 }

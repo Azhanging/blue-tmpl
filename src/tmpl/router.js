@@ -5,8 +5,8 @@ import fn from './fn';
 
 //把路由实例挂靠到模板中
 export function setRouter() {
-	if(fn.isObj(this.config.router)) {
-		this.constructor.router = this.config.router;
+	if(fn.isObj(this.$config.router)) {
+		this.constructor.router = this.$config.router;
 	}
 }
 
@@ -14,7 +14,7 @@ export function setRouter() {
 export function checkRouterStatus() {
 	//获取路由
 	const router = this.constructor.router,
-		status = this.config.async;
+		status = this.$config.async;
 	if(!(status === false) && router) {
 		router.changeRoutereStatus(true);
 	}

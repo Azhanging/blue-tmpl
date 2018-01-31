@@ -20,11 +20,11 @@ import {
 	render
 } from './tmpl-render';
 
-export default class Tmpl extends Dom {
+export default class BlueTmpl extends Dom {
 	//Tmpl构造
 	constructor(opts) {
 		super();
-		this.config = fn.extend(fn.copy(config), opts);
+		this.$config = fn.extend(fn.copy(config), opts);
 		this.init();
 	}
 
@@ -54,16 +54,17 @@ export default class Tmpl extends Dom {
 	}
 
 	//解析模板和数据
-	render(state) {
+	render(state, stateName) {
 		return new Render({
 			tmpl: this,
-			state
+			state,
+			stateName
 		});
 	}
 
 	//添加数据更新模板
 	update() {
-		this.template = setEl.call(this);
+		this.$template = setEl.call(this);
 		render.call(this);
 		return this;
 	}
@@ -84,7 +85,7 @@ export default class Tmpl extends Dom {
 }
 
 //常用的方法给tmpl的fn属性中
-Tmpl.prototype.fn = fn;
+BlueTmpl.prototype.fn = fn;
 
 //设置路径别名常量
-Tmpl.alias = {};
+BlueTmpl.alias = {};

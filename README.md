@@ -1,32 +1,44 @@
-# Tmpl   v1.0.10
+# Blue-Tmpl   v1.0.14
 
 blue-tmpl 可以使用在浏览器以及nodejs环境，可以作为nodejs框架express 或 koa2 的view engine使用；在浏览器中可以作为解析模板使用；
 
 在koa2和express使用参考blue-tmpl-views的npm包的使用
 https://www.npmjs.com/package/blue-tmpl-views
 
-##### 更新时间：2018年1月11日10:23:20
+global
+```javascript
+new BlueTmpl(opts)
+```
+
+
+AMD module , demand module , _require module:
+```javascript
+require('BlueTmpl')
+```
+
+CommonJS module:
+```javascript
+require('blue-tmpl')
+````
+
+
+##### update date：2018-1-31 14:34:38
 
 支持IE8-EDGE , chrome , firefox
 
-## 构造对象 Tmpl
+## 构造对象 BlueTmpl
 
-#### new Tepl(options)：
+#### new BlueTmpl(options)：
 
 ##### 特别说明一下，在默认的模板中的上下文this都是指向当前模板的实例对象上，里面还有一个代理this的变量_this_，为了在一个函数作用域内方便查找当前模板的实例this对象；
 
 ****
 
-#### 静态方法：
+#### Static Methods：
 
-**Tmpl.install(constructor):** 安装插件
+**BlueTmpl.install(constructor):** install plugin
 
-**Tmpl.setAlias({Object}):** 设置别名的常量，替换到模板中对应别名的常量值，key:为别名名称，value为别名的具体值，设置后的值都会对应到Tmpl.alias中，多层的对象将会解析成 用 '.' 链接的key；
-
-
-```javascript
-
-````
+**BlueTmpl.setAlias({Object}):** set alias constant , replace in template alias constant value , key:constant name, value:constant value , set alias add in BlueTmpl.alias ，多层的对象将会解析成 用 '.' 链接的key；
 
 *******
 
@@ -65,28 +77,28 @@ https://www.npmjs.com/package/blue-tmpl-views
 
 
 **动态模板**：
-默认模板中的```<tmpl-include name="tmplId"/>```
+默认模板中的```<tmpl-include name="tmplId"></tmpl-include>```
 中引入是不存在的，会被忽略掉，可以动态添加原来插入不存在的模板，
 使用实例方法update更新模板即可，更新后的是存在
-```<tmpl-include name="tmplId"/>```中找到的动态模块。
+```<tmpl-include name="tmplId"></tmpl-include>```中找到的动态模块。
 
 **************
 
 #### PS：nodejs中的用法，不需要包含script；
-只能作为解析模板内容，对应的Tmpl中有关dom的方法无法使用：
+只能作为解析模板内容，对应的BlueTmpl中有关dom的方法无法使用：
 （nodejs环境中的```tmpl-include```是使用file来索引文件的地址，
-在nodejs环境中使用了```tmpl-include```是使用name来索引文件地址是不不做任何的处理的，
+在nodejs环境中使用了```tmpl-include[name]```来索引文件地址是不不做任何的处理的，
 同理在浏览器环境中，```tmpl-include[file]``` 也是不做任何处理的，
 需要区分两个环境的使用）；
 
-在**nodejs**环境中使用，```<tmpl-include file="path"/>```，
-name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个extends的文件，
-```<tmpl-extends file="extends.tmpl"></tmpl-extends>```。
+在**nodejs**环境中使用，```<tmpl-include file="path"></tmpl-include>```，
+name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-block>来包含一个extend的文件，
+```<tmpl-extend file="extend.tmpl" />```。
 如果索引的block是不存在的，会使用base中的block块默认的内容。
 也可使用append:加到block的name中，这样设置的节点为在默认内容后插入。
 
 ```html
-<!--extends.tmpl-->
+<!--extend.tmpl-->
 <html>
   <body>
   	<header>
@@ -209,7 +221,7 @@ app.b // 2
 </script>
 
 <script>
-	new Tmpl({
+	new BlueTmpl({
 		data:{
 			a:1,
 			b:2,
@@ -241,7 +253,7 @@ app.b // 2
 </script>
 
 <script>
-	new Tmpl({template:"tmpl"}).render({title:'我是标题'，content:"我是内容"}).appendTo('app');
+	new BlueTmpl({template:"tmpl"}).render({title:'我是标题'，content:"我是内容"}).appendTo('app');
 </script>
 
 ```
@@ -312,12 +324,10 @@ async：模板的状态，设置为false为非异步模块，针对动态模板�
 
 #### 实例方法：
 
-**render(state)**:绑定数据到当前模板实例上，返回一个Render的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：
-	appendTo(el,cb):把绑定的数据模板添加到指定的el的子节点上,cb为回调；
-	inserBefore(el,ex,cb):把绑定的数据模板添加到指定的el的ex子节点前,cb为回调；
-	
-	属性：
-	template为解析完毕的dom string
+**render(state,stateName = 'state')**:绑定数据到当前模板实例上，state为object，stateName默认为state，返回一个Render类的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：appendTo(el,cb):把绑定的数据模板添加到指定的el的子节点上,cb为回调；inserBefore(el,ex,cb):把绑定的数据模板添加到指定的el的ex子节点前,cb为回调；
+
+属性：template为解析完毕的dom string
+
 *****
 
 **on(bindEl[,bindClassName],eventType,fn)**: 事件绑定为事件委托绑定，事件的绑定都绑定到className上，即className对应你绑定的事件方法，建议绑定的className前带上on-好区分为模板事件，
@@ -376,7 +386,7 @@ app.replaceClass(buttonEl,{'className':'newClassName'}); // class="on-replaceAdd
 
 ******
 
-**attr(el,attrName)**: 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的Tmpl实例对象：
+**attr(el,attrName)**: 获取元素中对应的属性值，如果属性值前加上   bind- ，则属性内部绑定的为js表达式,当前属性内的this指向当前调用的BlueTmpl实例对象：
 
 ```html
 <div bind-id="123 + 456"> 元素 </div>
@@ -401,7 +411,7 @@ app.attr(div,'id'); //返回  "123 + 456"
 <div bind-is-true="this.method()" id="el"> 元素 </div>
 ```
 ```javascript
-new Tmpl({
+new BlueTmpl({
 	methods:{
 		method:function(){
 			console.log(true);

@@ -27,7 +27,7 @@ export default function replaceInclude() {
 	let includeTmpl, includeId;
 
 	//去重
-	includeTmpl = fn.unique(this.template.match(include));
+	includeTmpl = fn.unique(this.$template.match(include));
 	includeId = includeTmpl.toString().replace(include, "$2").split(',');
 
 	//找不到include//查找的id和include匹配的数量必须相同
@@ -43,9 +43,9 @@ export default function replaceInclude() {
 		/*浏览器环境下执行*/
 		if(inBrowser) {
 			const el = this.getEl(id);
-			if(el) this.template = this.template.replace(replaceIncludeRegExp, this.html(el));
+			if(el) this.$template = this.$template.replace(replaceIncludeRegExp, this.html(el));
 			//找不到就清空原来的内容
-			else this.template = this.template.replace(replaceIncludeRegExp, '');
+			else this.$template = this.$template.replace(replaceIncludeRegExp, '');
 		} else {
 			/*node环境下执行*/
 			try {
@@ -53,21 +53,21 @@ export default function replaceInclude() {
 					encoding: 'UTF8'
 				});
 
-				this.template = this.template.replace(replaceIncludeRegExp, tmpl);
+				this.$template = this.$template.replace(replaceIncludeRegExp, tmpl);
 
 			} catch (e) {
 				//找不到就清空原来的内容
-				this.template = this.template.replace(replaceIncludeRegExp, '');
+				this.$template = this.$template.replace(replaceIncludeRegExp, '');
 			}
 		}
 	});
 
 	/*去掉重复的include*/
-	includeTmpl = fn.unique(this.template.match(include));
+	includeTmpl = fn.unique(this.$template.match(include));
 
 	/*查找是否还有include的引入*/
 	if(includeTmpl.length > 0) replaceInclude.call(this);
 
 	/*清空错误的include*/
-	this.template = this.template.replace(INCLUDE_ERROR, '');
+	this.$template = this.$template.replace(INCLUDE_ERROR, '');
 }

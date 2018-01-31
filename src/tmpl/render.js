@@ -14,14 +14,16 @@ class Render {
 
 	}
 
-	//初始render类
+	/*
+	* 初始render类
+	* */
 	init(opts) {
 
 		this.tmpl = opts.tmpl;
 
-		this.state = opts.state;
+		this.state = opts.state || {};
 
-		this.template = new Function('state', this.tmpl.vTmpl).apply(this.tmpl, [this.state]);
+		this.template = new Function(opts.stateName || 'state', this.tmpl.vTmpl).apply(this.tmpl, [this.state]);
 
 		inBrowser ? (this.fragment = this.tmpl.create(this.template)) : null;
 
@@ -56,7 +58,6 @@ class Render {
 
 		return tmpl;
 	}
-
 }
 
 export default Render;
