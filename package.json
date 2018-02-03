@@ -1,6 +1,6 @@
 {
   "name": "blue-tmpl",
-  "version": "1.0.14",
+  "version": "1.0.15",
   "description": "blue-tmpl in browser and blue-tmpl in express views engine or blue-tmpl in koa2 views engine",
   "main": "./index.js",
   "scripts": {
@@ -24,6 +24,12 @@
     "uglifyjs-webpack-plugin": "0.1.4",
     "webpack": "2.2.1"
   },
+  "files": [
+    "dist",
+    "LICENSE",
+    "README.md",
+    "index.js"
+  ],
   "repositories": [
     "https://github.com/Azhanging/blue-tmpl"
   ],

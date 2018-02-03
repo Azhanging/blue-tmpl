@@ -11,6 +11,6 @@ import BlueTmpl from './tmpl/tmpl';
 	else if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 })(typeof window !== 'undefined' ? window : this, function () {
-	BlueTmpl.version = "v1.0.14";
+	BlueTmpl.version = "v1.0.15";
 	return BlueTmpl;
 });

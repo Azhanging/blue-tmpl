@@ -8,7 +8,7 @@ const HtmlWebpackPlugin = require('html-webpack-plugin');
 //打包公共的chunk 
 const CommonsChunkPlugin = webpack.optimize.CommonsChunkPlugin;
 
-const version = 'v1.0.14';
+const version = 'v1.0.15';
 
 module.exports = {
 	//文件起始路径

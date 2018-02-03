@@ -1,4 +1,4 @@
-# Blue-Tmpl   v1.0.14
+#Blue-Tmpl v1.0.15
 
 blue-tmpl 可以使用在浏览器以及nodejs环境，可以作为nodejs框架express 或 koa2 的view engine使用；在浏览器中可以作为解析模板使用；
 
@@ -199,13 +199,12 @@ name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-
 
 ##### data : 可以设置模板中公用的数据可变动使用的数据：
 ```javascript
-...
-{
-	data:{
-		a:1,
-		b:2
-	}
-}
+new BlueTmpl({
+    data:{
+        a:1,
+        b:2
+    }
+})
 
 app.a // 1
 app.b // 2
