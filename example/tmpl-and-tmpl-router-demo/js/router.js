@@ -1,4 +1,4 @@
-demand.define(['@base-js/routerHandler.js', 'BlueTmpl'], function (routerHandler, Tmpl) {
+demand.define(['@base-js/routerHandler.js', 'blue-tmpl'], function (routerHandler, Tmpl) {
 
 	var TmplRouter = demand('tmpl-router');
 

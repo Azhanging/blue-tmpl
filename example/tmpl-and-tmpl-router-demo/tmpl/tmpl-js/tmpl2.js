@@ -1,5 +1,5 @@
 demand.define(function() {
-	var Tmpl = demand('BlueTmpl');
+	var Tmpl = demand('blue-tmpl');
 
 	return function tmpl2() {
 		new Tmpl({

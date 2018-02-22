@@ -1,17 +1,17 @@
 /*!
  * 
- * blue-tmpl.js v1.0.15
+ * blue-tmpl.js v1.0.16
  * (c) 2016-2017 Blue
  * Released under the MIT License.
  * https://github.com/azhanging/blue-tmpl
- * time:Sat Feb 03 2018 10:44:11 GMT+0800 (中国标准时间)
+ * time:Thu Feb 22 2018 12:34:46 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 	else if(typeof define === 'function' && define.amd)
-		define("BlueTmpl", [], factory);
+		define([], factory);
 	else if(typeof exports === 'object')
 		exports["BlueTmpl"] = factory();
 	else
@@ -2195,6 +2195,10 @@ var _compatibility = __webpack_require__(8);
 
 var _compatibility2 = _interopRequireDefault(_compatibility);
 
+var _in_browser = __webpack_require__(1);
+
+var _in_browser2 = _interopRequireDefault(_in_browser);
+
 var _tmpl = __webpack_require__(9);
 
 var _tmpl2 = _interopRequireDefault(_tmpl);
@@ -2202,9 +2206,11 @@ var _tmpl2 = _interopRequireDefault(_tmpl);
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
 (function (global, factory) {
-	if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('BlueTmpl', factory);else if (typeof _require === 'function' && typeof _require.define === 'function') _require.define('BlueTmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();
+	if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('blue-tmpl', factory);else if (typeof _require === 'function' && typeof _require.define === 'function') _require.define('blue-tmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();
 })(typeof window !== 'undefined' ? window : undefined, function () {
-	_tmpl2.default.version = "v1.0.15";
+	_tmpl2.default.version = "v1.0.16";
+	//删除webpack打包后多出的构造对象
+	if (_in_browser2.default && typeof window.BlueTmpl !== 'function') delete window.BlueTmpl;
 	return _tmpl2.default;
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
