@@ -10,7 +10,6 @@ import {
 //初始化设置
 import {
 	setInstance,
-	setEvent,
 	setEl
 } from './set';
 
@@ -36,7 +35,6 @@ export default function init() {
 		//转化为js执行
 		render.call(this);
 	}
-	setEvent.call(this);
 	fn.run(this.$config.events, this);
 	fn.run(this.$config.mounted, this);
 	checkRouterStatus.call(this);

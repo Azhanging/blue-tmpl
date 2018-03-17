@@ -1,4 +1,4 @@
-## Blue-Tmpl v1.0.16
+## Blue-Tmpl
 
 blue-tmpl 可以使用在浏览器以及nodejs环境，可以作为nodejs框架express 或 koa2 的view engine使用；在浏览器中可以作为解析模板使用；
 

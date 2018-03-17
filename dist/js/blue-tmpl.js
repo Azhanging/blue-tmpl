@@ -1,22 +1,22 @@
 /*!
  * 
- * blue-tmpl.js v1.0.16
+ * blue-tmpl.js v1.1.0
  * (c) 2016-2017 Blue
  * Released under the MIT License.
  * https://github.com/azhanging/blue-tmpl
- * time:Thu Feb 22 2018 12:34:46 GMT+0800 (中国标准时间)
+ * time:Sat Mar 17 2018 11:48:38 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
 	if(typeof exports === 'object' && typeof module === 'object')
-		module.exports = factory();
+		module.exports = factory(require("fs"));
 	else if(typeof define === 'function' && define.amd)
 		define([], factory);
 	else if(typeof exports === 'object')
-		exports["BlueTmpl"] = factory();
+		exports["BlueTmpl"] = factory(require("fs"));
 	else
-		root["BlueTmpl"] = factory();
-})(this, function() {
+		root["BlueTmpl"] = factory(root[undefined]);
+})(this, function(__WEBPACK_EXTERNAL_MODULE_19__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -619,7 +619,7 @@ var fs = void 0; //运行环境是否在浏览器
 
 
 if (!_in_browser2.default) {
-	fs = require('fs');
+	fs = __webpack_require__(19);
 }
 
 exports.default = fs;
@@ -634,7 +634,6 @@ exports.default = fs;
 Object.defineProperty(exports, "__esModule", {
 	value: true
 });
-exports.setEvent = setEvent;
 exports.setInstance = setInstance;
 exports.setEl = setEl;
 
@@ -648,13 +647,8 @@ var _in_browser2 = _interopRequireDefault(_in_browser);
 
 function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { default: obj }; }
 
-//初始化时间中的参数
-//常用的方法
-function setEvent() {}
-
 //设置实例属性
-
-//运行环境是否在浏览器
+//常用的方法
 function setInstance(type) {
 	var _this = this;
 
@@ -668,6 +662,8 @@ function setInstance(type) {
 }
 
 //设置this.$template
+
+//运行环境是否在浏览器
 function setEl() {
 	if (_in_browser2.default) {
 		try {
@@ -2032,7 +2028,6 @@ function init() {
 		//转化为js执行
 		_tmplRender.render.call(this);
 	}
-	_set.setEvent.call(this);
 	_fn2.default.run(this.$config.events, this);
 	_fn2.default.run(this.$config.mounted, this);
 	_router.checkRouterStatus.call(this);
@@ -2208,12 +2203,18 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 (function (global, factory) {
 	if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('blue-tmpl', factory);else if (typeof _require === 'function' && typeof _require.define === 'function') _require.define('blue-tmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();
 })(typeof window !== 'undefined' ? window : undefined, function () {
-	_tmpl2.default.version = "v1.0.16";
+	_tmpl2.default.version = "v1.1.0";
 	//删除webpack打包后多出的构造对象
 	if (_in_browser2.default && typeof window.BlueTmpl !== 'function') delete window.BlueTmpl;
 	return _tmpl2.default;
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
+
+/***/ }),
+/* 19 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
 
 /***/ })
 /******/ ]);

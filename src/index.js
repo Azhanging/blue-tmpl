@@ -12,7 +12,7 @@ import BlueTmpl from './tmpl/tmpl';
 	else if(typeof exports === 'object' && typeof module === 'object')
 		module.exports = factory();
 })(typeof window !== 'undefined' ? window : this, function () {
-	BlueTmpl.version = "v1.0.16";
+	BlueTmpl.version = "v1.1.0";
 	//删除webpack打包后多出的构造对象
 	if(inBrowaer && typeof window.BlueTmpl !== 'function') delete window.BlueTmpl;
 	return BlueTmpl;
