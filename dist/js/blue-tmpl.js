@@ -1,10 +1,10 @@
 /*!
  * 
- * blue-tmpl.js v1.1.0
+ * blue-tmpl.js v1.1.1
  * (c) 2016-2017 Blue
  * Released under the MIT License.
  * https://github.com/azhanging/blue-tmpl
- * time:Wed Jun 27 2018 09:56:21 GMT+0800 (中国标准时间)
+ * time:Wed Jun 27 2018 10:13:42 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -2209,7 +2209,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 (function (global, factory) {
 	if (typeof demand === 'function' && typeof demand.define === 'function') demand.define('blue-tmpl', factory);else if (typeof _require === 'function' && typeof _require.define === 'function') _require.define('blue-tmpl', factory);else if (( false ? 'undefined' : _typeof(exports)) === 'object' && ( false ? 'undefined' : _typeof(module)) === 'object') module.exports = factory();
 })(typeof window !== 'undefined' ? window : undefined, function () {
-	_tmpl2.default.version = "v1.1.0";
+	_tmpl2.default.version = "v1.1.1";
 	//删除webpack打包后多出的构造对象
 	if (_in_browser2.default && typeof window.BlueTmpl !== 'function') delete window.BlueTmpl;
 	return _tmpl2.default;
