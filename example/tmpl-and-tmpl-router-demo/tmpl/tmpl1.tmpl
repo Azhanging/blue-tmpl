@@ -9,18 +9,18 @@
 </div>
 
 <script type="text/template" id="tmpl1">
-	<%if(state){%>
-		<%= state%>
+	<%if(_this_){%>
+		<%= _this_ %>
 	<%}%>
 	__VIEW__.__INDEX__
-	<div class="g-media mg-t-10 pd-10  g-bg-primary" id="id<%= state.i %>">
+	<div class="g-media mg-t-10 pd-10  g-bg-primary" id="id<%= i %>">
 		<div class="g-media-head">
 			<img src="" class="wh-64 radius-50perc" />
 		</div>
 		<div class="g-media-body">
-			<h4 class="g-media-title"><a href="#/detail?id=<%= _this_.i %>">模板1-<%= state.i %></a></h4>
+			<h4 class="g-media-title"><a href="#/detail?id=<%= _this_.i %>">模板1-<%= i %></a></h4>
 			<p class="g-media-content on-show-detailed">
-				<%= state %>
+				<%= _this_ %>
 			</p>
 			<div class="g-media-other-msg">
 				<time><a href="#/tm1?index"><%= new Date() %></a></time>
@@ -50,14 +50,14 @@
 	<% } %>
 
 	<%-
-		'123' + '123123213' + '<div name="123" haha="456" >123</div>' + state.i	
+		'123' + '123123213' + '<div name="123" haha="456" >123</div>' + _this_
 	%>
 
 </script>
 
 <script type="text/template" id="m-btn">
-	<a href="javascript:;" class='tmpl-router-anchor g-btn g-btn-primary' tmpl-anchor="id<%= state%>" tmpl-anchor-top="-38">
-		<%= state %>
+	<a href="javascript:;" class='tmpl-router-anchor g-btn g-btn-primary' tmpl-anchor="id<%= _this_ %>" tmpl-anchor-top="-38">
+		<%= _this_ %>
 	</a>
 </script>
 

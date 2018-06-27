@@ -8,56 +8,56 @@ import inBrowser from './in_browser';
 import fn from './fn';
 
 class Render {
-	constructor(opts) {
+  constructor(opts) {
 
-		this.init(opts);
+    this.init(opts);
 
-	}
+  }
 
-	/*
-	* 初始render类
-	* */
-	init(opts) {
+  /*
+  * 初始render类
+  * */
+  init(opts) {
 
-		this.tmpl = opts.tmpl;
+    this.tmpl = opts.tmpl;
 
-		this.state = opts.state || {};
+    this.state = opts.state || {};
 
-		this.template = new Function(opts.stateName || 'state', this.tmpl.vTmpl).apply(this.tmpl, [this.state]);
+    this.template = new Function('tmpl', this.tmpl.vTmpl).apply(this.state, [this.tmpl]);
 
-		inBrowser ? (this.fragment = this.tmpl.create(this.template)) : null;
+    inBrowser ? (this.fragment = this.tmpl.create(this.template)) : null;
 
-	}
+  }
 
-	//在父节点中插入解析后的模板
-	appendTo(el, cb) {
+  //在父节点中插入解析后的模板
+  appendTo(el, cb) {
 
-		const tmpl = this.tmpl,
-			fn = tmpl.fn;
+    const tmpl = this.tmpl,
+      fn = tmpl.fn;
 
-		if(el.nodeType === 1) el.appendChild(this.fragment);
+    if (el.nodeType === 1) el.appendChild(this.fragment);
 
-		else tmpl.getEl(el).appendChild(this.fragment);
+    else tmpl.getEl(el).appendChild(this.fragment);
 
-		fn.cb(cb, this.tmpl);
+    fn.cb(cb, this.tmpl);
 
-		return tmpl;
-	}
+    return tmpl;
+  }
 
-	//在el子节点ex中插入解析后的模板
-	insertBefore(el, ex, cb) {
+  //在el子节点ex中插入解析后的模板
+  insertBefore(el, ex, cb) {
 
-		const tmpl = this.tmpl,
-			fn = tmpl.fn,
-			_el = el.nodeType === 1 ? el : tmpl.getEl(el),
-			_ex = el.nodeType === 1 ? ex : tmpl.getEl(ex);
+    const tmpl = this.tmpl,
+      fn = tmpl.fn,
+      _el = el.nodeType === 1 ? el : tmpl.getEl(el),
+      _ex = el.nodeType === 1 ? ex : tmpl.getEl(ex);
 
-		_el.insertBefore(this.fragment, _ex);
+    _el.insertBefore(this.fragment, _ex);
 
-		fn.cb(cb, tmpl);
+    fn.cb(cb, tmpl);
 
-		return tmpl;
-	}
+    return tmpl;
+  }
 }
 
 export default Render;

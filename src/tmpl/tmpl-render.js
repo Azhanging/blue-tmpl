@@ -118,7 +118,7 @@ export function render() {
 		}
 	});
 
-	this.vTmpl = 'try{var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");}catch(e){console.warn(e);return "";}';
+	this.vTmpl = 'with(this){try{var _this_ = tmpl,___ = [];' + domString.join('') + 'return ___.join("");}catch(e){console.warn(e);return "";}}';
 
 };
 

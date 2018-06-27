@@ -4,7 +4,7 @@
  * (c) 2016-2017 Blue
  * Released under the MIT License.
  * https://github.com/azhanging/blue-tmpl
- * time:Sat Mar 17 2018 11:48:38 GMT+0800 (中国标准时间)
+ * time:Wed Jun 27 2018 09:56:21 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -16,7 +16,7 @@
 		exports["BlueTmpl"] = factory(require("fs"));
 	else
 		root["BlueTmpl"] = factory(root[undefined]);
-})(this, function(__WEBPACK_EXTERNAL_MODULE_19__) {
+})(this, function(__WEBPACK_EXTERNAL_MODULE_18__) {
 return /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
@@ -82,7 +82,7 @@ return /******/ (function(modules) { // webpackBootstrap
 /******/ 	__webpack_require__.p = "/dist";
 /******/
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 18);
+/******/ 	return __webpack_require__(__webpack_require__.s = 19);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -545,7 +545,7 @@ function render() {
 		}
 	});
 
-	this.vTmpl = 'try{var _this_ = this,___ = [];' + domString.join('') + 'return ___.join("");}catch(e){console.warn(e);return "";}';
+	this.vTmpl = 'with(this){try{var _this_ = tmpl,___ = [];' + domString.join('') + 'return ___.join("");}catch(e){console.warn(e);return "";}}';
 };
 
 /*替换别名的常量*/
@@ -619,7 +619,7 @@ var fs = void 0; //运行环境是否在浏览器
 
 
 if (!_in_browser2.default) {
-	fs = __webpack_require__(19);
+	fs = __webpack_require__(18);
 }
 
 exports.default = fs;
@@ -2046,7 +2046,7 @@ function init() {
 
 
 Object.defineProperty(exports, "__esModule", {
-		value: true
+    value: true
 });
 
 var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }(); /*
@@ -2071,66 +2071,66 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
 
 var Render = function () {
-		function Render(opts) {
-				_classCallCheck(this, Render);
+    function Render(opts) {
+        _classCallCheck(this, Render);
 
-				this.init(opts);
-		}
+        this.init(opts);
+    }
 
-		/*
-  * 初始render类
-  * */
+    /*
+    * 初始render类
+    * */
 
 
-		_createClass(Render, [{
-				key: 'init',
-				value: function init(opts) {
+    _createClass(Render, [{
+        key: 'init',
+        value: function init(opts) {
 
-						this.tmpl = opts.tmpl;
+            this.tmpl = opts.tmpl;
 
-						this.state = opts.state || {};
+            this.state = opts.state || {};
 
-						this.template = new Function(opts.stateName || 'state', this.tmpl.vTmpl).apply(this.tmpl, [this.state]);
+            this.template = new Function('tmpl', this.tmpl.vTmpl).apply(this.state, [this.tmpl]);
 
-						_in_browser2.default ? this.fragment = this.tmpl.create(this.template) : null;
-				}
+            _in_browser2.default ? this.fragment = this.tmpl.create(this.template) : null;
+        }
 
-				//在父节点中插入解析后的模板
+        //在父节点中插入解析后的模板
 
-		}, {
-				key: 'appendTo',
-				value: function appendTo(el, cb) {
+    }, {
+        key: 'appendTo',
+        value: function appendTo(el, cb) {
 
-						var tmpl = this.tmpl,
-						    fn = tmpl.fn;
+            var tmpl = this.tmpl,
+                fn = tmpl.fn;
 
-						if (el.nodeType === 1) el.appendChild(this.fragment);else tmpl.getEl(el).appendChild(this.fragment);
+            if (el.nodeType === 1) el.appendChild(this.fragment);else tmpl.getEl(el).appendChild(this.fragment);
 
-						fn.cb(cb, this.tmpl);
+            fn.cb(cb, this.tmpl);
 
-						return tmpl;
-				}
+            return tmpl;
+        }
 
-				//在el子节点ex中插入解析后的模板
+        //在el子节点ex中插入解析后的模板
 
-		}, {
-				key: 'insertBefore',
-				value: function insertBefore(el, ex, cb) {
+    }, {
+        key: 'insertBefore',
+        value: function insertBefore(el, ex, cb) {
 
-						var tmpl = this.tmpl,
-						    fn = tmpl.fn,
-						    _el = el.nodeType === 1 ? el : tmpl.getEl(el),
-						    _ex = el.nodeType === 1 ? ex : tmpl.getEl(ex);
+            var tmpl = this.tmpl,
+                fn = tmpl.fn,
+                _el = el.nodeType === 1 ? el : tmpl.getEl(el),
+                _ex = el.nodeType === 1 ? ex : tmpl.getEl(ex);
 
-						_el.insertBefore(this.fragment, _ex);
+            _el.insertBefore(this.fragment, _ex);
 
-						fn.cb(cb, tmpl);
+            fn.cb(cb, tmpl);
 
-						return tmpl;
-				}
-		}]);
+            return tmpl;
+        }
+    }]);
 
-		return Render;
+    return Render;
 }();
 
 exports.default = Render;
@@ -2176,6 +2176,12 @@ function checkRouterStatus() {
 
 /***/ }),
 /* 18 */
+/***/ (function(module, exports) {
+
+module.exports = __WEBPACK_EXTERNAL_MODULE_18__;
+
+/***/ }),
+/* 19 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -2209,12 +2215,6 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 	return _tmpl2.default;
 });
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7)(module)))
-
-/***/ }),
-/* 19 */
-/***/ (function(module, exports) {
-
-module.exports = __WEBPACK_EXTERNAL_MODULE_19__;
 
 /***/ })
 /******/ ]);

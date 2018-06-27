@@ -11,26 +11,29 @@
 
         <script id="tmpl" type="text/template">
             <div class="on-c">
-                <%= stateName.a %>
+                <%= a %><%= _this_.b %>
             </div>
         </script>
 
         <script>
-            tmpl = new BlueTmpl({
-              template:"tmpl",
-              methods:{
-              	c:function(){
-                  alert(1);
-                }
-              },
-              events:function(){
-              	this.on(this.getEl('app'),'on-c','click',this.c);
+          tmpl = new BlueTmpl({
+            template: "tmpl",
+            data: {
+              b: 'test'
+            },
+            methods: {
+              c: function () {
+                alert(1);
               }
-            })
+            },
+            events: function () {
+              this.on(this.getEl('app'), 'on-c', 'click', this.c);
+            }
+          })
 
-            tmpl.render({a:1},'stateName').appendTo(tmpl.getEl('app'),function(){
-            	tmpl.off(this.getEl('app'),'on-c','click',this.c);
-            });
+          tmpl.render({ a: 1 }).appendTo(tmpl.getEl('app'), function () {
+            tmpl.off(this.getEl('app'), 'on-c', 'click', this.c);
+          });
 
         </script>
     </body>

@@ -9,12 +9,12 @@
 </div>
 
 <script type="text/template" id="tmpl2">
-	<% for(var i = 0;i<state.length;i++){ %>
+	<% for(var i = 0;i<5;i++){ %>
 	<div class="g-media mg-t-10 pd-10  g-bg-danger">
 		<div class="g-media-body">
-			<h4 class="g-media-title">模板2-<%= state[i] %></h4>
+			<h4 class="g-media-title">模板2-<%= i %></h4>
 			<p class="g-media-content on-show-detailed">
-				<%= state %>
+				<%= _this_ %>
 			</p>
 			<div class="g-media-other-msg">
 				<time><%= new Date() %></time>

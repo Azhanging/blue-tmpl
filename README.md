@@ -191,7 +191,7 @@ name指向模板的路径。也可以使用<tmpl-block name="block-name"></tmpl-
 ```
 *************
 
-#### 有关模板的使用open\_tag和close\_tag内写js代码 <% js 代码 %> ，<%= state %>为输出的js代码，<%- js代码 %> 转义的代码（如html的转义）内部可以写js表达式，只能是表达式（自执行函数需要分多行编写，建议不写在一行内，会出现预测不到的结果）；
+#### 有关模板的使用open\_tag和close\_tag内写js代码 <% js 代码 %> ，<%= jscode %>为输出的js代码，<%- js代码 %> 转义的代码（如html的转义）内部可以写js表达式，只能是表达式（自执行函数需要分多行编写，建议不写在一行内，会出现预测不到的结果）；
 
 
 
@@ -213,10 +213,10 @@ app.b // 2
 ```html
 
 <script type="text/template">
-	<div><%= this.a %></div>
-	<div><%= this.b %></div>
-	<div><%= this.c %></div>		
-	<div><%= this.d %></div>
+	<div><%= _this_.a %></div>
+	<div><%= _this_.b %></div>
+	<div><%= _this_.c %></div>		
+	<div><%= _this_.d %></div>
 </script>
 
 <script>
@@ -242,13 +242,11 @@ app.b // 2
 ```
 *************
 
-##### 默认从外部传进去的数据只有一个顶层的state变量：
-
 ```html
 <div id="app"></div>	
 <script type="text/template" id="tmpl">
-	<div><%= state.title %></div>
-	<div><%= state.content %></div>
+	<div><%= title %></div>
+	<div><%= content %></div>
 </script>
 
 <script>
@@ -323,7 +321,7 @@ async：模板的状态，设置为false为非异步模块，针对动态模板�
 
 #### 实例方法：
 
-**render(state,stateName = 'state')**:绑定数据到当前模板实例上，state为object，stateName默认为state，返回一个Render类的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：appendTo(el,cb):把绑定的数据模板添加到指定的el的子节点上,cb为回调；inserBefore(el,ex,cb):把绑定的数据模板添加到指定的el的ex子节点前,cb为回调；
+**render({data})**:绑定数据到当前模板实例上，返回一个Render类的实例对象，对象上有两个方法，appendTo和inserBefore,用来添加当前的数据模板到指定位置：appendTo(el,cb):把绑定的数据模板添加到指定的el的子节点上,cb为回调；inserBefore(el,ex,cb):把绑定的数据模板添加到指定的el的ex子节点前,cb为回调；
 
 属性：template为解析完毕的dom string
 
