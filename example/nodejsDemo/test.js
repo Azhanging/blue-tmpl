@@ -1,4 +1,4 @@
-let Tmpl = require('../../dist/js/blue-tmpl');
+let Tmpl = require('../../dist/static/js/blue-tmpl');
 
 let fs = require('fs');
 

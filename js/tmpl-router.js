@@ -4,7 +4,7 @@
  * 			(c) 2016-2017 Blue
  * 			Released under the MIT License.
  * 			https://github.com/azhanging/tmpl-router
- * 			time:Wed Sep 27 2017 20:33:07 GMT+0800 (中国标准时间)
+ * 			time:Mon Sep 10 2018 21:01:30 GMT+0800 (中国标准时间)
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
@@ -150,9 +150,9 @@ var TmplRouter = function () {
 		value: function set(routerOpts) {
 			var _this = this;
 
-			var fn = this.constructor.fn;
-			if (fn.isObj(routerOpts)) {
-				fn.each(routerOpts, function (opt, key) {
+			var util = this.constructor.util;
+			if (util.isObjcet(routerOpts)) {
+				util.each(routerOpts, function (opt, key) {
 					_this.routes[key] = opt;
 				});
 			}
@@ -171,8 +171,8 @@ var TmplRouter = function () {
 	}, {
 		key: 'go',
 		value: function go(page) {
-			var fn = this.constructor.fn;
-			if (fn.isNum(page)) history.go(page);
+			var util = this.constructor.util;
+			if (util.isNum(page)) history.go(page);
 		}
 	}, {
 		key: 'redirect',
@@ -200,11 +200,11 @@ var TmplRouter = function () {
 	}, {
 		key: 'query',
 		value: function query(searchs) {
-			var fn = this.constructor.fn;
-			if (!fn.isStr(searchs)) return {};
+			var util = this.constructor.util;
+			if (!util.isStr(searchs)) return {};
 			var query = {},
 			    search = searchs.split('&');
-			fn.each(search, function (_search, index) {
+			util.each(search, function (_search, index) {
 				var temp = _search.split('=');
 				if (temp.length !== 1) {
 					var key = temp[0];
@@ -221,7 +221,7 @@ var TmplRouter = function () {
 		key: 'search',
 		value: function search(el, _search2) {
 
-			var fn = this.constructor.fn,
+			var util = this.constructor.util,
 			    tmpl = this.constructor.tmpl;
 
 			var path = '';
@@ -233,8 +233,8 @@ var TmplRouter = function () {
 			}
 
 			if (_search2) {
-				if (fn.isObj(_search2)) {
-					_search2 = fn.serialize(_search2);
+				if (util.isObjcet(_search2)) {
+					_search2 = util.serialize(_search2);
 				}
 				path[1] = _search2;
 				tmpl.attr(el, {
@@ -275,7 +275,7 @@ var TmplRouter = function () {
 
 			this.tmpl = new Tmpl({});
 
-			this.fn = this.tmpl.fn;
+			this.util = this.tmpl.util;
 		}
 	}]);
 
@@ -356,7 +356,7 @@ exports.default = getTmpl;
 
 function getTmpl(hash) {
 
-	var fn = this.constructor.fn;
+	var util = this.constructor.util;
 
 	var tmpl = this.constructor.tmpl;
 
@@ -385,7 +385,7 @@ function getTmpl(hash) {
 				}
 			});
 		} catch (e) {
-			fn.ajax({
+			util.ajax({
 				async: false,
 				url: tmplUrl,
 				success: function success(data) {
@@ -411,11 +411,11 @@ function getTmpl(hash) {
 /*清空空的文本节点*/
 function filterTextNode(parentEl) {
 
-	var fn = this.constructor.fn;
+	var util = this.constructor.util;
 
 	var tmpl = this.constructor.tmpl;
 
-	fn.each(parentEl.childNodes, function (el, index) {
+	util.each(parentEl.childNodes, function (el, index) {
 		if (el && el.nodeType === 3 && el.textContent.trim() === '') {
 			tmpl.remove(el);
 		}
@@ -439,7 +439,7 @@ exports.default = protoHashChange;
 
 function protoHashChange() {
 
-    var fn = this.constructor.fn,
+    var util = this.constructor.util,
         tmpl = this.constructor.tmpl,
         path = window.location.hash.replace('#', ''),
         routerBtns = tmpl.getEls(this.config.routerLink),
@@ -464,15 +464,15 @@ function protoHashChange() {
 
     //error页面
     if (!this.alias[hash] && !this.routes[hash]) {
-        fn.run(this.config.error, this);
+        util.run(this.config.error, this);
         return;
     }
 
     //使用路由中的钩子
-    fn.run(this.routes[hash].routerEnter, this, [path, this.$from]);
+    util.run(this.routes[hash].routerEnter, this, [path, this.$from]);
 
     /*路由进入的全局钩子*/
-    fn.run(this.config.routerEnter, this, [path, this.$from]);
+    util.run(this.config.routerEnter, this, [path, this.$from]);
 
     /*如果是存在别名路径，返回代理的那个路径*/
     hashChange.apply(this, [routerBtns, hasAlias ? hash : path, path]);
@@ -482,7 +482,7 @@ function protoHashChange() {
 function hashChange(routerBtns, path, fullPath) {
     var _this = this;
 
-    var fn = this.constructor.fn,
+    var util = this.constructor.util,
         tmpl = this.constructor.tmpl,
         hash = this.getHash(path),
         lastRouter = this.$lastRouter;
@@ -506,7 +506,7 @@ function hashChange(routerBtns, path, fullPath) {
     showTmplEl.apply(this, [hash]); //显示路由的view
 
     //修改对应的状态
-    fn.each(routerBtns, function (el, index) {
+    util.each(routerBtns, function (el, index) {
         var path = tmpl.attr(el, 'href'),
             href = _this.getHash(path);
 
@@ -531,25 +531,25 @@ function hashChange(routerBtns, path, fullPath) {
     setRouterScroll.call(this, hash);
 
     //使用路由中的钩子
-    fn.run(this.routes[hash].routerEntered, this, [path, this.$from, alinkEl]);
+    util.run(this.routes[hash].routerEntered, this, [path, this.$from, alinkEl]);
 
     //调用全局进入结束钩子
-    fn.run(this.config.routerEntered, this, [path, this.$from, alinkEl]);
+    util.run(this.config.routerEntered, this, [path, this.$from, alinkEl]);
 }
 
 /*检查当前路径是否存在别名*/
 function getPathAlias(path, el) {
 
-    var fn = this.constructor.fn,
+    var util = this.constructor.util,
         hash = this.getHash(path),
         alias = this.alias[hash];
 
     //别名触发钩子
     /*if(this.routes[hash]) {
-        fn.run(this.routes[hash].routerEnter, this, [path]);
-        fn.run(this.config.routerEnter, this, [path, el]);
-        fn.run(this.routes[hash].routerEntered, this, [path]);
-        fn.run(this.config.routerEntered, this, [path, el]);
+        util.run(this.routes[hash].routerEnter, this, [path]);
+        util.run(this.config.routerEnter, this, [path, el]);
+        util.run(this.routes[hash].routerEntered, this, [path]);
+        util.run(this.config.routerEntered, this, [path, el]);
     }*/
 
     //如果别名存在别名，递归使用
@@ -564,9 +564,9 @@ function getPathAlias(path, el) {
 function hideTmplEl(hash) {
     var _this2 = this;
 
-    var fn = this.constructor.fn;
+    var util = this.constructor.util;
     /*如果不是匹配的路由视图，则不显示在路由视图中*/
-    fn.each(this.routes[hash].view, function (el, index) {
+    util.each(this.routes[hash].view, function (el, index) {
         _this2.routes[hash].temp.appendChild(el);
     });
     this.routes[hash].view = [];
@@ -576,7 +576,7 @@ function hideTmplEl(hash) {
 function showTmplEl(hash) {
     var _this3 = this;
 
-    var fn = this.constructor.fn,
+    var util = this.constructor.util,
         tmpl = this.constructor.tmpl,
         view = this.routerView;
 
@@ -584,7 +584,7 @@ function showTmplEl(hash) {
     view.appendChild(this.routes[hash].temp);
 
     //保存view层节点
-    fn.each(tmpl.children(view), function (el, index) {
+    util.each(tmpl.children(view), function (el, index) {
         _this3.routes[hash].view.push(el);
     });
 }
@@ -601,8 +601,8 @@ function setRouterScroll(hash) {
 
 /*设置scrollTop*/
 function setScrollTop(num) {
-    var fn = this.constructor.fn;
-    if (!fn.isNum(num)) return 0;
+    var util = this.constructor.util;
+    if (!util.isNum(num)) return 0;
     try {
         document.body.scrollTop = parseFloat(num);
     } catch (e) {
@@ -634,7 +634,7 @@ function _interopRequireDefault(obj) { return obj && obj.__esModule ? obj : { de
 //配置参数
 function init(opts) {
 
-	var fn = this.constructor.fn,
+	var util = this.constructor.util,
 	    tmpl = this.constructor.tmpl;
 
 	this.routes = {};
@@ -645,7 +645,7 @@ function init(opts) {
 	//只有一次路由实例，挂载到tmpl上
 	this.constructor.tmpl.constructor.router = this;
 
-	this.config = fn.extend(fn.copy(_config2.default), opts);
+	this.config = util.extend(util.deepCopy(_config2.default), opts);
 
 	this.routerView = tmpl.getEl(this.config.routerView);
 
@@ -665,11 +665,11 @@ function init(opts) {
 
 	_set.setHashEvent.call(this); //设置hash
 
-	fn.run(this.config.created, this); //所有创建后的钩子
+	util.run(this.config.created, this); //所有创建后的钩子
 
 	this.hashChange(); //初始化好了初始化hash
 
-	fn.run(this.config.mounted, this); //所有完毕后的钩子
+	util.run(this.config.mounted, this); //所有完毕后的钩子
 }
 //设置的handler
 ;
@@ -695,13 +695,13 @@ exports.setHashEvent = setHashEvent;
 function setRouter(routers, path) {
     var _this = this;
 
-    var fn = this.constructor.fn,
+    var util = this.constructor.util,
         _path = path ? path : '';
 
-    fn.each(routers, function (router, index) {
+    util.each(routers, function (router, index) {
         if (router.path === undefined) return;
         var __path = _path + router.path;
-        if (fn.isArr(router.modules)) {
+        if (util.isArray(router.modules)) {
             setRouter.apply(_this, [router.modules, __path]);
         }
         _this.routes[__path] = router;
@@ -713,14 +713,14 @@ function setRouter(routers, path) {
 function setInstance(type) {
     var _this2 = this;
 
-    var fn = this.constructor.fn,
+    var util = this.constructor.util,
         get = this.config[type];
 
-    if (!fn.isObj(get)) {
+    if (!util.isObjcet(get)) {
         return;
     }
 
-    fn.each(get, function (_get, key) {
+    util.each(get, function (_get, key) {
         _this2[key] = _get;
     });
 }
@@ -729,7 +729,7 @@ function setInstance(type) {
 function setRouterLinkStatus() {
     var _this3 = this;
 
-    var fn = this.constructor.fn;
+    var util = this.constructor.util;
 
     var tmpl = this.constructor.tmpl;
 
@@ -737,13 +737,13 @@ function setRouterLinkStatus() {
 
     var routerBtns = tmpl.getEls(this.config.routerLink); //获取路由绑定的节点
 
-    fn.each(routerBtns, function (routerBtn, index) {
-        fn.on(routerBtn, 'click', function (event) {
+    util.each(routerBtns, function (routerBtn, index) {
+        util.on(routerBtn, 'click', function (event) {
             var path = tmpl.attr(routerBtn, 'href'),
                 hash = _this3.getHash(path);
             if (!(_this3.getHash(_this3.$lastRouter) === hash)) {
                 //点击路由链接触发的钩子
-                fn.run(_this3.config.triggerRouter, _this3, [path, routerBtn]);
+                util.run(_this3.config.triggerRouter, _this3, [path, routerBtn]);
             }
             if (!_this3.routerStatus) {
                 event.preventDefault();
@@ -758,7 +758,7 @@ function setRouterLinkStatus() {
 function setRouterAnchor(time) {
     var _this4 = this;
 
-    var fn = this.constructor.fn,
+    var util = this.constructor.util,
         tmpl = this.constructor.tmpl;
 
     function stopScroll(event) {
@@ -773,9 +773,9 @@ function setRouterAnchor(time) {
 
         var anchorOffsetTop = tmpl.attr(el, _this4.config.routerAnchorTop);
 
-        anchorOffsetTop = fn.isNum(anchorOffsetTop) ? Number(anchorOffsetTop) : 0;
+        anchorOffsetTop = util.isNum(anchorOffsetTop) ? Number(anchorOffsetTop) : 0;
 
-        if (fn.isEl(anchorEl)) {
+        if (util.isEl(anchorEl)) {
             //定义滑动阻止默认动作
             window.addEventListener('mousewheel', stopScroll);
 
@@ -792,9 +792,9 @@ function setRouterAnchor(time) {
 function setkeepLive() {
     var _this5 = this;
 
-    var fn = this.constructor.fn;
+    var util = this.constructor.util;
     if (!this.config.keepLive) return;
-    fn.on(window, 'scroll', function (event) {
+    util.on(window, 'scroll', function (event) {
         if (_this5.routes[_this5.currentRouter] && _this5.routes[_this5.currentRouter].keepLive) {
             _this5.routes[_this5.currentRouter].scrollTop = document.body.scrollTop || document.documentElement.scrollTop;
         }
@@ -805,11 +805,11 @@ function setkeepLive() {
 function setPaths(routes) {
     var _this6 = this;
 
-    var fn = this.constructor.fn;
+    var util = this.constructor.util;
 
     this.alias = {};
 
-    fn.each(routes, function (router, path) {
+    util.each(routes, function (router, path) {
 
         var alias = router.alias;
 

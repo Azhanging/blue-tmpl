@@ -21,67 +21,67 @@ import {
 } from '../compile';
 
 export default class BlueTmpl extends Dom {
-	//Tmpl构造
-	constructor(opts) {
-		super();
-		this.$config = util.extend(util.deepCopy(config), opts);
-		this.init();
-	}
+  //Tmpl构造
+  constructor(opts) {
+    super();
+    this.$config = util.extend(util.deepCopy(config), opts);
+    this.init();
+  }
 
-	//安装插件
-	static install(constructor) {
-		constructor.install(this);
-	}
+  //安装插件
+  static install(constructor) {
+    constructor.install(this);
+  }
 
-	//直接解析
-	static render(domStr, state) {
+  //直接解析
+  static render(domStr, state) {
 
-		const tmpl = new this({
-			template: domStr
-		});
+    const tmpl = new this({
+      template: domStr
+    });
 
-		return tmpl.render(state).template;
-	}
+    return tmpl.render(state).template;
+  }
 
-	//解析path
-	static setAlias(paths) {
-		setAlias.call(this, paths);
-	}
+  //解析path
+  static setAlias(paths) {
+    setAlias.call(this, paths);
+  }
 
-	//初始化对象
-	init() {
-		init.call(this);
-	}
+  //初始化对象
+  init() {
+    init.call(this);
+  }
 
-	//解析模板和数据
-	render(state, stateName) {
-		return new Render({
-			tmpl: this,
-			state,
-			stateName
-		});
-	}
+  //解析模板和数据
+  render(state, stateName) {
+    return new Render({
+      tmpl: this,
+      state,
+      stateName
+    });
+  }
 
-	//添加数据更新模板
-	update() {
-		this.$template = setEl.call(this);
+  //添加数据更新模板
+  update() {
+    this.$template = setEl.call(this);
     compile.call(this);
-		return this;
-	}
+    return this;
+  }
 
-	/*回调*/
-	cb(cb) {
-		util.cb(cb, this);
-		return this;
-	}
+  /*回调*/
+  cb(cb) {
+    util.cb(cb, this);
+    return this;
+  }
 
-	/*转义*/
-	escape(escapeVal) {
-		util.each(escapeCode, (item, key) => {
-			escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
-		});
-		return escapeVal;
-	}
+  /*转义*/
+  escape(escapeVal) {
+    util.each(escapeCode, (item, key) => {
+      escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
+    });
+    return escapeVal;
+  }
 }
 
 BlueTmpl.prototype.util = util;

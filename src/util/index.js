@@ -1,8 +1,8 @@
 import inBrowser from "../core/in_browser";
 
-class Util{
+class Util {
 
-  nullPlainObject(val){
+  nullPlainObject(val) {
     return JSON.stringify(val) === "{}";
   }
 
@@ -148,10 +148,10 @@ class Util{
   }
 
   unique(arr) { /*去重*/
-    if(!this.isArr(arr)) return [];
+    if (!this.isArray(arr)) return [];
     let newArray = [];
     this.each(arr, (item, index) => {
-      if(newArray.indexOf(item) === -1) {
+      if (newArray.indexOf(item) === -1) {
         newArray.push(item);
       }
     });
@@ -161,7 +161,7 @@ class Util{
   trimArr(arr) { /*清空数组中空的值*/
     let newArr = [];
     this.each(arr, (item, index) => {
-      if(item !== '') {
+      if (item !== '') {
         newArr.push(item);
       }
     });
@@ -171,7 +171,7 @@ class Util{
   serialize(data) { //初始化form数据
     let result = '';
 
-    if(!this.isObj(data) || !this.isArr(data)) return '';
+    if (!this.isObj(data) || !this.isArr(data)) return '';
 
     this.each(data, (val, key) => {
 
@@ -213,17 +213,74 @@ class Util{
 
   getObjLen(obj) {
     let index = 0;
-    this.each(obj,()=>{
+    this.each(obj, () => {
       ++index;
     });
     return index;
+  }
+
+  ajax(options) {
+    //创建xhr
+    const xhr = new XMLHttpRequest();
+    //连接类型
+    options.type = (options.type ? options.type.toUpperCase() : 'GET');
+    //超时
+    xhr.timeout = options.timeout && options.async !== false ? options.timeout : 0;
+
+    if (options.type === "GET") {
+
+      xhr.open(options.type, (() => {
+
+        return options.url.indexOf('?') ?
+          options.url + this.serialize(options.data) :
+          options.url + '?' + this.serialize(options.data);
+
+      })(), options.async);
+
+    } else if (options.type === "POST") {
+
+      xhr.open(options.type, options.url, options.async);
+
+    }
+    xhr.setRequestHeader('Content-Type', options.contentType ?
+      options.contentType :
+      'application/x-www-form-urlencoded; charset=UTF-8');
+    //响应事件
+    xhr.addEventListener('readystatechange', () => {
+      let data;
+
+      try {
+        data = JSON.parse(xhr.responseText);
+      } catch (e) {
+        data = xhr.responseText;
+      }
+
+      if (xhr.readyState == 4) {
+        if (xhr.status == 200) {
+          this.cb(options.success, this, [data]);
+        } else if (xhr.status >= 400) {
+          this.cb(options.error, this, [data]);
+        }
+      }
+    }, false);
+
+    //send指令
+    if (options.type === "GET") {
+
+      xhr.send();
+
+    } else if (options.type === "POST") {
+
+      xhr.send(this.serialize(options.data));
+
+    }
   }
 }
 
 //设置事件
 Util.prototype.on = (function () {
-  if(!inBrowser) return;
-  if(typeof document.addEventListener === 'function') {
+  if (!inBrowser) return;
+  if (typeof document.addEventListener === 'function') {
     return function on(el, type, cb) {
       el.addEventListener(type, cb, false);
     }
@@ -236,8 +293,8 @@ Util.prototype.on = (function () {
 
 //移除事件
 Util.prototype.off = (function () {
-  if(!inBrowser) return;
-  if(typeof document.removeEventListener === 'function') {
+  if (!inBrowser) return;
+  if (typeof document.removeEventListener === 'function') {
     return function off(el, type, cb) {
       el.removeEventListener(type, cb, false);
     }

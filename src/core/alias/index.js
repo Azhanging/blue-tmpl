@@ -3,19 +3,19 @@ import util from '../../util';
 
 export function setAlias(paths, key = '') {
 
-	if(!util.isObjcet(paths)) return;
+  if (!util.isObjcet(paths)) return;
 
-	util.each(paths, (path, _key) => {
+  util.each(paths, (path, _key) => {
 
-		if(!path) return;
+    if (!path) return;
 
-		const __key = key ? key + '.' + _key : _key;
+    const __key = key ? key + '.' + _key : _key;
 
-		if(util.isObjcet(path)) {
-			setAlias.apply(this, [path, __key]);
-		} else {
-			this.alias[__key] = path;
-		}
+    if (util.isObjcet(path)) {
+      setAlias.apply(this, [path, __key]);
+    } else {
+      this.alias[__key] = path;
+    }
 
-	});
+  });
 }
