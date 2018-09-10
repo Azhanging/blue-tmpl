@@ -1,0 +1,18 @@
+<!DOCTYPE html><html lang=en><head><meta charset=UTF-8><title>Title</title></head><body><script src=./dist/static/js/blue-tmpl.js></script><div class=row id=app></div><script id=tmpl type=text/template><div class="on-c"> <%= a %><%= _this_.b %> </div></script><script>tmpl = new BlueTmpl({
+            template: "tmpl",
+            data: {
+              b: 'test'
+            },
+            methods: {
+              c: function () {
+                alert(1);
+              }
+            },
+            events: function () {
+              this.on(this.getEl('app'), 'on-c', 'click', this.c);
+            }
+          })
+
+          tmpl.render({ a: 1 }).appendTo(tmpl.getEl('app'), function () {
+            tmpl.off(this.getEl('app'), 'on-c', 'click', this.c);
+          });</script><script type=text/javascript src=./static/js/blue-tmpl.js></script><script type=text/javascript src=./static/js/blue-tmpl.min.js></script></body></html>
