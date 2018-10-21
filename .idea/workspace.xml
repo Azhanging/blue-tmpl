@@ -4,29 +4,24 @@
     <list default="true" id="5b72b343-1b77-44d3-bb80-bba138a11999" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
       <change beforePath="$PROJECT_DIR$/dist/static/js/blue-tmpl.js" afterPath="$PROJECT_DIR$/dist/static/js/blue-tmpl.js" />
-      <change beforePath="$PROJECT_DIR$/dist/static/js/blue-tmpl.js.map" afterPath="$PROJECT_DIR$/dist/static/js/blue-tmpl.js.map" />
       <change beforePath="$PROJECT_DIR$/dist/static/js/blue-tmpl.min.js" afterPath="$PROJECT_DIR$/dist/static/js/blue-tmpl.min.js" />
-      <change beforePath="$PROJECT_DIR$/dist/static/js/blue-tmpl.min.js.map" afterPath="$PROJECT_DIR$/dist/static/js/blue-tmpl.min.js.map" />
-      <change beforePath="$PROJECT_DIR$/example/nodejsDemo/test.js" afterPath="$PROJECT_DIR$/example/nodejsDemo/test.js" />
-      <change beforePath="$PROJECT_DIR$/example/tmpl-and-tmpl-router-demo/index.html" afterPath="$PROJECT_DIR$/example/tmpl-and-tmpl-router-demo/index.html" />
-      <change beforePath="$PROJECT_DIR$/example/tmpl-and-tmpl-router-demo/tmpl/tmpl-js/detail.js" afterPath="$PROJECT_DIR$/example/tmpl-and-tmpl-router-demo/tmpl/tmpl-js/detail.js" />
-      <change beforePath="$PROJECT_DIR$/example/tmpl-and-tmpl-router-demo/tmpl/tmpl1.tmpl" afterPath="$PROJECT_DIR$/example/tmpl-and-tmpl-router-demo/tmpl/tmpl1.tmpl" />
-      <change beforePath="$PROJECT_DIR$/js/tmpl-router.js" afterPath="$PROJECT_DIR$/js/tmpl-router.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/alias/index.js" afterPath="$PROJECT_DIR$/src/core/alias/index.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/compatibility.js" afterPath="$PROJECT_DIR$/src/core/compatibility.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/compile/block.js" afterPath="$PROJECT_DIR$/src/core/compile/block.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/compile/compile-regexp.js" afterPath="$PROJECT_DIR$/src/core/compile/compile-regexp.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/compile/escape-code.js" afterPath="$PROJECT_DIR$/src/core/compile/escape-code.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/compile/index.js" afterPath="$PROJECT_DIR$/src/core/compile/index.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/config.js" afterPath="$PROJECT_DIR$/src/core/config.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/fs/index.js" afterPath="$PROJECT_DIR$/src/core/fs/index.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/index.js" afterPath="$PROJECT_DIR$/src/core/index.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/instance/dom.js" afterPath="$PROJECT_DIR$/src/core/instance/dom.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/instance/index.js" afterPath="$PROJECT_DIR$/src/core/instance/index.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/instance/init.js" afterPath="$PROJECT_DIR$/src/core/instance/init.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/instance/set.js" afterPath="$PROJECT_DIR$/src/core/instance/set.js" />
-      <change beforePath="$PROJECT_DIR$/src/core/router/index.js" afterPath="$PROJECT_DIR$/src/core/router/index.js" />
-      <change beforePath="$PROJECT_DIR$/src/util/index.js" afterPath="$PROJECT_DIR$/src/util/index.js" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/alias.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/block.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/compatibility.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/config.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/dom.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/escapeCode.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/fn.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/fs.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/in_browser.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/include.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/init.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/render.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/router.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/set.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/tmpl-regexp.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/tmpl-render.js" afterPath="" />
+      <change beforePath="$PROJECT_DIR$/src/tmpl/tmpl.js" afterPath="" />
     </list>
     <ignored path="$PROJECT_DIR$/dist/" />
     <ignored path="$PROJECT_DIR$/.tmp/" />
@@ -40,49 +35,7 @@
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
   <component name="FileEditorManager">
-    <leaf>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/render/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="-143">
-              <caret line="12" column="4" lean-forward="false" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/router/index.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="380">
-              <caret line="20" column="1" lean-forward="false" selection-start-line="20" selection-start-column="1" selection-end-line="20" selection-end-column="1" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="compatibility.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/compatibility.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="114">
-              <caret line="40" column="20" lean-forward="false" selection-start-line="40" selection-start-column="20" selection-end-line="40" selection-end-column="20" />
-              <folding>
-                <element signature="e#68#923#0" expanded="false" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="config.js" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/src/core/config.js">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="171">
-              <caret line="9" column="22" lean-forward="false" selection-start-line="9" selection-start-column="22" selection-end-line="9" selection-end-column="22" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
       <file leaf-file-name="in_browser.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/core/in_browser.js">
           <provider selected="true" editor-type-id="text-editor">
@@ -116,7 +69,7 @@
       <file leaf-file-name="index.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/src/util/index.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="405">
+            <state relative-caret-position="874">
               <caret line="182" column="3" lean-forward="true" selection-start-line="182" selection-start-column="3" selection-end-line="182" selection-end-column="3" />
               <folding>
                 <element signature="n#!!block;n#nullPlainObject#0;n#Util#0" expanded="false" />
@@ -192,13 +145,60 @@
           </provider>
         </entry>
       </file>
-      <file leaf-file-name="blue-tmpl.js" pinned="false" current-in-tab="true">
+      <file leaf-file-name="blue-tmpl.js" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/dist/static/js/blue-tmpl.js">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="0">
-              <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+            <state relative-caret-position="34865">
+              <caret line="1835" column="0" lean-forward="true" selection-start-line="1835" selection-start-column="0" selection-end-line="1835" selection-end-column="0" />
               <folding>
                 <element signature="n#!!doc" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="test.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/example/nodejsDemo/test.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="-835">
+              <caret line="0" column="38" lean-forward="false" selection-start-line="0" selection-start-column="38" selection-end-line="0" selection-end-column="38" />
+              <folding />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/example/nodejsDemo/tmpl-views/base.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="0">
+              <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+              <folding>
+                <marker date="1517316098805" expanded="true" signature="319:351" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="base.tmpl" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/example/nodejsDemo/tmpl-views/base.tmpl">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="267">
+              <caret line="48" column="16" lean-forward="true" selection-start-line="48" selection-start-column="16" selection-end-line="48" selection-end-column="16" />
+              <folding>
+                <marker date="1517316098806" expanded="true" signature="351:383" ph="..." />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file leaf-file-name="config.js" pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/build/config.js">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="286">
+              <caret line="70" column="13" lean-forward="false" selection-start-line="70" selection-start-column="13" selection-end-line="70" selection-end-column="13" />
+              <folding>
+                <element signature="e#307#1235#0" expanded="false" />
+                <element signature="e#1264#2404#0" expanded="false" />
               </folding>
             </state>
           </provider>
@@ -372,6 +372,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -382,105 +383,31 @@
             <path>
               <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
               <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="dist" type="462c0819:PsiDirectoryNode" />
+              <item name="build" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
               <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="dist" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
               <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="dist" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
+              <item name="nodejsDemo" type="462c0819:PsiDirectoryNode" />
             </path>
             <path>
               <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
               <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="dist" type="462c0819:PsiDirectoryNode" />
-              <item name="static" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-              <item name="blue-tmpl.js" type="620a8d5e:NestingTreeNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="js" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="alias" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="compile" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="fs" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="instance" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="render" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="core" type="462c0819:PsiDirectoryNode" />
-              <item name="router" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="tmpl" type="462c0819:PsiDirectoryNode" />
-            </path>
-            <path>
-              <item name="blue-tmpl" type="b2602c69:ProjectViewProjectNode" />
-              <item name="blue-tmpl" type="462c0819:PsiDirectoryNode" />
-              <item name="src" type="462c0819:PsiDirectoryNode" />
-              <item name="util" type="462c0819:PsiDirectoryNode" />
+              <item name="example" type="462c0819:PsiDirectoryNode" />
+              <item name="nodejsDemo" type="462c0819:PsiDirectoryNode" />
+              <item name="tmpl-views" type="462c0819:PsiDirectoryNode" />
             </path>
           </expand>
           <select />
         </subPane>
       </pane>
       <pane id="Scratches" />
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -527,6 +454,15 @@
       <node-interpreter value="project" />
       <envs />
     </configuration>
+    <configuration name="dev" type="js.build_tools.npm" factoryName="npm" temporary="true" nameIsGenerated="true">
+      <package-json value="$PROJECT_DIR$/package.json" />
+      <command value="run" />
+      <scripts>
+        <script value="dev" />
+      </scripts>
+      <node-interpreter value="project" />
+      <envs />
+    </configuration>
     <configuration name="start" type="js.build_tools.npm" factoryName="npm" temporary="true" nameIsGenerated="true">
       <package-json value="$PROJECT_DIR$/package.json" />
       <command value="run" />
@@ -536,18 +472,20 @@
       <node-interpreter value="project" />
       <envs />
     </configuration>
-    <list size="4">
+    <list size="5">
       <item index="0" class="java.lang.String" itemvalue="npm.start" />
       <item index="1" class="java.lang.String" itemvalue="Node.js.test.js" />
       <item index="2" class="java.lang.String" itemvalue="JavaScript Debug.index.html" />
       <item index="3" class="java.lang.String" itemvalue="npm.build" />
+      <item index="4" class="java.lang.String" itemvalue="npm.dev" />
     </list>
     <recent_temporary>
-      <list size="4">
-        <item index="0" class="java.lang.String" itemvalue="npm.build" />
-        <item index="1" class="java.lang.String" itemvalue="Node.js.test.js" />
-        <item index="2" class="java.lang.String" itemvalue="npm.start" />
-        <item index="3" class="java.lang.String" itemvalue="JavaScript Debug.index.html" />
+      <list size="5">
+        <item index="0" class="java.lang.String" itemvalue="Node.js.test.js" />
+        <item index="1" class="java.lang.String" itemvalue="npm.build" />
+        <item index="2" class="java.lang.String" itemvalue="npm.dev" />
+        <item index="3" class="java.lang.String" itemvalue="npm.start" />
+        <item index="4" class="java.lang.String" itemvalue="JavaScript Debug.index.html" />
       </list>
     </recent_temporary>
   </component>
@@ -582,23 +520,23 @@
       <workItem from="1530065579012" duration="69000" />
       <workItem from="1536582202738" duration="5667000" />
       <workItem from="1536587958768" duration="149000" />
+      <workItem from="1540085827616" duration="359000" />
     </task>
     <servers />
   </component>
   <component name="TimeTrackingManager">
-    <option name="totallyTimeSpent" value="78009000" />
+    <option name="totallyTimeSpent" value="78368000" />
   </component>
   <component name="ToolWindowManager">
     <frame x="-8" y="-8" width="1936" height="1056" extended-state="6" />
-    <editor active="true" />
     <layout>
-      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18923241" sideWeight="0.6312292" order="0" side_tool="false" content_ui="combo" />
+      <window_info id="Project" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.18923241" sideWeight="0.6229236" order="0" side_tool="false" content_ui="combo" />
       <window_info id="TODO" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="6" side_tool="false" content_ui="tabs" />
       <window_info id="Docker" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="false" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
       <window_info id="Event Log" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.29464287" sideWeight="0.5052687" order="7" side_tool="true" content_ui="tabs" />
       <window_info id="Version Control" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="7" side_tool="false" content_ui="tabs" />
-      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="true" show_stripe_button="true" weight="0.3273743" sideWeight="0.4947313" order="2" side_tool="false" content_ui="tabs" />
-      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18923241" sideWeight="0.36877078" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="npm" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.18923241" sideWeight="0.37707642" order="2" side_tool="true" content_ui="tabs" />
+      <window_info id="Run" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.3273743" sideWeight="0.4947313" order="2" side_tool="false" content_ui="tabs" />
       <window_info id="Structure" active="false" anchor="left" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.25" sideWeight="0.5" order="1" side_tool="false" content_ui="tabs" />
       <window_info id="Mongo Explorer" active="false" anchor="right" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.33" sideWeight="0.5" order="3" side_tool="false" content_ui="tabs" />
       <window_info id="Terminal" active="false" anchor="bottom" auto_hide="false" internal_type="DOCKED" type="DOCKED" visible="false" show_stripe_button="true" weight="0.43575418" sideWeight="0.4963119" order="7" side_tool="false" content_ui="tabs" />
@@ -626,27 +564,10 @@
     <watches-manager />
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://$PROJECT_DIR$/src/tmpl/tmpl.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="288">
-          <caret line="52" column="4" lean-forward="true" selection-start-line="52" selection-start-column="4" selection-end-line="52" selection-end-column="4" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/src/tmpl/tmpl-render.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="2800">
-          <caret line="120" column="71" lean-forward="false" selection-start-line="120" selection-start-column="71" selection-end-line="120" selection-end-column="71" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/src/tmpl/init.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="650">
           <caret line="35" column="22" lean-forward="false" selection-start-line="35" selection-start-column="22" selection-end-line="35" selection-end-column="22" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -672,10 +593,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="138">
           <caret line="6" column="34" lean-forward="false" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
-          <folding>
-            <element signature="n#!!block;n#setInstance#0" expanded="false" />
-            <element signature="n#!!block;n#setEl#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -683,7 +600,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="-416">
           <caret line="23" column="34" lean-forward="true" selection-start-line="23" selection-start-column="34" selection-end-line="23" selection-end-column="34" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -712,9 +628,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="758">
           <caret line="133" column="0" lean-forward="true" selection-start-line="133" selection-start-column="0" selection-end-line="133" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!block;n#setEntrust#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -735,21 +648,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/build/config.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="230">
-          <caret line="90" column="37" lean-forward="true" selection-start-line="90" selection-start-column="37" selection-end-line="90" selection-end-column="37" />
-          <folding>
-            <element signature="e#307#1235#0" expanded="false" />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/webpack.config.js">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="532">
           <caret line="28" column="2" lean-forward="false" selection-start-line="28" selection-start-column="2" selection-end-line="28" selection-end-column="2" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -771,15 +673,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="28">
           <caret line="17" column="16" lean-forward="true" selection-start-line="17" selection-start-column="16" selection-end-line="17" selection-end-column="16" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/example/nodejsDemo/test.js">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="38" lean-forward="false" selection-start-line="0" selection-start-column="38" selection-end-line="0" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -787,15 +680,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="175">
           <caret line="86" column="2" lean-forward="false" selection-start-line="86" selection-start-column="2" selection-end-line="141" selection-end-column="3" />
-          <folding>
-            <element signature="n#!!block;n#unique#0;n#Fn#0" expanded="false" />
-            <element signature="n#!!block;n#trimArr#0;n#Fn#0" expanded="false" />
-            <element signature="n#!!block;n#ajax#0;n#Fn#0" expanded="false" />
-            <element signature="n#!!block;n#serialize#0;n#Fn#0" expanded="false" />
-            <element signature="n#!!block;n#initRegExp#0;n#Fn#0" expanded="false" />
-            <element signature="e#3223#3478#0" expanded="false" />
-            <element signature="e#3523#3786#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -827,7 +711,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="589">
           <caret line="31" column="30" lean-forward="false" selection-start-line="31" selection-start-column="30" selection-end-line="31" selection-end-column="30" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -849,7 +732,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="361">
           <caret line="19" column="38" lean-forward="true" selection-start-line="19" selection-start-column="38" selection-end-line="19" selection-end-column="38" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -857,9 +739,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="216">
           <caret line="59" column="4" lean-forward="false" selection-start-line="59" selection-start-column="4" selection-end-line="59" selection-end-column="17" />
-          <folding>
-            <element signature="n#script#0;n#!!top" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -894,7 +773,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
           <caret line="10" column="26" lean-forward="false" selection-start-line="10" selection-start-column="26" selection-end-line="10" selection-end-column="26" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -918,7 +796,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="190">
           <caret line="10" column="18" lean-forward="false" selection-start-line="10" selection-start-column="18" selection-end-line="10" selection-end-column="18" />
-          <folding />
         </state>
       </provider>
     </entry>
@@ -944,11 +821,6 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="622">
           <caret line="33" column="25" lean-forward="false" selection-start-line="33" selection-start-column="25" selection-end-line="33" selection-end-column="25" />
-          <folding>
-            <element signature="e#56#108#0" expanded="true" />
-            <element signature="e#118#165#0" expanded="true" />
-            <element signature="e#178#239#0" expanded="true" />
-          </folding>
         </state>
       </provider>
     </entry>
@@ -956,16 +828,12 @@
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="209">
           <caret line="29" column="0" lean-forward="true" selection-start-line="29" selection-start-column="0" selection-end-line="29" selection-end-column="0" />
-          <folding>
-            <element signature="n#!!block;n#setInstance#0" expanded="false" />
-            <element signature="n#!!block;n#setEl#0" expanded="false" />
-          </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/src/core/render/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="-143">
+        <state relative-caret-position="190">
           <caret line="12" column="4" lean-forward="false" selection-start-line="12" selection-start-column="4" selection-end-line="12" selection-end-column="4" />
           <folding />
         </state>
@@ -1023,7 +891,7 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/src/util/index.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="405">
+        <state relative-caret-position="874">
           <caret line="182" column="3" lean-forward="true" selection-start-line="182" selection-start-column="3" selection-end-line="182" selection-end-column="3" />
           <folding>
             <element signature="n#!!block;n#nullPlainObject#0;n#Util#0" expanded="false" />
@@ -1108,12 +976,51 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/build/config.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="286">
+          <caret line="70" column="13" lean-forward="false" selection-start-line="70" selection-start-column="13" selection-end-line="70" selection-end-column="13" />
+          <folding>
+            <element signature="e#307#1235#0" expanded="false" />
+            <element signature="e#1264#2404#0" expanded="false" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/dist/static/js/blue-tmpl.js">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="0">
-          <caret line="0" column="0" lean-forward="true" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+        <state relative-caret-position="34865">
+          <caret line="1835" column="0" lean-forward="true" selection-start-line="1835" selection-start-column="0" selection-end-line="1835" selection-end-column="0" />
           <folding>
             <element signature="n#!!doc" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/nodejsDemo/test.js">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-835">
+          <caret line="0" column="38" lean-forward="false" selection-start-line="0" selection-start-column="38" selection-end-line="0" selection-end-column="38" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/nodejsDemo/tmpl-views/base.html">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="0">
+          <caret line="0" column="0" lean-forward="false" selection-start-line="0" selection-start-column="0" selection-end-line="0" selection-end-column="0" />
+          <folding>
+            <marker date="1517316098805" expanded="true" signature="319:351" ph="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/example/nodejsDemo/tmpl-views/base.tmpl">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="267">
+          <caret line="48" column="16" lean-forward="true" selection-start-line="48" selection-start-column="16" selection-end-line="48" selection-end-column="16" />
+          <folding>
+            <marker date="1517316098806" expanded="true" signature="351:383" ph="..." />
           </folding>
         </state>
       </provider>

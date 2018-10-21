@@ -4,7 +4,7 @@
  * (c) 2016-2017 Blue
  * Released under the MIT License.
  * https://github.com/azhanging/blue-tmpl
- * time:Mon, 10 Sep 2018 14:01:38 GMT
+ * time:Sun, 21 Oct 2018 01:37:33 GMT
  * 		
  */
 (function webpackUniversalModuleDefinition(root, factory) {
