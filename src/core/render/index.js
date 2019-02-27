@@ -29,13 +29,13 @@ class Render {
   appendTo(el, cb) {
 
     const tmpl = this.tmpl,
-      util = tmpl.util;
+      utils = tmpl.utils;
 
     if (el.nodeType === 1) el.appendChild(this.fragment);
 
     else tmpl.getEl(el).appendChild(this.fragment);
 
-    util.cb(cb, this.tmpl);
+    utils.hook(this.tmpl, cb);
 
     return tmpl;
   }
@@ -44,13 +44,13 @@ class Render {
   insertBefore(el, ex, cb) {
 
     const tmpl = this.tmpl,
-      util = tmpl.util,
+      utils = tmpl.utils,
       _el = el.nodeType === 1 ? el : tmpl.getEl(el),
       _ex = el.nodeType === 1 ? ex : tmpl.getEl(ex);
 
     _el.insertBefore(this.fragment, _ex);
 
-    util.cb(cb, tmpl);
+    utils.hook(tmpl, cb);
 
     return tmpl;
   }

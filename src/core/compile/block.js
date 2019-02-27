@@ -1,5 +1,5 @@
 //常用的方法
-import util from '../../util';
+import utils from '../../utils';
 
 import {
   replaceAlias
@@ -21,7 +21,7 @@ export default function replaceBlock() {
   //先设置获取include的引入模板
   replaceAlias.call(this);
 
-  const baseFile = util.unique(this.$template.match(EXTEND)),
+  const baseFile = utils.unique(this.$template.match(EXTEND)),
     /*只获取第一个base的名字*/
     baseFileName = baseFile.toString()
       .replace(EXTEND, "$2")
@@ -31,7 +31,7 @@ export default function replaceBlock() {
   if (baseFileName === '') return;
 
   //获取入口模板
-  const blockTmpl = util.unique(this.$template.match(BLOCK));
+  const blockTmpl = utils.unique(this.$template.match(BLOCK));
 
   //获取继承的模板
   let layoutTmpl = fs.readFileSync(baseFileName, {
@@ -41,17 +41,17 @@ export default function replaceBlock() {
   //从继承模板中筛选出block
   const layoutTmplFindBlock = layoutTmpl.match(BLOCK) || [],
     layoutTmplFindBlockStr = layoutTmplFindBlock.toString(),
-    baseBlockName = util.unique(layoutTmplFindBlockStr !== '' ?
+    baseBlockName = utils.unique(layoutTmplFindBlockStr !== '' ?
       (layoutTmplFindBlockStr.replace(BLOCK, "$2").split(',')) : []);
 
-  util.each(baseBlockName, (name, index) => {
+  utils.each(baseBlockName, (name, index) => {
 
     const block = layoutTmplFindBlock[index],
-      replaceBlock = new RegExp(util.initRegExp(block), 'g');
+      replaceBlock = new RegExp(utils.initRegExp(block), 'g');
 
     let hasBlock = false;
 
-    util.each(blockTmpl, (blocktmpl) => {
+    utils.each(blockTmpl, (blocktmpl) => {
 
       BLOCK.test(blocktmpl);
 

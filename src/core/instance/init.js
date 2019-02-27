@@ -1,5 +1,5 @@
 //常用的方法
-import util from '../../util';
+import utils from '../../utils';
 
 //tmpl的render解析
 import {
@@ -20,11 +20,11 @@ import {
 } from '../router';
 
 export default function init() {
-  util.run(this.$config.create, this);
+  utils.hook(this, this.$opts.create);
   this.$template = setEl.call(this);
   setInstance.call(this, 'methods');
   setInstance.call(this, 'data');
-  util.run(this.$config.created, this);
+  utils.hook(this, this.$opts.created);
 
   //初始化路由
   setRouter.call(this);
@@ -35,7 +35,7 @@ export default function init() {
     //转化为js执行
     compile.call(this);
   }
-  util.run(this.$config.events, this);
-  util.run(this.$config.mounted, this);
+  utils.hook(this, this.$opts.events);
+  utils.hook(this, this.$opts.mounted);
   checkRouterStatus.call(this);
 }

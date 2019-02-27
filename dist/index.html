@@ -1,4 +1,4 @@
-<!DOCTYPE html><html lang=en><head><meta charset=UTF-8><title>Title</title></head><body><script src=./dist/static/js/blue-tmpl.js></script><div class=row id=app></div><script id=tmpl type=text/template><div class="on-c"> <%= a %><%= _this_.b %> </div></script><script>tmpl = new BlueTmpl({
+<!DOCTYPE html><html lang=en><head><meta charset=UTF-8><title>Title</title></head><body><script src=./dist/static/js/blue-tmpl.js></script><div class=row id=app><div bind-a=2><div bind-b="bindHandler('123')"></div></div></div><script id=tmpl type=text/template><div class="on-c"> <%= a %><%= _this_.b %> </div></script><script>tmpl = new BlueTmpl({
             template: "tmpl",
             data: {
               b: 'test'
@@ -6,6 +6,9 @@
             methods: {
               c: function () {
                 alert(1);
+              },
+              bindHandler(v){
+                return v + this.b;
               }
             },
             events: function () {

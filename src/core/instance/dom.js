@@ -1,5 +1,5 @@
 //常用的方法
-import util from '../../util';
+import utils from '../../utils';
 
 //绑定相关函数
 function bindFn(el, className, type) {
@@ -7,8 +7,8 @@ function bindFn(el, className, type) {
   const _className = el.className.split(' ');
 
   //替换
-  if (util.isObjcet(className) && (type == 'replaceBind' || type == 'replaceClass')) {
-    util.each(className, (__className, key) => {
+  if (utils.isObjcet(className) && (type == 'replaceBind' || type == 'replaceClass')) {
+    utils.each(className, (__className, key) => {
       var findIndex = _className.indexOf(key);
       if (findIndex != -1) _className[findIndex] = __className;
     });
@@ -39,18 +39,18 @@ function bindFn(el, className, type) {
 
 //设置主的委托事件
 function setEntrust(ele, type, cb) {
-  util.on(ele, type, (event) => {
+  utils.on(ele, type, (event) => {
     const ev = event || window.event,
 
       el = ev.target || ev.srcElement,
 
       eventType = ele.events[type];
 
-    util.each(eventType, (_eventType, bind) => {
+    utils.each(eventType, (_eventType, bind) => {
 
       if (!this.hasClass(el, bind)) return;
 
-      util.each(_eventType, (cb, index) => {
+      utils.each(_eventType, (cb, index) => {
 
         cb.apply(this, [ev, el]);
 
@@ -67,7 +67,7 @@ class Dom {
     //获取节点
     if (!exp) return null;
 
-    if (!this.util.isFn(document.querySelector)) {
+    if (!this.utils.isFn(document.querySelector)) {
       return document.getElementById(exp);
     }
 
@@ -82,7 +82,7 @@ class Dom {
     //获取多个节点
     if (!exp) return null;
 
-    if (!this.util.isFn(document.querySelectorAll)) {
+    if (!this.utils.isFn(document.querySelectorAll)) {
       return document.getElementsByClassName(exp);
     }
 
@@ -122,7 +122,7 @@ class Dom {
     } else if (arguments.length === 3) {
       cb = type;
       type = exp;
-      util.on(ele, type, (event) => {
+      utils.on(ele, type, (event) => {
         cb.call(this, event);
       });
     }
@@ -138,17 +138,17 @@ class Dom {
         ele.events[type][exp].splice(eventIndex, 1);
       }
       if (ele.events[type][exp].length === 0) {
-        util.off(ele, type, cb);
+        utils.off(ele, type, cb);
       }
     } else if (arguments.length === 3) {
       /*删除事件*/
-      util.off(ele, type, cb);
+      utils.off(ele, type, cb);
     }
     return this;
   }
 
   //设置事件委托的class
-  bind(el, bind) {
+  /*bind(el, bind) {
     bindFn.apply(this, [el, bind, 'bind']);
     return this;
   }
@@ -163,7 +163,7 @@ class Dom {
   replaceBind(el, bind) {
     bindFn.apply(this, [el, bind, 'replaceBind']);
     return this;
-  }
+  }*/
 
   //添加class
   addClass(el, className) {
@@ -210,9 +210,9 @@ class Dom {
 
   //获取属性
   attr(el, attr) {
-    if (util.isObjcet(attr)) {
+    if (utils.isObjcet(attr)) {
 
-      util.each(attr, (_attr, key) => {
+      utils.each(attr, (_attr, key) => {
 
         if (typeof _attr === 'boolean') {
 
@@ -239,7 +239,7 @@ class Dom {
 
         var attrs = [];
 
-        util.each(attr, (_attr, index) => {
+        utils.each(attr, (_attr) => {
 
           attrs.push(this.attr(el, _attr));
 
@@ -248,9 +248,13 @@ class Dom {
         return attrs;
 
       } else if (/^bind-\S*/.test(attr)) {
-
-        return new Function('return ' + el.getAttribute(attr) + ';')
-          .apply(this);
+        if (el.bind) {
+          //通过Bind类绑定在el的bing中的值
+          const elBindAttr = el.bind[attr.replace(/^bind-(.*?)/, '$1')];
+          return elBindAttr;
+        } else {
+          return new Function('return ' + el.getAttribute(attr) + ';').apply(this);
+        }
 
       } else {
 
@@ -263,8 +267,8 @@ class Dom {
   //获取、设置prop属性
   prop(el, prop) {
     //设置节点属性
-    if (util.isObjcet(prop)) {
-      util.each(prop, (_prop, key) => {
+    if (utils.isObjcet(prop)) {
+      utils.each(prop, (_prop, key) => {
 
         el[key] = _prop;
 
@@ -272,7 +276,7 @@ class Dom {
 
       return this;
 
-    } else if (util.isStr(prop)) { //获得节点属性
+    } else if (utils.isStr(prop)) { //获得节点属性
 
       if (/^bind-\S*/.test(prop))
 
@@ -339,7 +343,7 @@ class Dom {
   //获取直接的当个子节点
   children(el) {
     const els = [];
-    util.each(el.childNodes, (child) => {
+    utils.each(el.childNodes, (child) => {
       if (child.nodeType === 1) {
         els.push(child);
       }
@@ -417,7 +421,7 @@ class Dom {
 
     el.opacity = opacity ? opacity : 1;
 
-    util.isNum(time) ? (this.animate(el, {
+    utils.isNum(time) ? (this.animate(el, {
       opacity: 0
     }, time, () => {
       el.style.display = 'none';
@@ -431,7 +435,7 @@ class Dom {
 
     var opactiy = el.opactiy ? el.opactiy : 100;
 
-    if (util.isNum(time)) {
+    if (utils.isNum(time)) {
 
       this.css(el, {
         opacity: 0
@@ -464,7 +468,7 @@ class Dom {
 
       let animateStatus = true;
 
-      util.each(animate, (val, type) => {
+      utils.each(animate, (val, type) => {
 
         let speed = 0,
           cssVal = 0;
@@ -511,7 +515,7 @@ class Dom {
 
       if (animateStatus) {
         clearInterval(el.timer);
-        util.cb(cb, this);
+        utils.hook(this, cb);
       }
 
     }, time / 60);
@@ -520,9 +524,9 @@ class Dom {
   /*操作css*/
   css(el, css) {
     //获取css
-    if (util.isStr(css)) {
+    if (utils.isStr(css)) {
       return this.curCss(el, css);
-    } else if (util.isObjcet(css)) {
+    } else if (utils.isObjcet(css)) {
       //设置style
       this.setStyle(el, css);
       return this;
@@ -536,13 +540,13 @@ class Dom {
     const AZ = /[A-Z]/g,
       _AZ = /-[a-z]/g;
 
-    if (!util.isStr(text)) return text;
+    if (!utils.isStr(text)) return text;
 
     camelCases = isCameCase ? text.match(_AZ) : text.match(AZ);
 
     camelCases = camelCases ? camelCases : [];
 
-    util.each(camelCases, (str) => {
+    utils.each(camelCases, (str) => {
       if (isCameCase) text = text.replace(str, str.replace(/-/g, '')
         .toUpperCase());
       else text = text.replace(str, '-' + str.toLowerCase());
@@ -574,7 +578,7 @@ class Dom {
   /*设置css*/
   setStyle(el, css) {
 
-    util.each(css, (style, cssName) => {
+    utils.each(css, (style, cssName) => {
 
       el.style[cssName] = style;
 
@@ -613,7 +617,7 @@ class Dom {
 
         newScript.innerHTML = childHtml;
 
-        util.each(child.attributes, (attr) => {
+        utils.each(child.attributes, (attr) => {
 
           if (!attr) true;
 

@@ -7,10 +7,12 @@
     <body>
         <script src="./dist/static/js/blue-tmpl.js"></script>
 
-        <div class="row" id="app"></div>
+        <div class="row" id="app">
+
+        </div>
 
         <script id="tmpl" type="text/template">
-            <div class="on-c">
+            <div class="on-c" bind-a="'1'+1">
                 <%= a %><%= _this_.b %>
             </div>
         </script>
@@ -19,11 +21,15 @@
           tmpl = new BlueTmpl({
             template: "tmpl",
             data: {
+              rootEl:document.getElementById('app'),
               b: 'test'
             },
             methods: {
               c: function () {
                 alert(1);
+              },
+              bindHandler(v){
+                return v + this.b;
               }
             },
             events: function () {
@@ -31,8 +37,9 @@
             }
           })
 
-          tmpl.render({ a: 1 }).appendTo(tmpl.getEl('app'), function () {
-            tmpl.off(this.getEl('app'), 'on-c', 'click', this.c);
+          tmpl.render({ a: 1 }).appendTo(tmpl.rootEl, function () {
+            this.bind().update(tmpl.rootEl);
+            this.off(this.rootEl, 'on-c', 'click', this.c);
           });
 
         </script>

@@ -3,17 +3,19 @@ import init from './init';
 //处理模板数据的Render类
 import Render from '../render';
 //常用的类方法
-import util from '../../util';
+import utils from '../../utils';
 //Dom的操作
 import Dom from './dom';
 //config配置
-import config from '../config';
+import options from '../options';
 //转义html
 import escapeCode from '../compile/escape-code';
 //set
 import { setEl } from './set';
 //setAlias
 import { setAlias } from '../alias';
+
+import bind from './bind';
 
 //tmpl的render解析
 import {
@@ -24,7 +26,7 @@ export default class BlueTmpl extends Dom {
   //Tmpl构造
   constructor(opts) {
     super();
-    this.$config = util.extend(util.deepCopy(config), opts);
+    this.$opts = utils.extend(utils.deepCopy(options), opts);
     this.init();
   }
 
@@ -69,22 +71,21 @@ export default class BlueTmpl extends Dom {
     return this;
   }
 
-  /*回调*/
-  cb(cb) {
-    util.cb(cb, this);
-    return this;
+  bind() {
+    bind.setTmpl(this);
+    return bind;
   }
 
   /*转义*/
   escape(escapeVal) {
-    util.each(escapeCode, (item, key) => {
+    utils.each(escapeCode, (item, key) => {
       escapeVal = escapeVal.replace(new RegExp(key, 'g'), item);
     });
     return escapeVal;
   }
 }
 
-BlueTmpl.prototype.util = util;
+BlueTmpl.prototype.utils = utils;
 
 BlueTmpl.alias = {};
 

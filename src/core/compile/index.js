@@ -5,7 +5,7 @@
 //运行环境是否在浏览器
 import inBrowser from '../in_browser';
 //常用的方法
-import util from '../../util';
+import utils from '../../utils';
 //include
 import replaceInclude from './include';
 //extend
@@ -39,8 +39,8 @@ let SCRIPT_REGEXP,
 //设置正则
 export function setRegExp() {
 
-  const open_tag = util.initRegExp(this.$config.open_tag),
-    close_tag = util.initRegExp(this.$config.close_tag);
+  const open_tag = utils.initRegExp(this.$opts.config.open_tag),
+    close_tag = utils.initRegExp(this.$opts.config.close_tag);
   //解析所有的表达式
   SCRIPT_REGEXP = new RegExp(open_tag + '[^=-][\\\s\\\S]*?' + close_tag + '|' + open_tag + '=[\\\s\\\S]*?' + close_tag + '|' + open_tag + '-[\\\s\\\S]*?' + close_tag, 'g');
   //原生的script
@@ -80,12 +80,12 @@ export function compile() {
     longString = echoString.length > script.length ? echoString : script;
 
   //排除了运算和赋值表达式，处理直接输出的字符串
-  util.each(echoString, (_echoString, index) => {
+  utils.each(echoString, (_echoString, index) => {
     echoString[index] = "___.push(\"" + filterTransferredMeaning(_echoString) + "\");";
   });
 
   //这里是处理所有表达式内容
-  util.each(script, (_string, index) => {
+  utils.each(script, (_string, index) => {
     //恢复正则的索引位置
     ECHO_SCRIPT_REGEXP.lastIndex = 0;
     NATIVE_SCRIPT.lastIndex = 0;
@@ -106,13 +106,13 @@ export function compile() {
     }
   });
 
-  util.each(longString, (_longString, index) => {
+  utils.each(longString, (_longString, index) => {
     //直接输出的dom结构
-    if (util.isStr(echoString[index])) {
+    if (utils.isStr(echoString[index])) {
       domString.push(echoString[index]);
     }
     //js的源码
-    if (util.isStr(script[index])) {
+    if (utils.isStr(script[index])) {
       domString.push(script[index].replace(FILTER_TRANFORM, ""));
     }
   });
@@ -124,8 +124,8 @@ export function compile() {
 /*替换别名的常量*/
 export function replaceAlias() {
   const constructor = this.constructor;
-  util.each(constructor.alias, (replaceAlias, alias) => {
-    this.$template = this.$template.replace(new RegExp(util.initRegExp(alias), 'g'), replaceAlias);
+  utils.each(constructor.alias, (replaceAlias, alias) => {
+    this.$template = this.$template.replace(new RegExp(utils.initRegExp(alias), 'g'), replaceAlias);
   });
 }
 

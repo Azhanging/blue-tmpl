@@ -1,7 +1,7 @@
 //运行环境是否在浏览器
 import inBrowser from '../in_browser';
 //常用的方法
-import util from '../../util';
+import utils from '../../utils';
 //在node环境中使用需要用到fs获取文件
 import fs from '../fs';
 
@@ -27,19 +27,19 @@ export default function replaceInclude() {
   let includeTmpl, includeId;
 
   //去重
-  includeTmpl = util.unique(this.$template.match(include));
+  includeTmpl = utils.unique(this.$template.match(include));
   includeId = includeTmpl.toString().replace(include, "$2").split(',');
 
   //找不到include//查找的id和include匹配的数量必须相同
-  if (includeTmpl.length === 0 || util.trimArr(includeId)
+  if (includeTmpl.length === 0 || utils.trimArr(includeId)
       .length === 0 ||
     !(includeTmpl.length > 0 &&
       includeId.length > 0 &&
       includeId.length === includeTmpl.length
     )) return;
 
-  util.each(includeId, (id, index) => {
-    const replaceIncludeRegExp = new RegExp(util.initRegExp(includeTmpl[index]), 'g');
+  utils.each(includeId, (id, index) => {
+    const replaceIncludeRegExp = new RegExp(utils.initRegExp(includeTmpl[index]), 'g');
     /*浏览器环境下执行*/
     if (inBrowser) {
       const el = this.getEl(id);
@@ -66,7 +66,7 @@ export default function replaceInclude() {
   });
 
   /*去掉重复的include*/
-  includeTmpl = util.unique(this.$template.match(include));
+  includeTmpl = utils.unique(this.$template.match(include));
 
   /*查找是否还有include的引入*/
   if (includeTmpl.length > 0) replaceInclude.call(this);

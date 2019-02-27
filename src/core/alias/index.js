@@ -1,17 +1,17 @@
 //常用的类方法
-import util from '../../util';
+import utils from '../../utils';
 
 export function setAlias(paths, key = '') {
 
-  if (!util.isObjcet(paths)) return;
+  if (!utils.isObjcet(paths)) return;
 
-  util.each(paths, (path, _key) => {
+  utils.each(paths, (path, _key) => {
 
     if (!path) return;
 
     const __key = key ? key + '.' + _key : _key;
 
-    if (util.isObjcet(path)) {
+    if (utils.isObjcet(path)) {
       setAlias.apply(this, [path, __key]);
     } else {
       this.alias[__key] = path;

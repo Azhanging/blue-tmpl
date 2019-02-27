@@ -1,6 +1,6 @@
 import inBrowser from "../core/in_browser";
 
-class Util {
+class Utils {
 
   nullPlainObject(val) {
     return JSON.stringify(val) === "{}";
@@ -54,7 +54,7 @@ class Util {
     return bool === false;
   }
 
-  run(context, callback = function () {
+  hook(context, callback = function () {
   }, args = []) {
     callback.apply(context, args);
   }
@@ -171,7 +171,7 @@ class Util {
   serialize(data) { //初始化form数据
     let result = '';
 
-    if (!this.isObj(data) || !this.isArr(data)) return '';
+    if (!this.isObjcet(data)) return '';
 
     this.each(data, (val, key) => {
 
@@ -190,14 +190,9 @@ class Util {
     return expr;
   }
 
-  //执行函数
-  run(cb, context, args) {
-    this.cb(cb, context, args);
-  }
-
   //把当前key-value复制到对应对象的key-value上
   copy(object, _object) {
-    util.each(_object, (obj, key) => {
+    utils.each(_object, (obj, key) => {
       object[key] = obj;
     });
   }
@@ -257,9 +252,9 @@ class Util {
 
       if (xhr.readyState == 4) {
         if (xhr.status == 200) {
-          this.cb(options.success, this, [data]);
+          this.hook(this, options.success, [data]);
         } else if (xhr.status >= 400) {
-          this.cb(options.error, this, [data]);
+          this.hook(this, options.error, [data]);
         }
       }
     }, false);
@@ -278,7 +273,7 @@ class Util {
 }
 
 //设置事件
-Util.prototype.on = (function () {
+Utils.prototype.on = (function () {
   if (!inBrowser) return;
   if (typeof document.addEventListener === 'function') {
     return function on(el, type, cb) {
@@ -292,7 +287,7 @@ Util.prototype.on = (function () {
 })();
 
 //移除事件
-Util.prototype.off = (function () {
+Utils.prototype.off = (function () {
   if (!inBrowser) return;
   if (typeof document.removeEventListener === 'function') {
     return function off(el, type, cb) {
@@ -305,7 +300,7 @@ Util.prototype.off = (function () {
   }
 })();
 
-const util = new Util();
+const utils = new Utils();
 
 
-export default util;
+export default utils;
